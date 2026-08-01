@@ -1,2 +1,1 @@
-# performance-lab
-j-util Performance Lab
+# j-util Performance Lab
