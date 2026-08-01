@@ -20,5 +20,5 @@ public record BenchmarkRow(
         long priceCents,
         long timestamp,
         String region,
-        String status) {
+        String status) implements BenchmarkProjection {
 }

@@ -43,13 +43,40 @@ java -cp target/benchmarks.jar io.github.jutil.performancelab.CsvDatasetGenerato
 
 Generated files under `target/` are build artifacts and must not be committed.
 
-## Run benchmarks
-
-After benchmarks are added, package and run the self-contained JMH runner:
+For a quick development run, generate the benchmark's default 10,000-row dataset:
 
 ```shell
-./mvnw clean package
-java -jar target/benchmarks.jar
+java -cp target/benchmarks.jar io.github.jutil.performancelab.CsvDatasetGenerator 10000
 ```
 
-No benchmark scenarios are included in the initial project structure.
+## Run the full-row CSV benchmarks
+
+The first CSV baseline compares streaming directly to a consumer, materializing
+an `ArrayList` before `List.forEach`, and materializing a columnar projection
+store before cursor traversal. Run all three methods with:
+
+```shell
+java -jar target/benchmarks.jar CsvFullRowBenchmark
+```
+
+Override the `rowCount` JMH parameter with `-p`; the corresponding dataset must
+already exist:
+
+```shell
+java -jar target/benchmarks.jar CsvFullRowBenchmark -p rowCount=100000
+```
+
+Add JMH's GC profiler to collect allocation and garbage-collection metrics:
+
+```shell
+java -jar target/benchmarks.jar CsvFullRowBenchmark -p rowCount=10000 -prof gc
+```
+
+The GC profiler does not directly measure retained heap or peak heap usage.
+
+Each measured invocation includes opening and reading the file, parsing CSV,
+creating `BenchmarkRow` objects, and processing or materializing rows according
+to the selected strategy. Dataset generation is separate and unmeasured. JMH
+warmup means filesystem and operating-system page-cache effects may be present.
+No performance conclusions should be drawn without running controlled experiments
+on the intended hardware and dataset sizes.
