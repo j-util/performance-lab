@@ -3,7 +3,8 @@ package io.github.jutil.performancelab;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.concurrent.TimeUnit;
 
 import org.openjdk.jmh.annotations.Benchmark;
@@ -52,44 +53,103 @@ public class CsvFullRowBenchmark {
     }
 
     @Benchmark
-    public long listMaterializationThenConsumer() throws IOException {
-        return CsvProcessingStrategies.listMaterializationThenConsumer(csvFile, rowCount).checksum();
+    public long arrayListExpectedSizeMaterializationThenConsumer() throws IOException {
+        return CsvProcessingStrategies
+                .arrayListExpectedSizeMaterializationThenConsumer(csvFile, rowCount)
+                .checksum();
     }
 
     @Benchmark
-    public long columnarMaterializationThenConsumer() throws IOException {
-        return CsvProcessingStrategies.columnarMaterializationThenConsumer(csvFile, rowCount).checksum();
+    public long arrayListInitial10MaterializationThenConsumer() throws IOException {
+        return CsvProcessingStrategies
+                .arrayListInitial10MaterializationThenConsumer(csvFile, rowCount)
+                .checksum();
     }
 
     @Benchmark
-    public long listPriceSum(ListPriceSumState state) {
-        return CsvPriceSumScans.listPriceSum(state.rows);
+    public long linkedListMaterializationThenConsumer() throws IOException {
+        return CsvProcessingStrategies.linkedListMaterializationThenConsumer(csvFile, rowCount).checksum();
     }
 
     @Benchmark
-    public long columnarPriceSum(ColumnarPriceSumState state) {
+    public long columnarExpectedSizeMaterializationThenConsumer() throws IOException {
+        return CsvProcessingStrategies
+                .columnarExpectedSizeMaterializationThenConsumer(csvFile, rowCount)
+                .checksum();
+    }
+
+    @Benchmark
+    public long columnarInitial10MaterializationThenConsumer() throws IOException {
+        return CsvProcessingStrategies
+                .columnarInitial10MaterializationThenConsumer(csvFile, rowCount)
+                .checksum();
+    }
+
+    @Benchmark
+    public long arrayListPriceSum(ArrayListScanState state) {
+        return CsvPriceSumScans.arrayListPriceSum(state.rows);
+    }
+
+    @Benchmark
+    public long linkedListPriceSum(LinkedListScanState state) {
+        return CsvPriceSumScans.linkedListPriceSum(state.rows);
+    }
+
+    @Benchmark
+    public long columnarPriceSum(ColumnarScanState state) {
         return CsvPriceSumScans.columnarPriceSum(state.store);
     }
 
-    /** Retains only the list representation used by {@link #listPriceSum(ListPriceSumState)}. */
+    @Benchmark
+    public long arrayListFilteredPriceSum(ArrayListScanState state) {
+        return CsvPriceSumScans.arrayListFilteredPriceSum(state.rows);
+    }
+
+    @Benchmark
+    public long linkedListFilteredPriceSum(LinkedListScanState state) {
+        return CsvPriceSumScans.linkedListFilteredPriceSum(state.rows);
+    }
+
+    @Benchmark
+    public long columnarFilteredPriceSum(ColumnarScanState state) {
+        return CsvPriceSumScans.columnarFilteredPriceSum(state.store);
+    }
+
+    /** Retains only the ArrayList representation needed by ArrayList scan benchmarks. */
     @State(Scope.Benchmark)
-    public static class ListPriceSumState {
+    public static class ArrayListScanState {
 
         @Param({"10000"})
         public int rowCount;
 
-        private List<BenchmarkRow> rows;
+        private ArrayList<BenchmarkRow> rows;
 
         @Setup(Level.Trial)
         public void setup() throws IOException {
             Path csvFile = benchmarkCsvFile(rowCount);
-            rows = CsvPriceSumScans.loadList(csvFile, rowCount);
+            rows = CsvPriceSumScans.loadArrayList(csvFile, rowCount);
         }
     }
 
-    /** Retains only the columnar representation used by {@link #columnarPriceSum(ColumnarPriceSumState)}. */
+    /** Retains only the LinkedList representation needed by LinkedList scan benchmarks. */
     @State(Scope.Benchmark)
-    public static class ColumnarPriceSumState {
+    public static class LinkedListScanState {
+
+        @Param({"10000"})
+        public int rowCount;
+
+        private LinkedList<BenchmarkRow> rows;
+
+        @Setup(Level.Trial)
+        public void setup() throws IOException {
+            Path csvFile = benchmarkCsvFile(rowCount);
+            rows = CsvPriceSumScans.loadLinkedList(csvFile, rowCount);
+        }
+    }
+
+    /** Retains only the ProjectionStore representation needed by columnar scan benchmarks. */
+    @State(Scope.Benchmark)
+    public static class ColumnarScanState {
 
         @Param({"10000"})
         public int rowCount;

@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import io.github.jutil.columnarprojection.ProjectionCursor;
@@ -22,13 +23,25 @@ final class CsvPriceSumScans {
     private CsvPriceSumScans() {
     }
 
-    static List<BenchmarkRow> loadList(Path csvFile, int expectedRowCount) throws IOException {
+    static ArrayList<BenchmarkRow> loadArrayList(Path csvFile, int expectedRowCount) throws IOException {
         ArrayList<BenchmarkRow> rows = new ArrayList<>(expectedRowCount);
+        loadRows(csvFile, expectedRowCount, rows, "ArrayList materialization");
+        return rows;
+    }
+
+    static LinkedList<BenchmarkRow> loadLinkedList(Path csvFile, int expectedRowCount) throws IOException {
+        LinkedList<BenchmarkRow> rows = new LinkedList<>();
+        loadRows(csvFile, expectedRowCount, rows, "LinkedList materialization");
+        return rows;
+    }
+
+    private static void loadRows(
+            Path csvFile, int expectedRowCount, List<BenchmarkRow> rows, String representation)
+            throws IOException {
         try (InputStream input = Files.newInputStream(csvFile)) {
             BenchmarkCsvParser.parseRows(input, rows::add);
         }
-        validateCount("list materialization", expectedRowCount, rows.size());
-        return rows;
+        validateCount(representation, expectedRowCount, rows.size());
     }
 
     static ProjectionStore<BenchmarkProjection> loadColumnar(Path csvFile, int expectedRowCount)
@@ -45,10 +58,18 @@ final class CsvPriceSumScans {
         return store;
     }
 
-    static long listPriceSum(List<BenchmarkRow> rows) {
+    static long arrayListPriceSum(ArrayList<BenchmarkRow> rows) {
         long sum = 0L;
         for (int index = 0, size = rows.size(); index < size; index++) {
             sum += rows.get(index).priceCents();
+        }
+        return sum;
+    }
+
+    static long linkedListPriceSum(LinkedList<BenchmarkRow> rows) {
+        long sum = 0L;
+        for (BenchmarkRow row : rows) {
+            sum += row.priceCents();
         }
         return sum;
     }
@@ -58,6 +79,39 @@ final class CsvPriceSumScans {
         ProjectionCursor<BenchmarkProjection> cursor = store.cursor();
         while (cursor.moveNext()) {
             sum += cursor.current().priceCents();
+        }
+        return sum;
+    }
+
+    static long arrayListFilteredPriceSum(ArrayList<BenchmarkRow> rows) {
+        long sum = 0L;
+        for (int index = 0, size = rows.size(); index < size; index++) {
+            BenchmarkRow row = rows.get(index);
+            if (row.quantity() >= 5) {
+                sum += row.priceCents();
+            }
+        }
+        return sum;
+    }
+
+    static long linkedListFilteredPriceSum(LinkedList<BenchmarkRow> rows) {
+        long sum = 0L;
+        for (BenchmarkRow row : rows) {
+            if (row.quantity() >= 5) {
+                sum += row.priceCents();
+            }
+        }
+        return sum;
+    }
+
+    static long columnarFilteredPriceSum(ProjectionStore<BenchmarkProjection> store) {
+        long sum = 0L;
+        ProjectionCursor<BenchmarkProjection> cursor = store.cursor();
+        while (cursor.moveNext()) {
+            BenchmarkProjection row = cursor.current();
+            if (row.quantity() >= 5) {
+                sum += row.priceCents();
+            }
         }
         return sum;
     }

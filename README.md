@@ -51,28 +51,52 @@ java -cp target/benchmarks.jar io.github.jutil.performancelab.CsvDatasetGenerato
 
 ## Run the CSV benchmarks
 
-The benchmark contains two experiment categories.
+The benchmark answers three distinct questions.
 
-The end-to-end comparisons are:
+### 1. End-to-end processing and materialization
 
 - streaming directly to the full-row consumer;
-- `List` materialization followed by the full-row consumer; and
-- columnar materialization followed by the full-row consumer.
+- `ArrayList` materialization with the expected row count as its initial capacity;
+- `ArrayList` materialization starting with an initial capacity of 10;
+- `LinkedList` materialization;
+- `ProjectionStore` materialization with the expected row count as its initial capacity; and
+- `ProjectionStore` materialization starting with an initial capacity of 10.
 
-These three measured operations include opening and reading the file, parsing
-CSV, creating `BenchmarkRow` objects, and processing or materializing rows
-according to the selected strategy.
+Each measured operation includes opening and reading the file, parsing CSV,
+materializing the selected representation where applicable, and running the
+same full-row checksum consumer. Dataset generation remains a separate,
+unmeasured step.
 
-The already-loaded selected-column scans are:
+### 2. Already-loaded selected-column reduction
 
-- `List<BenchmarkRow>` to `sum(priceCents)`; and
-- `ProjectionStore<BenchmarkProjection>` to `sum(priceCents)`.
+The retained `ArrayList`, `LinkedList`, and `ProjectionStore` benchmarks each
+compute:
 
-The retained structures for these two methods are prepared in JMH trial setup.
-This comparison excludes ingestion and materialization time and measures repeated
-access over data that is already retained in memory.
+```text
+sum(priceCents)
+```
 
-Run all five methods with:
+### 3. Already-loaded primitive filter and reduction
+
+The same three retained representations each apply the primitive filter and
+reduction:
+
+```text
+quantity >= 5
+sum(priceCents) for matching rows
+```
+
+Both already-loaded comparisons prepare their structures in JMH trial setup, so
+measured execution excludes CSV ingestion and materialization. Separate JMH
+states retain only the representation required by a benchmark. The retained
+`ArrayList` and `ProjectionStore` use the expected row count as their initial
+capacity.
+
+The initial-capacity comparison is intentionally limited to the end-to-end
+benchmarks because it measures construction and growth cost. Once a structure is
+already loaded, its starting capacity is not part of the measured scan.
+
+Run all methods with:
 
 ```shell
 java -jar target/benchmarks.jar CsvFullRowBenchmark
@@ -93,7 +117,7 @@ java -jar target/benchmarks.jar CsvFullRowBenchmark -p rowCount=10000 -prof gc
 
 The GC profiler does not directly measure retained heap or peak heap usage.
 
-Dataset generation is separate and unmeasured for both categories. JMH warmup
+Dataset generation is separate and unmeasured for all three categories. JMH warmup
 means filesystem and operating-system page-cache effects may be present in the
 end-to-end comparisons. No performance conclusions should be drawn without
 running controlled experiments on the intended hardware and dataset sizes.

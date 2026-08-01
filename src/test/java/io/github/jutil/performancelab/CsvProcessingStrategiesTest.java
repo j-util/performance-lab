@@ -13,23 +13,40 @@ class CsvProcessingStrategiesTest {
     Path temporaryDirectory;
 
     @Test
-    void allStrategiesProcessTheSameRowsAndProduceTheSameChecksum() throws Exception {
+    void allMaterializationStrategiesProcessTheSameRowsAndProduceTheSameChecksum() throws Exception {
         int rowCount = 17;
         Path dataset = temporaryDirectory.resolve("rows.csv");
         CsvDatasetGenerator.generate(rowCount, dataset);
 
         CsvProcessingStrategies.StrategyResult streaming =
                 CsvProcessingStrategies.streamingToConsumer(dataset, rowCount);
-        CsvProcessingStrategies.StrategyResult list =
-                CsvProcessingStrategies.listMaterializationThenConsumer(dataset, rowCount);
-        CsvProcessingStrategies.StrategyResult columnar =
-                CsvProcessingStrategies.columnarMaterializationThenConsumer(dataset, rowCount);
+        CsvProcessingStrategies.StrategyResult arrayListExpectedSize =
+                CsvProcessingStrategies.arrayListExpectedSizeMaterializationThenConsumer(
+                        dataset, rowCount);
+        CsvProcessingStrategies.StrategyResult arrayListInitial10 =
+                CsvProcessingStrategies.arrayListInitial10MaterializationThenConsumer(
+                        dataset, rowCount);
+        CsvProcessingStrategies.StrategyResult linkedList =
+                CsvProcessingStrategies.linkedListMaterializationThenConsumer(dataset, rowCount);
+        CsvProcessingStrategies.StrategyResult columnarExpectedSize =
+                CsvProcessingStrategies.columnarExpectedSizeMaterializationThenConsumer(
+                        dataset, rowCount);
+        CsvProcessingStrategies.StrategyResult columnarInitial10 =
+                CsvProcessingStrategies.columnarInitial10MaterializationThenConsumer(
+                        dataset, rowCount);
 
         assertEquals(rowCount, streaming.rowCount());
-        assertEquals(rowCount, list.rowCount());
-        assertEquals(rowCount, columnar.rowCount());
-        assertEquals(streaming.checksum(), list.checksum());
-        assertEquals(list.checksum(), columnar.checksum(),
-                "columnar cursor traversal must match List.forEach traversal");
+        assertSameResult(streaming, arrayListExpectedSize);
+        assertSameResult(arrayListExpectedSize, arrayListInitial10);
+        assertSameResult(arrayListExpectedSize, linkedList);
+        assertSameResult(arrayListExpectedSize, columnarExpectedSize);
+        assertSameResult(columnarExpectedSize, columnarInitial10);
+    }
+
+    private static void assertSameResult(
+            CsvProcessingStrategies.StrategyResult expected,
+            CsvProcessingStrategies.StrategyResult actual) {
+        assertEquals(expected.rowCount(), actual.rowCount());
+        assertEquals(expected.checksum(), actual.checksum());
     }
 }

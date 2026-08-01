@@ -5,6 +5,8 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 import io.github.jutil.columnarprojection.ProjectionCursor;
 import io.github.jutil.columnarprojection.ProjectionStore;
@@ -32,24 +34,57 @@ final class CsvProcessingStrategies {
         return new StrategyResult(consumer.checksum(), consumer.count());
     }
 
-    static StrategyResult listMaterializationThenConsumer(Path csvFile, int expectedRowCount)
+    static StrategyResult arrayListExpectedSizeMaterializationThenConsumer(
+            Path csvFile, int expectedRowCount)
             throws IOException {
-        ArrayList<BenchmarkRow> rows = new ArrayList<>(expectedRowCount);
+        return listMaterializationThenConsumer(
+                csvFile, expectedRowCount, new ArrayList<>(expectedRowCount), "ArrayList expected-size");
+    }
+
+    static StrategyResult arrayListInitial10MaterializationThenConsumer(
+            Path csvFile, int expectedRowCount)
+            throws IOException {
+        return listMaterializationThenConsumer(
+                csvFile, expectedRowCount, new ArrayList<>(10), "ArrayList initial-10");
+    }
+
+    static StrategyResult linkedListMaterializationThenConsumer(Path csvFile, int expectedRowCount)
+            throws IOException {
+        return listMaterializationThenConsumer(
+                csvFile, expectedRowCount, new LinkedList<>(), "LinkedList");
+    }
+
+    static StrategyResult columnarExpectedSizeMaterializationThenConsumer(
+            Path csvFile, int expectedRowCount)
+            throws IOException {
+        return columnarMaterializationThenConsumer(csvFile, expectedRowCount, expectedRowCount);
+    }
+
+    static StrategyResult columnarInitial10MaterializationThenConsumer(
+            Path csvFile, int expectedRowCount)
+            throws IOException {
+        return columnarMaterializationThenConsumer(csvFile, expectedRowCount, 10);
+    }
+
+    private static StrategyResult listMaterializationThenConsumer(
+            Path csvFile, int expectedRowCount, List<BenchmarkRow> rows, String strategy)
+            throws IOException {
         try (InputStream input = Files.newInputStream(csvFile)) {
             BenchmarkCsvParser.parseRows(input, rows::add);
         }
-        validateCount("list materialization", expectedRowCount, rows.size());
+        validateCount(strategy + " materialization", expectedRowCount, rows.size());
 
         FullRowChecksumConsumer consumer = new FullRowChecksumConsumer();
         rows.forEach(consumer);
-        validateCount("list checksum consumer", expectedRowCount, consumer.count());
+        validateCount(strategy + " checksum consumer", expectedRowCount, consumer.count());
         return new StrategyResult(consumer.checksum(), consumer.count());
     }
 
-    static StrategyResult columnarMaterializationThenConsumer(Path csvFile, int expectedRowCount)
+    private static StrategyResult columnarMaterializationThenConsumer(
+            Path csvFile, int expectedRowCount, int initialCapacity)
             throws IOException {
         ProjectionStore<BenchmarkProjection> store =
-                ProjectionStores.create(BenchmarkProjection.class, expectedRowCount);
+                ProjectionStores.create(BenchmarkProjection.class, initialCapacity);
         ProcessingResult processingResult;
         try (InputStream input = Files.newInputStream(csvFile)) {
             processingResult = PROCESSOR.process(input, store::add);
