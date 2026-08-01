@@ -21,6 +21,28 @@ The Maven Wrapper downloads the project's Maven version automatically.
 
 Ordinary verification tests belong under `src/test/java` and use JUnit 5.
 
+## Generate benchmark data
+
+Dataset generation is a standalone step and is never performed as part of a
+measured benchmark operation. Build the self-contained JAR, then pass the desired
+row count to the generator:
+
+```shell
+./mvnw clean package
+java -cp target/benchmarks.jar io.github.jutil.performancelab.CsvDatasetGenerator 1000000
+```
+
+This example deterministically writes 1,000,000 data rows plus a header to
+`target/benchmark-data/benchmark-rows-1000000.csv`. Repeating the command with
+the same row count produces identical CSV data. To choose another destination,
+pass it as the second argument:
+
+```shell
+java -cp target/benchmarks.jar io.github.jutil.performancelab.CsvDatasetGenerator 1000 /tmp/benchmark.csv
+```
+
+Generated files under `target/` are build artifacts and must not be committed.
+
 ## Run benchmarks
 
 After benchmarks are added, package and run the self-contained JMH runner:
