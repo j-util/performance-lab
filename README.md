@@ -49,11 +49,30 @@ For a quick development run, generate the benchmark's default 10,000-row dataset
 java -cp target/benchmarks.jar io.github.jutil.performancelab.CsvDatasetGenerator 10000
 ```
 
-## Run the full-row CSV benchmarks
+## Run the CSV benchmarks
 
-The first CSV baseline compares streaming directly to a consumer, materializing
-an `ArrayList` before `List.forEach`, and materializing a columnar projection
-store before cursor traversal. Run all three methods with:
+The benchmark contains two experiment categories.
+
+The end-to-end comparisons are:
+
+- streaming directly to the full-row consumer;
+- `List` materialization followed by the full-row consumer; and
+- columnar materialization followed by the full-row consumer.
+
+These three measured operations include opening and reading the file, parsing
+CSV, creating `BenchmarkRow` objects, and processing or materializing rows
+according to the selected strategy.
+
+The already-loaded selected-column scans are:
+
+- `List<BenchmarkRow>` to `sum(priceCents)`; and
+- `ProjectionStore<BenchmarkProjection>` to `sum(priceCents)`.
+
+The retained structures for these two methods are prepared in JMH trial setup.
+This comparison excludes ingestion and materialization time and measures repeated
+access over data that is already retained in memory.
+
+Run all five methods with:
 
 ```shell
 java -jar target/benchmarks.jar CsvFullRowBenchmark
@@ -74,9 +93,7 @@ java -jar target/benchmarks.jar CsvFullRowBenchmark -p rowCount=10000 -prof gc
 
 The GC profiler does not directly measure retained heap or peak heap usage.
 
-Each measured invocation includes opening and reading the file, parsing CSV,
-creating `BenchmarkRow` objects, and processing or materializing rows according
-to the selected strategy. Dataset generation is separate and unmeasured. JMH
-warmup means filesystem and operating-system page-cache effects may be present.
-No performance conclusions should be drawn without running controlled experiments
-on the intended hardware and dataset sizes.
+Dataset generation is separate and unmeasured for both categories. JMH warmup
+means filesystem and operating-system page-cache effects may be present in the
+end-to-end comparisons. No performance conclusions should be drawn without
+running controlled experiments on the intended hardware and dataset sizes.
