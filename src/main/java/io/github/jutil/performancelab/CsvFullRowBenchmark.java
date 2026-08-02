@@ -53,13 +53,18 @@ public class CsvFullRowBenchmark {
     }
 
     @Benchmark
-    public long streamingFilteredPriceSum() throws IOException {
-        return CsvProcessingStrategies.streamingFilteredPriceSum(csvFile, rowCount).sum();
+    public long arrayListFilteredPriceSumEndToEnd() throws IOException {
+        return CsvProcessingStrategies.arrayListFilteredPriceSumEndToEnd(csvFile, rowCount).sum();
     }
 
     @Benchmark
-    public long reductionStoreFilteredPriceSum() throws IOException {
-        return CsvProcessingStrategies.reductionStoreFilteredPriceSum(csvFile, rowCount).sum();
+    public long columnarFilteredPriceSumEndToEnd() throws IOException {
+        return CsvProcessingStrategies.columnarFilteredPriceSumEndToEnd(csvFile, rowCount).sum();
+    }
+
+    @Benchmark
+    public long reductionStoreFilteredPriceSumEndToEnd() throws IOException {
+        return CsvProcessingStrategies.reductionStoreFilteredPriceSumEndToEnd(csvFile, rowCount).sum();
     }
 
     @Benchmark

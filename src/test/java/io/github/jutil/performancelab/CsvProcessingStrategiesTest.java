@@ -2,6 +2,7 @@ package io.github.jutil.performancelab;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.nio.file.Files;
 import java.nio.file.Path;
 
 import org.junit.jupiter.api.Test;
@@ -44,19 +45,30 @@ class CsvProcessingStrategiesTest {
     }
 
     @Test
-    void streamingAndReductionStoreProduceTheSameFilteredPriceSum() throws Exception {
-        int rowCount = 17;
+    void allEndToEndReductionStrategiesProcessTheSameRowsAndProduceTheSameFilteredPriceSum()
+            throws Exception {
+        int rowCount = 3;
         Path dataset = temporaryDirectory.resolve("filtered-price-rows.csv");
-        CsvDatasetGenerator.generate(rowCount, dataset);
+        Files.writeString(dataset, """
+                id,customerId,productId,quantity,priceCents,timestamp,region,status
+                1,101,11,4,100,1704067200000,EUROPE,COMPLETED
+                2,102,12,5,200,1704067201000,ASIA_PACIFIC,PENDING
+                3,103,13,6,300,1704067202000,NORTH_AMERICA,REFUNDED
+                """);
 
-        CsvProcessingStrategies.FilteredPriceSumResult streaming =
-                CsvProcessingStrategies.streamingFilteredPriceSum(dataset, rowCount);
+        CsvProcessingStrategies.FilteredPriceSumResult arrayList =
+                CsvProcessingStrategies.arrayListFilteredPriceSumEndToEnd(dataset, rowCount);
+        CsvProcessingStrategies.FilteredPriceSumResult columnar =
+                CsvProcessingStrategies.columnarFilteredPriceSumEndToEnd(dataset, rowCount);
         CsvProcessingStrategies.FilteredPriceSumResult reductionStore =
-                CsvProcessingStrategies.reductionStoreFilteredPriceSum(dataset, rowCount);
+                CsvProcessingStrategies.reductionStoreFilteredPriceSumEndToEnd(dataset, rowCount);
 
-        assertEquals(rowCount, streaming.rowCount());
+        assertEquals(rowCount, arrayList.rowCount());
+        assertEquals(rowCount, columnar.rowCount());
         assertEquals(rowCount, reductionStore.rowCount());
-        assertEquals(streaming.sum(), reductionStore.sum());
+        assertEquals(arrayList.sum(), columnar.sum());
+        assertEquals(arrayList.sum(), reductionStore.sum());
+        assertEquals(500L, arrayList.sum());
     }
 
     private static void assertSameResult(

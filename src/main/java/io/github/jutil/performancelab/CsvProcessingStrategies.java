@@ -34,22 +34,43 @@ final class CsvProcessingStrategies {
         return new StrategyResult(consumer.checksum(), consumer.count());
     }
 
-    static FilteredPriceSumResult streamingFilteredPriceSum(
+    static FilteredPriceSumResult arrayListFilteredPriceSumEndToEnd(
             Path csvFile, int expectedRowCount) throws IOException {
-        FilteredPriceSumConsumer consumer = new FilteredPriceSumConsumer();
+        ArrayList<BenchmarkRow> rows = new ArrayList<>(expectedRowCount);
         ProcessingResult processingResult;
         try (InputStream input = Files.newInputStream(csvFile)) {
-            processingResult = PROCESSOR.process(input, consumer);
+            processingResult = PROCESSOR.process(input, rows::add);
         }
         validateCount(
-                "streaming filtered-price input processing",
+                "ArrayList filtered-price input processing",
                 expectedRowCount,
                 processingResult.getProcessedCount());
+        validateCount("ArrayList filtered-price materialization", expectedRowCount, rows.size());
         return new FilteredPriceSumResult(
-                consumer.sum(), processingResult.getProcessedCount());
+                CsvPriceSumScans.arrayListFilteredPriceSum(rows),
+                processingResult.getProcessedCount());
     }
 
-    static FilteredPriceSumResult reductionStoreFilteredPriceSum(
+    static FilteredPriceSumResult columnarFilteredPriceSumEndToEnd(
+            Path csvFile, int expectedRowCount) throws IOException {
+        ProjectionStore<BenchmarkProjection> store =
+                ProjectionStores.create(BenchmarkProjection.class, expectedRowCount);
+        ProcessingResult processingResult;
+        try (InputStream input = Files.newInputStream(csvFile)) {
+            processingResult = PROCESSOR.process(input, store::add);
+        }
+        validateCount(
+                "columnar filtered-price input processing",
+                expectedRowCount,
+                processingResult.getProcessedCount());
+        validateCount("columnar filtered-price materialization", expectedRowCount, store.size());
+        store.seal();
+        return new FilteredPriceSumResult(
+                CsvPriceSumScans.columnarFilteredPriceSum(store),
+                processingResult.getProcessedCount());
+    }
+
+    static FilteredPriceSumResult reductionStoreFilteredPriceSumEndToEnd(
             Path csvFile, int expectedRowCount) throws IOException {
         BenchmarkRowReductionStore store = new BenchmarkRowReductionStore();
         ProcessingResult processingResult;

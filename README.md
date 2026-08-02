@@ -51,7 +51,8 @@ java -cp target/benchmarks.jar io.github.jutil.performancelab.CsvDatasetGenerato
 
 ## Run the CSV benchmarks
 
-The benchmark answers four distinct questions.
+The benchmark includes full-row processing comparisons and two separate
+categories of reduction benchmarks.
 
 ### 1. End-to-end processing and materialization
 
@@ -67,44 +68,56 @@ materializing the selected representation where applicable, and running the
 same full-row checksum consumer. Dataset generation remains a separate,
 unmeasured step.
 
-### 2. Already-loaded selected-column reduction
+### 2. Reduction over already-materialized data
 
-The retained `ArrayList`, `LinkedList`, and `ProjectionStore` benchmarks each
-compute:
+The retained `ArrayList` and columnar `ProjectionStore` benchmarks compare
+reductions after data has already been materialized. They include both an
+unfiltered selected-column sum:
 
 ```text
 sum(priceCents)
 ```
 
-### 3. Already-loaded primitive filter and reduction
-
-The same three retained representations each apply the primitive filter and
-reduction:
+and the business operation:
 
 ```text
 quantity >= 5
 sum(priceCents) for matching rows
 ```
 
-### 4. End-to-end streaming primitive filter and reduction
+The existing retained `LinkedList` scan benchmarks remain available as an
+additional representation. These benchmarks prepare their structures in JMH
+trial setup, so measured execution excludes CSV ingestion and materialization.
+Separate JMH states retain only the representation required by a benchmark.
+The retained `ArrayList` and `ProjectionStore` use the expected row count as
+their initial capacity.
 
-The CSV suite compares a handwritten primitive streaming reduction with a
-reduction-store `LongReduction`. Both consume the same parsed CSV stream and
-compute:
+### 3. End-to-end aggregate production
+
+Three end-to-end benchmarks produce the same aggregate from the same CSV input:
+
+- `arrayListFilteredPriceSumEndToEnd` parses every `BenchmarkRow` into an
+  expected-size `ArrayList`, then scans the list;
+- `columnarFilteredPriceSumEndToEnd` parses every `BenchmarkRow` into an
+  expected-size columnar `ProjectionStore`, then scans its quantity and price
+  projections; and
+- `reductionStoreFilteredPriceSumEndToEnd` feeds every `BenchmarkRow` to the
+  generated reduction store, which incrementally applies `FilteredPriceSum`
+  without retaining a row collection.
+
+All three compute:
 
 ```text
 quantity >= 5
 sum(priceCents) for matching rows
 ```
 
-Both measured operations include opening and reading the file and parsing CSV;
-neither materializes rows.
-
-Both already-loaded comparisons prepare their structures in JMH trial setup, so
-measured execution excludes CSV ingestion and materialization. Separate JMH
-states retain only the representation required by a benchmark. The retained
-`ArrayList` and `ProjectionStore` use the expected row count as their initial
-capacity.
+Each measured operation includes opening and reading the file, parsing the same
+`BenchmarkRow` objects through the same parser and `InputStreamProcessor`, and
+producing the final `long` sum. The architectural work intentionally differs:
+the `ArrayList` retains objects and performs a later traversal, the columnar
+store retains projections and performs a later columnar traversal, and the
+reduction store computes during ingestion without materializing retained rows.
 
 The initial-capacity comparison is intentionally limited to the end-to-end
 benchmarks because it measures construction and growth cost. Once a structure is
@@ -131,7 +144,7 @@ java -jar target/benchmarks.jar CsvFullRowBenchmark -p rowCount=10000 -prof gc
 
 The GC profiler does not directly measure retained heap or peak heap usage.
 
-Dataset generation is separate and unmeasured for all four categories. JMH warmup
+Dataset generation is separate and unmeasured for all categories. JMH warmup
 means filesystem and operating-system page-cache effects may be present in the
 end-to-end comparisons. No performance conclusions should be drawn without
 running controlled experiments on the intended hardware and dataset sizes.
