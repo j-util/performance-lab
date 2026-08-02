@@ -53,6 +53,16 @@ public class CsvFullRowBenchmark {
     }
 
     @Benchmark
+    public long streamingFilteredPriceSum() throws IOException {
+        return CsvProcessingStrategies.streamingFilteredPriceSum(csvFile, rowCount).sum();
+    }
+
+    @Benchmark
+    public long reductionStoreFilteredPriceSum() throws IOException {
+        return CsvProcessingStrategies.reductionStoreFilteredPriceSum(csvFile, rowCount).sum();
+    }
+
+    @Benchmark
     public long arrayListExpectedSizeMaterializationThenConsumer() throws IOException {
         return CsvProcessingStrategies
                 .arrayListExpectedSizeMaterializationThenConsumer(csvFile, rowCount)

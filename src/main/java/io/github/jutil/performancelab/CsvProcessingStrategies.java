@@ -34,6 +34,36 @@ final class CsvProcessingStrategies {
         return new StrategyResult(consumer.checksum(), consumer.count());
     }
 
+    static FilteredPriceSumResult streamingFilteredPriceSum(
+            Path csvFile, int expectedRowCount) throws IOException {
+        FilteredPriceSumConsumer consumer = new FilteredPriceSumConsumer();
+        ProcessingResult processingResult;
+        try (InputStream input = Files.newInputStream(csvFile)) {
+            processingResult = PROCESSOR.process(input, consumer);
+        }
+        validateCount(
+                "streaming filtered-price input processing",
+                expectedRowCount,
+                processingResult.getProcessedCount());
+        return new FilteredPriceSumResult(
+                consumer.sum(), processingResult.getProcessedCount());
+    }
+
+    static FilteredPriceSumResult reductionStoreFilteredPriceSum(
+            Path csvFile, int expectedRowCount) throws IOException {
+        BenchmarkRowReductionStore store = new BenchmarkRowReductionStore();
+        ProcessingResult processingResult;
+        try (InputStream input = Files.newInputStream(csvFile)) {
+            processingResult = PROCESSOR.process(input, store::add);
+        }
+        validateCount(
+                "reduction-store filtered-price input processing",
+                expectedRowCount,
+                processingResult.getProcessedCount());
+        return new FilteredPriceSumResult(
+                store.filteredPriceSum(), processingResult.getProcessedCount());
+    }
+
     static StrategyResult arrayListExpectedSizeMaterializationThenConsumer(
             Path csvFile, int expectedRowCount)
             throws IOException {
@@ -110,5 +140,8 @@ final class CsvProcessingStrategies {
     }
 
     record StrategyResult(long checksum, long rowCount) {
+    }
+
+    record FilteredPriceSumResult(long sum, long rowCount) {
     }
 }

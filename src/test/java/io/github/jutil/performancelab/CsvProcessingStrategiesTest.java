@@ -43,6 +43,22 @@ class CsvProcessingStrategiesTest {
         assertSameResult(columnarExpectedSize, columnarInitial10);
     }
 
+    @Test
+    void streamingAndReductionStoreProduceTheSameFilteredPriceSum() throws Exception {
+        int rowCount = 17;
+        Path dataset = temporaryDirectory.resolve("filtered-price-rows.csv");
+        CsvDatasetGenerator.generate(rowCount, dataset);
+
+        CsvProcessingStrategies.FilteredPriceSumResult streaming =
+                CsvProcessingStrategies.streamingFilteredPriceSum(dataset, rowCount);
+        CsvProcessingStrategies.FilteredPriceSumResult reductionStore =
+                CsvProcessingStrategies.reductionStoreFilteredPriceSum(dataset, rowCount);
+
+        assertEquals(rowCount, streaming.rowCount());
+        assertEquals(rowCount, reductionStore.rowCount());
+        assertEquals(streaming.sum(), reductionStore.sum());
+    }
+
     private static void assertSameResult(
             CsvProcessingStrategies.StrategyResult expected,
             CsvProcessingStrategies.StrategyResult actual) {

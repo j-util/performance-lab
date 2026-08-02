@@ -30,6 +30,7 @@
         <maven.shade.plugin.version>3.6.2</maven.shade.plugin.version>
         <maven.surefire.plugin.version>3.5.5</maven.surefire.plugin.version>
         <columnar-projection-store.version>1.1.0</columnar-projection-store.version>
+        <reduction-store.version>0.1.0-SNAPSHOT</reduction-store.version>
     </properties>
 
     <dependencies>
@@ -43,6 +44,12 @@
             <groupId>io.github.j-util</groupId>
             <artifactId>columnar-projection-store</artifactId>
             <version>${columnar-projection-store.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.github.j-util</groupId>
+            <artifactId>reduction-store</artifactId>
+            <version>${reduction-store.version}</version>
         </dependency>
 
         <dependency>
@@ -75,6 +82,7 @@
                     <annotationProcessors>
                         <annotationProcessor>org.openjdk.jmh.generators.BenchmarkProcessor</annotationProcessor>
                         <annotationProcessor>io.github.jutil.columnarprojection.processor.ProjectionSchemaProcessor</annotationProcessor>
+                        <annotationProcessor>io.github.jutil.reductionstore.processor.ReductionProcessor</annotationProcessor>
                     </annotationProcessors>
                     <annotationProcessorPaths>
                         <path>
@@ -86,6 +94,11 @@
                             <groupId>io.github.j-util</groupId>
                             <artifactId>columnar-projection-store-processor</artifactId>
                             <version>${columnar-projection-store.version}</version>
+                        </path>
+                        <path>
+                            <groupId>io.github.j-util</groupId>
+                            <artifactId>reduction-store-processor</artifactId>
+                            <version>${reduction-store.version}</version>
                         </path>
                     </annotationProcessorPaths>
                 </configuration>

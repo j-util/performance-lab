@@ -51,7 +51,7 @@ java -cp target/benchmarks.jar io.github.jutil.performancelab.CsvDatasetGenerato
 
 ## Run the CSV benchmarks
 
-The benchmark answers three distinct questions.
+The benchmark answers four distinct questions.
 
 ### 1. End-to-end processing and materialization
 
@@ -86,6 +86,20 @@ quantity >= 5
 sum(priceCents) for matching rows
 ```
 
+### 4. End-to-end streaming primitive filter and reduction
+
+The CSV suite compares a handwritten primitive streaming reduction with a
+reduction-store `LongReduction`. Both consume the same parsed CSV stream and
+compute:
+
+```text
+quantity >= 5
+sum(priceCents) for matching rows
+```
+
+Both measured operations include opening and reading the file and parsing CSV;
+neither materializes rows.
+
 Both already-loaded comparisons prepare their structures in JMH trial setup, so
 measured execution excludes CSV ingestion and materialization. Separate JMH
 states retain only the representation required by a benchmark. The retained
@@ -117,7 +131,7 @@ java -jar target/benchmarks.jar CsvFullRowBenchmark -p rowCount=10000 -prof gc
 
 The GC profiler does not directly measure retained heap or peak heap usage.
 
-Dataset generation is separate and unmeasured for all three categories. JMH warmup
+Dataset generation is separate and unmeasured for all four categories. JMH warmup
 means filesystem and operating-system page-cache effects may be present in the
 end-to-end comparisons. No performance conclusions should be drawn without
 running controlled experiments on the intended hardware and dataset sizes.
