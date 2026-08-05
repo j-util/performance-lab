@@ -21,3 +21,5 @@ jobs:
           java -cp target/benchmarks.jar \
             io.github.jutil.performancelab.CsvDatasetGenerator \
             10000
+      - name: List JMH benchmarks
+        run: java -jar target/benchmarks.jar -l
