@@ -26,7 +26,7 @@ jobs:
         run: |
           java -cp target/benchmarks.jar \
             io.github.jutil.performancelab.CsvDatasetGenerator \
-            1000000
+            5000000
 
       - name: List JMH benchmarks
         run: java -jar target/benchmarks.jar -l
@@ -43,8 +43,8 @@ jobs:
             --file target/jmh-smoke.json \
             "java -jar target/benchmarks.jar \
               CsvFullRowBenchmark \
-              -p rowCount=1000000 \
-              -wi 1 \
+              -p rowCount=5000000 \
+              -wi 2 \
               -i 3 \
               -f 1 \
               -r 1s \
