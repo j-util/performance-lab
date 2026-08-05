@@ -43,7 +43,7 @@ jobs:
             --file target/jmh-smoke.json \
             "java -jar target/benchmarks.jar \
               CsvFullRowBenchmark \
-              -p rowCount=10000 \
+              -p rowCount=1000000 \
               -wi 1 \
               -i 3 \
               -f 1 \
