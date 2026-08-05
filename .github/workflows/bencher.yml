@@ -42,7 +42,7 @@ jobs:
             --adapter java_jmh \
             --file target/jmh-smoke.json \
             "java -jar benchmark-jmh/target/benchmarks.jar \
-              CsvFullRowBenchmark \
+              \"CsvFullRowProcessingBenchmark|CsvFilteredPriceSumEndToEndBenchmark|ReadyPriceSumBenchmark|ReadyFilteredPriceSumBenchmark\" \
               -p rowCount=5000000 \
               -wi 2 \
               -i 3 \

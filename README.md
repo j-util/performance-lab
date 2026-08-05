@@ -17,7 +17,7 @@ The Maven Wrapper downloads the project's Maven version automatically.
 
 - `benchmark-core` contains the shared benchmark models, deterministic data
   generation, workload implementations, and correctness tests.
-- `benchmark-jmh` contains the OpenJDK JMH benchmark class and produces the
+- `benchmark-jmh` contains the OpenJDK JMH benchmark classes and produces the
   executable benchmark JAR.
 
 ## Build and test
@@ -59,10 +59,10 @@ java -cp benchmark-jmh/target/benchmarks.jar io.github.jutil.performancelab.CsvD
 
 ## Run the CSV benchmarks
 
-The benchmark includes full-row processing comparisons and two separate
-categories of reduction benchmarks.
+The 15 benchmark methods are organized into four classes so that each class
+contains only directly comparable operations.
 
-### 1. End-to-end processing and materialization
+### `CsvFullRowProcessingBenchmark`
 
 - streaming directly to the full-row consumer;
 - `ArrayList` materialization with the expected row count as its initial capacity;
@@ -76,31 +76,7 @@ materializing the selected representation where applicable, and running the
 same full-row checksum consumer. Dataset generation remains a separate,
 unmeasured step.
 
-### 2. Reduction over already-materialized data
-
-The retained `ArrayList` and columnar `ProjectionStore` benchmarks compare
-reductions after data has already been materialized. They include both an
-unfiltered selected-column sum:
-
-```text
-sum(priceCents)
-```
-
-and the business operation:
-
-```text
-quantity >= 5
-sum(priceCents) for matching rows
-```
-
-The existing retained `LinkedList` scan benchmarks remain available as an
-additional representation. These benchmarks prepare their structures in JMH
-trial setup, so measured execution excludes CSV ingestion and materialization.
-Separate JMH states retain only the representation required by a benchmark.
-The retained `ArrayList` and `ProjectionStore` use the expected row count as
-their initial capacity.
-
-### 3. End-to-end aggregate production
+### `CsvFilteredPriceSumEndToEndBenchmark`
 
 Three end-to-end benchmarks produce the same aggregate from the same CSV input:
 
@@ -127,6 +103,31 @@ the `ArrayList` retains objects and performs a later traversal, the columnar
 store retains projections and performs a later columnar traversal, and the
 reduction store computes during ingestion without materializing retained rows.
 
+### `ReadyPriceSumBenchmark` and `ReadyFilteredPriceSumBenchmark`
+
+The ready-data benchmarks compare reductions after data has already been
+materialized. `ReadyPriceSumBenchmark` contains the unfiltered selected-column
+sum for `ArrayList`, `LinkedList`, and columnar `ProjectionStore`:
+
+```text
+sum(priceCents)
+```
+
+`ReadyFilteredPriceSumBenchmark` contains the filtered business operation for
+the same three representations:
+
+```text
+quantity >= 5
+sum(priceCents) for matching rows
+```
+
+The existing retained `LinkedList` scan benchmarks remain available as an
+additional representation. These benchmarks prepare their structures in JMH
+trial setup, so measured execution excludes CSV ingestion and materialization.
+Separate JMH states retain only the representation required by a benchmark.
+The retained `ArrayList` and `ProjectionStore` use the expected row count as
+their initial capacity.
+
 The initial-capacity comparison is intentionally limited to the end-to-end
 benchmarks because it measures construction and growth cost. Once a structure is
 already loaded, its starting capacity is not part of the measured scan.
@@ -134,20 +135,26 @@ already loaded, its starting capacity is not part of the measured scan.
 Run all methods with:
 
 ```shell
-java -jar benchmark-jmh/target/benchmarks.jar CsvFullRowBenchmark
+java -jar benchmark-jmh/target/benchmarks.jar \
+  'CsvFullRowProcessingBenchmark|CsvFilteredPriceSumEndToEndBenchmark|ReadyPriceSumBenchmark|ReadyFilteredPriceSumBenchmark'
 ```
 
 Override the `rowCount` JMH parameter with `-p`; the corresponding dataset must
 already exist:
 
 ```shell
-java -jar benchmark-jmh/target/benchmarks.jar CsvFullRowBenchmark -p rowCount=100000
+java -jar benchmark-jmh/target/benchmarks.jar \
+  'CsvFullRowProcessingBenchmark|CsvFilteredPriceSumEndToEndBenchmark|ReadyPriceSumBenchmark|ReadyFilteredPriceSumBenchmark' \
+  -p rowCount=100000
 ```
 
 Add JMH's GC profiler to collect allocation and garbage-collection metrics:
 
 ```shell
-java -jar benchmark-jmh/target/benchmarks.jar CsvFullRowBenchmark -p rowCount=10000 -prof gc
+java -jar benchmark-jmh/target/benchmarks.jar \
+  'CsvFullRowProcessingBenchmark|CsvFilteredPriceSumEndToEndBenchmark|ReadyPriceSumBenchmark|ReadyFilteredPriceSumBenchmark' \
+  -p rowCount=10000 \
+  -prof gc
 ```
 
 The GC profiler does not directly measure retained heap or peak heap usage.
