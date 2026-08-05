@@ -41,7 +41,6 @@ jobs:
             --testbed github-ubuntu-latest \
             --adapter java_jmh \
             --file target/jmh-smoke.json \
-            --dry-run \
             "java -jar target/benchmarks.jar \
               CsvFullRowBenchmark \
               -p rowCount=10000 \
