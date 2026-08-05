@@ -165,6 +165,11 @@ differ: notably, Eclipse Collections uses compensated summation. Results are
 validated with a small floating-point tolerance instead of requiring
 bit-identical output.
 
+This ready-data suite repeatedly traverses each already-materialized
+representation and reports its average execution time in microseconds per
+operation. Each warmup and measurement iteration lasts one second; construction
+and data generation remain outside the measured operation.
+
 Without a `rowCount` override, `ReadyPriceAverageBenchmark` runs all five
 representations at each of its four default sizes: 1,000, 100,000, 1,000,000,
 and 10,000,000 rows. Passing `-p rowCount=...` overrides the source parameter

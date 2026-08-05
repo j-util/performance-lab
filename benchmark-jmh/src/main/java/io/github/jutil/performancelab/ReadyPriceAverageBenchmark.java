@@ -17,10 +17,10 @@ import io.github.jutil.performancelab.ReadyPriceAverageStateSupport.FastUtilObje
 import io.github.jutil.performancelab.ReadyPriceAverageStateSupport.TablesawTableState;
 
 /** Price-average benchmarks over already-materialized, representation-specific data. */
-@BenchmarkMode(Mode.SingleShotTime)
-@OutputTimeUnit(TimeUnit.MILLISECONDS)
-@Warmup(iterations = 2)
-@Measurement(iterations = 3)
+@BenchmarkMode(Mode.AverageTime)
+@OutputTimeUnit(TimeUnit.MICROSECONDS)
+@Warmup(iterations = 2, time = 1, timeUnit = TimeUnit.SECONDS)
+@Measurement(iterations = 3, time = 1, timeUnit = TimeUnit.SECONDS)
 @Fork(1)
 public class ReadyPriceAverageBenchmark {
 

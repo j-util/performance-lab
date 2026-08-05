@@ -4,6 +4,9 @@ All notable changes to this repository will be documented in this file.
 
 ## Unreleased
 
+- Measure the ready-data price-average suite as repeated average-time traversal
+  in microseconds per operation, with one-second warmup and measurement
+  iterations while keeping construction outside measurement.
 - Add four configurable default sizes to the ready-data price-average benchmark
   and a manually dispatched workflow for running one benchmark suite at a time.
 - Add an in-memory average-price benchmark across complete-record JDK,
