@@ -2,3 +2,9 @@ name: Bencher Benchmarks
 
 on:
   workflow_dispatch:
+
+jobs:
+  verify-trigger:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Manual Bencher workflow is configured"
