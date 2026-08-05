@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>io.github.j-util</groupId>
+        <artifactId>performance-lab</artifactId>
+        <version>0.1.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>benchmark-core</artifactId>
+    <name>j-util Performance Lab - Benchmark Core</name>
+
+    <dependencies>
+        <dependency>
+            <groupId>io.github.j-util</groupId>
+            <artifactId>inputstream-processor-core</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.github.j-util</groupId>
+            <artifactId>columnar-projection-store</artifactId>
+            <version>${columnar-projection-store.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.github.j-util</groupId>
+            <artifactId>reduction-store</artifactId>
+            <version>${reduction-store.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-csv</artifactId>
+            <version>1.14.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <annotationProcessors>
+                        <annotationProcessor>io.github.jutil.columnarprojection.processor.ProjectionSchemaProcessor</annotationProcessor>
+                        <annotationProcessor>io.github.jutil.reductionstore.processor.ReductionProcessor</annotationProcessor>
+                    </annotationProcessors>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>io.github.j-util</groupId>
+                            <artifactId>columnar-projection-store-processor</artifactId>
+                            <version>${columnar-projection-store.version}</version>
+                        </path>
+                        <path>
+                            <groupId>io.github.j-util</groupId>
+                            <artifactId>reduction-store-processor</artifactId>
+                            <version>${reduction-store.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+</project>

@@ -13,13 +13,21 @@ must not be treated as universal performance claims.
 
 The Maven Wrapper downloads the project's Maven version automatically.
 
+## Modules
+
+- `benchmark-core` contains the shared benchmark models, deterministic data
+  generation, workload implementations, and correctness tests.
+- `benchmark-jmh` contains the OpenJDK JMH benchmark class and produces the
+  executable benchmark JAR.
+
 ## Build and test
 
 ```shell
 ./mvnw clean verify
 ```
 
-Ordinary verification tests belong under `src/test/java` and use JUnit 5.
+Ordinary verification tests belong under `benchmark-core/src/test/java` and use
+JUnit 5.
 
 ## Generate benchmark data
 
@@ -29,7 +37,7 @@ row count to the generator:
 
 ```shell
 ./mvnw clean package
-java -cp target/benchmarks.jar io.github.jutil.performancelab.CsvDatasetGenerator 1000000
+java -cp benchmark-jmh/target/benchmarks.jar io.github.jutil.performancelab.CsvDatasetGenerator 1000000
 ```
 
 This example deterministically writes 1,000,000 data rows plus a header to
@@ -38,7 +46,7 @@ the same row count produces identical CSV data. To choose another destination,
 pass it as the second argument:
 
 ```shell
-java -cp target/benchmarks.jar io.github.jutil.performancelab.CsvDatasetGenerator 1000 /tmp/benchmark.csv
+java -cp benchmark-jmh/target/benchmarks.jar io.github.jutil.performancelab.CsvDatasetGenerator 1000 /tmp/benchmark.csv
 ```
 
 Generated files under `target/` are build artifacts and must not be committed.
@@ -46,7 +54,7 @@ Generated files under `target/` are build artifacts and must not be committed.
 For a quick development run, generate the benchmark's default 10,000-row dataset:
 
 ```shell
-java -cp target/benchmarks.jar io.github.jutil.performancelab.CsvDatasetGenerator 10000
+java -cp benchmark-jmh/target/benchmarks.jar io.github.jutil.performancelab.CsvDatasetGenerator 10000
 ```
 
 ## Run the CSV benchmarks
@@ -126,20 +134,20 @@ already loaded, its starting capacity is not part of the measured scan.
 Run all methods with:
 
 ```shell
-java -jar target/benchmarks.jar CsvFullRowBenchmark
+java -jar benchmark-jmh/target/benchmarks.jar CsvFullRowBenchmark
 ```
 
 Override the `rowCount` JMH parameter with `-p`; the corresponding dataset must
 already exist:
 
 ```shell
-java -jar target/benchmarks.jar CsvFullRowBenchmark -p rowCount=100000
+java -jar benchmark-jmh/target/benchmarks.jar CsvFullRowBenchmark -p rowCount=100000
 ```
 
 Add JMH's GC profiler to collect allocation and garbage-collection metrics:
 
 ```shell
-java -jar target/benchmarks.jar CsvFullRowBenchmark -p rowCount=10000 -prof gc
+java -jar benchmark-jmh/target/benchmarks.jar CsvFullRowBenchmark -p rowCount=10000 -prof gc
 ```
 
 The GC profiler does not directly measure retained heap or peak heap usage.

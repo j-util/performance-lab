@@ -24,12 +24,12 @@ jobs:
 
       - name: Generate benchmark dataset
         run: |
-          java -cp target/benchmarks.jar \
+          java -cp benchmark-jmh/target/benchmarks.jar \
             io.github.jutil.performancelab.CsvDatasetGenerator \
             5000000
 
       - name: List JMH benchmarks
-        run: java -jar target/benchmarks.jar -l
+        run: java -jar benchmark-jmh/target/benchmarks.jar -l
 
       - name: Validate Bencher integration
         env:
@@ -41,7 +41,7 @@ jobs:
             --testbed github-ubuntu-latest \
             --adapter java_jmh \
             --file target/jmh-smoke.json \
-            "java -jar target/benchmarks.jar \
+            "java -jar benchmark-jmh/target/benchmarks.jar \
               CsvFullRowBenchmark \
               -p rowCount=5000000 \
               -wi 2 \
