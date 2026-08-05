@@ -12,9 +12,9 @@ import org.openjdk.jmh.annotations.Warmup;
 
 import io.github.jutil.performancelab.ReadyPriceAverageStateSupport.ArrayListState;
 import io.github.jutil.performancelab.ReadyPriceAverageStateSupport.ColumnarProjectionStoreState;
+import io.github.jutil.performancelab.ReadyPriceAverageStateSupport.DoubleArrayBaselineState;
 import io.github.jutil.performancelab.ReadyPriceAverageStateSupport.EclipseFastListState;
 import io.github.jutil.performancelab.ReadyPriceAverageStateSupport.FastUtilObjectArrayListState;
-import io.github.jutil.performancelab.ReadyPriceAverageStateSupport.PrimitiveArraysState;
 import io.github.jutil.performancelab.ReadyPriceAverageStateSupport.TablesawTableState;
 
 /** Price-average benchmarks over already-materialized, representation-specific data. */
@@ -41,13 +41,23 @@ public class ReadyPriceAverageBenchmark {
     }
 
     @Benchmark
+    public double eclipseFastListNaivePriceAverage(EclipseFastListState state) {
+        return ReadyPriceAverageCases.eclipseFastListNaivePriceAverage(state.rows);
+    }
+
+    @Benchmark
     public double tablesawTablePriceAverage(TablesawTableState state) {
         return ReadyPriceAverageCases.tablesawTablePriceAverage(state.table);
     }
 
     @Benchmark
-    public double primitiveArraysPriceAverage(PrimitiveArraysState state) {
-        return ReadyPriceAverageCases.primitiveArraysPriceAverage(state.prices);
+    public double tablesawTableNaivePriceAverage(TablesawTableState state) {
+        return ReadyPriceAverageCases.tablesawTableNaivePriceAverage(state.table);
+    }
+
+    @Benchmark
+    public double doubleArrayBaselinePriceAverage(DoubleArrayBaselineState state) {
+        return ReadyPriceAverageCases.doubleArrayBaselinePriceAverage(state.prices);
     }
 
     @Benchmark

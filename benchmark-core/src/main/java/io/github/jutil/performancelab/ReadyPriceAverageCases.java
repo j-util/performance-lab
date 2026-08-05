@@ -70,18 +70,15 @@ final class ReadyPriceAverageCases {
         return table;
     }
 
-    static PrimitiveArrays newPrimitiveArrays(int rowCount) {
+    static double[] newDoubleArrayBaselinePrices(int rowCount) {
         PriceTickFixtures.validateRowCount(rowCount);
-        long[] timestamps = new long[rowCount];
         double[] prices = new double[rowCount];
         for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
             PriceTick tick = PriceTickFixtures.tickAt(rowIndex);
-            timestamps[rowIndex] = tick.timestamp();
             prices[rowIndex] = tick.price();
         }
-        validateSize("Primitive arrays timestamps", rowCount, timestamps.length);
-        validateSize("Primitive arrays prices", rowCount, prices.length);
-        return new PrimitiveArrays(timestamps, prices);
+        validateSize("Double-array baseline prices", rowCount, prices.length);
+        return prices;
     }
 
     static ProjectionStore<PriceTickProjection> newColumnarProjectionStore(int rowCount) {
@@ -115,11 +112,28 @@ final class ReadyPriceAverageCases {
         return rows.sumOfDouble(PriceTick::price) / rows.size();
     }
 
+    static double eclipseFastListNaivePriceAverage(FastList<PriceTick> rows) {
+        double sum = 0.0d;
+        for (int index = 0, size = rows.size(); index < size; index++) {
+            sum += rows.get(index).price();
+        }
+        return sum / rows.size();
+    }
+
     static double tablesawTablePriceAverage(Table table) {
         return table.doubleColumn(PRICE_COLUMN).mean();
     }
 
-    static double primitiveArraysPriceAverage(double[] prices) {
+    static double tablesawTableNaivePriceAverage(Table table) {
+        DoubleColumn prices = table.doubleColumn(PRICE_COLUMN);
+        double sum = 0.0d;
+        for (int index = 0, size = prices.size(); index < size; index++) {
+            sum += prices.getDouble(index);
+        }
+        return sum / prices.size();
+    }
+
+    static double doubleArrayBaselinePriceAverage(double[] prices) {
         double sum = 0.0d;
         for (double price : prices) {
             sum += price;
@@ -165,8 +179,5 @@ final class ReadyPriceAverageCases {
             throw new IllegalStateException(
                     representation + " contains " + actual + " rows; expected " + expected);
         }
-    }
-
-    record PrimitiveArrays(long[] timestamps, double[] prices) {
     }
 }

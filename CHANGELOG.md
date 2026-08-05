@@ -4,8 +4,10 @@ All notable changes to this repository will be documented in this file.
 
 ## Unreleased
 
-- Add a complete-record, parallel primitive-array baseline to the ready-data
-  price-average benchmark.
+- Add ordinary-addition Eclipse Collections and Tablesaw variants alongside
+  their native price-average operations.
+- Simplify and rename the primitive price-average baseline as a price-only
+  `double[]` calculation baseline.
 - Measure the ready-data price-average suite as repeated average-time traversal
   in microseconds per operation, with one-second warmup and measurement
   iterations while keeping construction outside measurement.

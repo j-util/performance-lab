@@ -93,26 +93,22 @@ public final class ReadyPriceAverageStateSupport {
         }
     }
 
-    /** Retains only the parallel primitive timestamp and price arrays. */
+    /** Retains only the price array used by the double-array calculation baseline. */
     @State(Scope.Benchmark)
-    public static class PrimitiveArraysState {
+    public static class DoubleArrayBaselineState {
 
         @Param({"1000", "100000", "1000000", "10000000"})
         public int rowCount;
 
-        long[] timestamps;
         double[] prices;
 
         @Setup(Level.Trial)
         public void setup() {
-            ReadyPriceAverageCases.PrimitiveArrays arrays =
-                    ReadyPriceAverageCases.newPrimitiveArrays(rowCount);
-            timestamps = arrays.timestamps();
-            prices = arrays.prices();
+            prices = ReadyPriceAverageCases.newDoubleArrayBaselinePrices(rowCount);
             ReadyPriceAverageCases.validateAverage(
-                    "Primitive arrays",
+                    "Double-array baseline",
                     rowCount,
-                    ReadyPriceAverageCases.primitiveArraysPriceAverage(prices));
+                    ReadyPriceAverageCases.doubleArrayBaselinePriceAverage(prices));
         }
     }
 

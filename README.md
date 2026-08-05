@@ -135,57 +135,63 @@ already loaded, its starting capacity is not part of the measured scan.
 
 ### `ReadyPriceAverageBenchmark`
 
-This benchmark asks: after the same deterministic collection of complete
-`PriceTick(long timestamp, double price)` records has already been materialized,
-how long does each representation's natural efficient public operation take to
-calculate the average price?
+This benchmark asks: after deterministic input has already been materialized,
+how long do native convenient operations and identical naive arithmetic take to
+calculate the average price across the compared storage representations?
 
-Every comparator stores both timestamp and price even though the calculation
+All actual collection and store comparators retain the complete logical
+`PriceTick(long timestamp, double price)` record even though the calculation
 reads only price. `ArrayList<PriceTick>`, FastUtil
 `ObjectArrayList<PriceTick>`, and Eclipse Collections `FastList<PriceTick>`
 store records as objects. Tablesaw stores the same logical records column-wise
-in a `Table` with timestamp and price columns. The plain-Java primitive-arrays
-representation stores every complete logical record as parallel `long[]`
-timestamp and `double[]` price columns, while Columnar Projection Store stores
-both timestamp and price projections.
+in a `Table` with timestamp and price columns, while Columnar Projection Store
+stores both timestamp and price projections.
 
-The measured operation selected for each representation is:
+The ordinary-addition comparator methods are:
 
 - `ArrayList`: indexed traversal with ordinary addition, divided by list size;
 - FastUtil `ObjectArrayList`: traversal of the public `elements()` backing array
   through its logical size with ordinary addition, divided by list size;
-- Eclipse Collections `FastList`: `sumOfDouble(PriceTick::price)`, divided by
-  list size;
-- Tablesaw: the price column's native `mean()` operation on the complete table;
-- primitive arrays: direct traversal of `double[] prices` with ordinary
-  addition, divided by the array length; and
+- Eclipse Collections `FastList` naive: explicit indexed traversal of the
+  existing list with ordinary addition, divided by list size;
+- Tablesaw naive: explicit indexed traversal of the existing price
+  `DoubleColumn` with ordinary addition, divided by column size; and
 - Columnar Projection Store: price summation through its public cursor API,
   divided by store size.
 
+The native-operation methods coexist with those identical-naive-arithmetic
+comparisons:
+
+- Eclipse Collections `FastList`: native `sumOfDouble(PriceTick::price)`,
+  divided by list size; and
+- Tablesaw: the price column's native `mean()` operation on the complete table.
+
+The separate `double[]` calculation baseline contains only prices. It traverses
+that array directly with ordinary addition and divides by the array length,
+providing the lowest-abstraction reference for the measured calculation. It is
+intentionally not a complete `PriceTick` representation. This documented
+exception must not be used for full-record retained-memory-footprint claims.
+
 Construction, deterministic data generation, row-count checks, and correctness
 validation run in JMH trial setup and are excluded from measurement. Each JMH
-state retains only its own representation. Numerical algorithms are allowed to
-differ: adding the primitive-array baseline does not make all comparisons use
-identical numerical algorithms. Eclipse Collections and Tablesaw retain their
-existing native-operation semantics. Results are validated with a small
-floating-point tolerance instead of requiring bit-identical output.
-
-The primitive-arrays representation is a plain-Java, lower-overhead reference
-baseline for direct primitive-array traversal. It provides a reference point
-for quantifying the abstraction overhead of Columnar Projection Store after
-results are collected; it is not itself a performance result.
+state retains only its own representation, and the native and naive methods for
+each framework reuse the same state. Ordinary-addition implementations traverse
+the same finite prices in the same encounter order and are checked for exact
+agreement. Eclipse Collections and Tablesaw retain their existing native
+operation semantics and are validated with a small floating-point tolerance
+because their arithmetic order can differ.
 
 This ready-data suite repeatedly traverses each already-materialized
 representation and reports its average execution time in microseconds per
 operation. Each warmup and measurement iteration lasts one second; construction
 and data generation remain outside the measured operation.
 
-Without a `rowCount` override, `ReadyPriceAverageBenchmark` runs all six
-representations at each of its four default sizes: 1,000, 100,000, 1,000,000,
-and 10,000,000 rows. Passing `-p rowCount=...` overrides the source parameter
-list for that invocation, so only the requested size is run.
+Without a `rowCount` override, `ReadyPriceAverageBenchmark` runs all eight
+methods at each of its four default sizes: 1,000, 100,000, 1,000,000, and
+10,000,000 rows. Passing `-p rowCount=...` overrides the source parameter list
+for that invocation, so only the requested size is run.
 
-Run only the six price-average methods with a chosen positive row count:
+Run only the eight price-average methods with a chosen positive row count:
 
 ```shell
 java -jar benchmark-jmh/target/benchmarks.jar \

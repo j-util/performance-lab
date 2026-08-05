@@ -1,5 +1,6 @@
 package io.github.jutil.performancelab;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -31,13 +32,13 @@ class ReadyPriceAverageCasesTest {
     }
 
     @Test
-    void allRepresentationsProduceEquivalentAverageForSingleRecord() {
-        assertEquivalentRepresentations(1);
+    void allComparatorsProduceEquivalentAverageForSingleRecord() {
+        assertEquivalentComparators(1);
     }
 
     @Test
-    void allRepresentationsContainTheSameCompleteRecordsAndEquivalentAverages() {
-        assertEquivalentRepresentations(37);
+    void completeRepresentationsAndDoubleArrayBaselinePreserveFixtureData() {
+        assertEquivalentComparators(37);
     }
 
     @Test
@@ -57,7 +58,7 @@ class ReadyPriceAverageCasesTest {
                     () -> ReadyPriceAverageCases.newTablesawTable(invalidRowCount));
             assertThrows(
                     IllegalArgumentException.class,
-                    () -> ReadyPriceAverageCases.newPrimitiveArrays(invalidRowCount));
+                    () -> ReadyPriceAverageCases.newDoubleArrayBaselinePrices(invalidRowCount));
             assertThrows(
                     IllegalArgumentException.class,
                     () -> ReadyPriceAverageCases.newColumnarProjectionStore(invalidRowCount));
@@ -67,10 +68,13 @@ class ReadyPriceAverageCasesTest {
         }
     }
 
-    private static void assertEquivalentRepresentations(int rowCount) {
+    private static void assertEquivalentComparators(int rowCount) {
         List<PriceTick> expectedRows = new ArrayList<>(rowCount);
+        double[] expectedPrices = new double[rowCount];
         for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
-            expectedRows.add(PriceTickFixtures.tickAt(rowIndex));
+            PriceTick tick = PriceTickFixtures.tickAt(rowIndex);
+            expectedRows.add(tick);
+            expectedPrices[rowIndex] = tick.price();
         }
 
         ArrayList<PriceTick> arrayList = ReadyPriceAverageCases.newArrayList(rowCount);
@@ -78,8 +82,7 @@ class ReadyPriceAverageCasesTest {
                 ReadyPriceAverageCases.newFastUtilObjectArrayList(rowCount);
         FastList<PriceTick> eclipse = ReadyPriceAverageCases.newEclipseFastList(rowCount);
         Table tablesaw = ReadyPriceAverageCases.newTablesawTable(rowCount);
-        ReadyPriceAverageCases.PrimitiveArrays primitiveArrays =
-                ReadyPriceAverageCases.newPrimitiveArrays(rowCount);
+        double[] baselinePrices = ReadyPriceAverageCases.newDoubleArrayBaselinePrices(rowCount);
         ProjectionStore<PriceTickProjection> columnar =
                 ReadyPriceAverageCases.newColumnarProjectionStore(rowCount);
 
@@ -87,19 +90,30 @@ class ReadyPriceAverageCasesTest {
         assertEquals(expectedRows, new ArrayList<>(fastUtil));
         assertEquals(expectedRows, new ArrayList<>(eclipse));
         assertEquals(expectedRows, snapshot(tablesaw));
-        assertEquals(expectedRows, snapshot(primitiveArrays));
         assertEquals(expectedRows, snapshot(columnar));
+        assertArrayEquals(expectedPrices, baselinePrices);
 
         double expectedAverage = PriceTickFixtures.expectedAverage(rowCount);
         double tolerance = ReadyPriceAverageCases.toleranceFor(expectedAverage);
-        assertEquals(
-                expectedAverage,
-                ReadyPriceAverageCases.arrayListPriceAverage(arrayList),
-                tolerance);
-        assertEquals(
-                expectedAverage,
-                ReadyPriceAverageCases.fastUtilObjectArrayListPriceAverage(fastUtil),
-                tolerance);
+        double arrayListAverage = ReadyPriceAverageCases.arrayListPriceAverage(arrayList);
+        double fastUtilAverage =
+                ReadyPriceAverageCases.fastUtilObjectArrayListPriceAverage(fastUtil);
+        double eclipseNaiveAverage =
+                ReadyPriceAverageCases.eclipseFastListNaivePriceAverage(eclipse);
+        double tablesawNaiveAverage =
+                ReadyPriceAverageCases.tablesawTableNaivePriceAverage(tablesaw);
+        double columnarAverage =
+                ReadyPriceAverageCases.columnarProjectionStorePriceAverage(columnar);
+        double baselineAverage =
+                ReadyPriceAverageCases.doubleArrayBaselinePriceAverage(baselinePrices);
+
+        assertEquals(expectedAverage, arrayListAverage, tolerance);
+        assertEquals(arrayListAverage, fastUtilAverage);
+        assertEquals(arrayListAverage, eclipseNaiveAverage);
+        assertEquals(arrayListAverage, tablesawNaiveAverage);
+        assertEquals(arrayListAverage, columnarAverage);
+        assertEquals(arrayListAverage, baselineAverage);
+
         assertEquals(
                 expectedAverage,
                 ReadyPriceAverageCases.eclipseFastListPriceAverage(eclipse),
@@ -108,30 +122,6 @@ class ReadyPriceAverageCasesTest {
                 expectedAverage,
                 ReadyPriceAverageCases.tablesawTablePriceAverage(tablesaw),
                 tolerance);
-        double primitiveArraysAverage =
-                ReadyPriceAverageCases.primitiveArraysPriceAverage(primitiveArrays.prices());
-        double arrayListAverage = ReadyPriceAverageCases.arrayListPriceAverage(arrayList);
-        double columnarAverage =
-                ReadyPriceAverageCases.columnarProjectionStorePriceAverage(columnar);
-        assertEquals(expectedAverage, primitiveArraysAverage, tolerance);
-        assertEquals(arrayListAverage, primitiveArraysAverage, tolerance);
-        assertEquals(columnarAverage, primitiveArraysAverage, tolerance);
-        assertEquals(
-                expectedAverage,
-                columnarAverage,
-                tolerance);
-    }
-
-    private static List<PriceTick> snapshot(
-            ReadyPriceAverageCases.PrimitiveArrays primitiveArrays) {
-        long[] timestamps = primitiveArrays.timestamps();
-        double[] prices = primitiveArrays.prices();
-        assertEquals(timestamps.length, prices.length);
-        List<PriceTick> ticks = new ArrayList<>(timestamps.length);
-        for (int rowIndex = 0; rowIndex < timestamps.length; rowIndex++) {
-            ticks.add(new PriceTick(timestamps[rowIndex], prices[rowIndex]));
-        }
-        return ticks;
     }
 
     private static List<PriceTick> snapshot(Table table) {
