@@ -57,6 +57,9 @@ class ReadyPriceAverageCasesTest {
                     () -> ReadyPriceAverageCases.newTablesawTable(invalidRowCount));
             assertThrows(
                     IllegalArgumentException.class,
+                    () -> ReadyPriceAverageCases.newPrimitiveArrays(invalidRowCount));
+            assertThrows(
+                    IllegalArgumentException.class,
                     () -> ReadyPriceAverageCases.newColumnarProjectionStore(invalidRowCount));
             assertThrows(
                     IllegalArgumentException.class,
@@ -75,6 +78,8 @@ class ReadyPriceAverageCasesTest {
                 ReadyPriceAverageCases.newFastUtilObjectArrayList(rowCount);
         FastList<PriceTick> eclipse = ReadyPriceAverageCases.newEclipseFastList(rowCount);
         Table tablesaw = ReadyPriceAverageCases.newTablesawTable(rowCount);
+        ReadyPriceAverageCases.PrimitiveArrays primitiveArrays =
+                ReadyPriceAverageCases.newPrimitiveArrays(rowCount);
         ProjectionStore<PriceTickProjection> columnar =
                 ReadyPriceAverageCases.newColumnarProjectionStore(rowCount);
 
@@ -82,6 +87,7 @@ class ReadyPriceAverageCasesTest {
         assertEquals(expectedRows, new ArrayList<>(fastUtil));
         assertEquals(expectedRows, new ArrayList<>(eclipse));
         assertEquals(expectedRows, snapshot(tablesaw));
+        assertEquals(expectedRows, snapshot(primitiveArrays));
         assertEquals(expectedRows, snapshot(columnar));
 
         double expectedAverage = PriceTickFixtures.expectedAverage(rowCount);
@@ -102,10 +108,30 @@ class ReadyPriceAverageCasesTest {
                 expectedAverage,
                 ReadyPriceAverageCases.tablesawTablePriceAverage(tablesaw),
                 tolerance);
+        double primitiveArraysAverage =
+                ReadyPriceAverageCases.primitiveArraysPriceAverage(primitiveArrays.prices());
+        double arrayListAverage = ReadyPriceAverageCases.arrayListPriceAverage(arrayList);
+        double columnarAverage =
+                ReadyPriceAverageCases.columnarProjectionStorePriceAverage(columnar);
+        assertEquals(expectedAverage, primitiveArraysAverage, tolerance);
+        assertEquals(arrayListAverage, primitiveArraysAverage, tolerance);
+        assertEquals(columnarAverage, primitiveArraysAverage, tolerance);
         assertEquals(
                 expectedAverage,
-                ReadyPriceAverageCases.columnarProjectionStorePriceAverage(columnar),
+                columnarAverage,
                 tolerance);
+    }
+
+    private static List<PriceTick> snapshot(
+            ReadyPriceAverageCases.PrimitiveArrays primitiveArrays) {
+        long[] timestamps = primitiveArrays.timestamps();
+        double[] prices = primitiveArrays.prices();
+        assertEquals(timestamps.length, prices.length);
+        List<PriceTick> ticks = new ArrayList<>(timestamps.length);
+        for (int rowIndex = 0; rowIndex < timestamps.length; rowIndex++) {
+            ticks.add(new PriceTick(timestamps[rowIndex], prices[rowIndex]));
+        }
+        return ticks;
     }
 
     private static List<PriceTick> snapshot(Table table) {

@@ -144,8 +144,10 @@ Every comparator stores both timestamp and price even though the calculation
 reads only price. `ArrayList<PriceTick>`, FastUtil
 `ObjectArrayList<PriceTick>`, and Eclipse Collections `FastList<PriceTick>`
 store records as objects. Tablesaw stores the same logical records column-wise
-in a `Table` with timestamp and price columns, while Columnar Projection Store
-stores both timestamp and price projections.
+in a `Table` with timestamp and price columns. The plain-Java primitive-arrays
+representation stores every complete logical record as parallel `long[]`
+timestamp and `double[]` price columns, while Columnar Projection Store stores
+both timestamp and price projections.
 
 The measured operation selected for each representation is:
 
@@ -154,28 +156,36 @@ The measured operation selected for each representation is:
   through its logical size with ordinary addition, divided by list size;
 - Eclipse Collections `FastList`: `sumOfDouble(PriceTick::price)`, divided by
   list size;
-- Tablesaw: the price column's native `mean()` operation on the complete table; and
+- Tablesaw: the price column's native `mean()` operation on the complete table;
+- primitive arrays: direct traversal of `double[] prices` with ordinary
+  addition, divided by the array length; and
 - Columnar Projection Store: price summation through its public cursor API,
   divided by store size.
 
 Construction, deterministic data generation, row-count checks, and correctness
 validation run in JMH trial setup and are excluded from measurement. Each JMH
 state retains only its own representation. Numerical algorithms are allowed to
-differ: notably, Eclipse Collections uses compensated summation. Results are
-validated with a small floating-point tolerance instead of requiring
-bit-identical output.
+differ: adding the primitive-array baseline does not make all comparisons use
+identical numerical algorithms. Eclipse Collections and Tablesaw retain their
+existing native-operation semantics. Results are validated with a small
+floating-point tolerance instead of requiring bit-identical output.
+
+The primitive-arrays representation is a plain-Java, lower-overhead reference
+baseline for direct primitive-array traversal. It provides a reference point
+for quantifying the abstraction overhead of Columnar Projection Store after
+results are collected; it is not itself a performance result.
 
 This ready-data suite repeatedly traverses each already-materialized
 representation and reports its average execution time in microseconds per
 operation. Each warmup and measurement iteration lasts one second; construction
 and data generation remain outside the measured operation.
 
-Without a `rowCount` override, `ReadyPriceAverageBenchmark` runs all five
+Without a `rowCount` override, `ReadyPriceAverageBenchmark` runs all six
 representations at each of its four default sizes: 1,000, 100,000, 1,000,000,
 and 10,000,000 rows. Passing `-p rowCount=...` overrides the source parameter
 list for that invocation, so only the requested size is run.
 
-Run only the five price-average methods with a chosen positive row count:
+Run only the six price-average methods with a chosen positive row count:
 
 ```shell
 java -jar benchmark-jmh/target/benchmarks.jar \

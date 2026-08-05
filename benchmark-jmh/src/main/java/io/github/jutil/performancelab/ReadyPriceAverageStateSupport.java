@@ -93,6 +93,29 @@ public final class ReadyPriceAverageStateSupport {
         }
     }
 
+    /** Retains only the parallel primitive timestamp and price arrays. */
+    @State(Scope.Benchmark)
+    public static class PrimitiveArraysState {
+
+        @Param({"1000", "100000", "1000000", "10000000"})
+        public int rowCount;
+
+        long[] timestamps;
+        double[] prices;
+
+        @Setup(Level.Trial)
+        public void setup() {
+            ReadyPriceAverageCases.PrimitiveArrays arrays =
+                    ReadyPriceAverageCases.newPrimitiveArrays(rowCount);
+            timestamps = arrays.timestamps();
+            prices = arrays.prices();
+            ReadyPriceAverageCases.validateAverage(
+                    "Primitive arrays",
+                    rowCount,
+                    ReadyPriceAverageCases.primitiveArraysPriceAverage(prices));
+        }
+    }
+
     /** Retains only the Columnar Projection Store representation. */
     @State(Scope.Benchmark)
     public static class ColumnarProjectionStoreState {

@@ -70,6 +70,20 @@ final class ReadyPriceAverageCases {
         return table;
     }
 
+    static PrimitiveArrays newPrimitiveArrays(int rowCount) {
+        PriceTickFixtures.validateRowCount(rowCount);
+        long[] timestamps = new long[rowCount];
+        double[] prices = new double[rowCount];
+        for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
+            PriceTick tick = PriceTickFixtures.tickAt(rowIndex);
+            timestamps[rowIndex] = tick.timestamp();
+            prices[rowIndex] = tick.price();
+        }
+        validateSize("Primitive arrays timestamps", rowCount, timestamps.length);
+        validateSize("Primitive arrays prices", rowCount, prices.length);
+        return new PrimitiveArrays(timestamps, prices);
+    }
+
     static ProjectionStore<PriceTickProjection> newColumnarProjectionStore(int rowCount) {
         PriceTickFixtures.validateRowCount(rowCount);
         ProjectionStore<PriceTickProjection> store =
@@ -103,6 +117,14 @@ final class ReadyPriceAverageCases {
 
     static double tablesawTablePriceAverage(Table table) {
         return table.doubleColumn(PRICE_COLUMN).mean();
+    }
+
+    static double primitiveArraysPriceAverage(double[] prices) {
+        double sum = 0.0d;
+        for (double price : prices) {
+            sum += price;
+        }
+        return sum / prices.length;
     }
 
     static double columnarProjectionStorePriceAverage(
@@ -143,5 +165,8 @@ final class ReadyPriceAverageCases {
             throw new IllegalStateException(
                     representation + " contains " + actual + " rows; expected " + expected);
         }
+    }
+
+    record PrimitiveArrays(long[] timestamps, double[] prices) {
     }
 }
