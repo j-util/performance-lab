@@ -16,3 +16,8 @@ jobs:
       - uses: bencherdev/bencher@main
       - name: Build benchmark project
         run: ./mvnw --batch-mode --no-transfer-progress clean package -DskipTests
+      - name: Generate benchmark dataset
+        run: |
+          java -cp target/benchmarks.jar \
+            io.github.jutil.performancelab.CsvDatasetGenerator \
+            10000
