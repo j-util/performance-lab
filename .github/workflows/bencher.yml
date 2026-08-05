@@ -1,0 +1,4 @@
+name: Bencher Benchmarks
+
+on:
+  workflow_dispatch:
