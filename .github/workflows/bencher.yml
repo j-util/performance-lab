@@ -7,4 +7,4 @@ jobs:
   verify-trigger:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "Manual Bencher workflow is configured"
+      - uses: actions/checkout@v4
