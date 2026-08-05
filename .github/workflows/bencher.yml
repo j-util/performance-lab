@@ -6,20 +6,39 @@ on:
 jobs:
   verify-trigger:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v5
+
       - uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: "26"
           cache: maven
+
       - uses: bencherdev/bencher@main
+
       - name: Build benchmark project
         run: ./mvnw --batch-mode --no-transfer-progress clean package -DskipTests
+
       - name: Generate benchmark dataset
         run: |
           java -cp target/benchmarks.jar \
             io.github.jutil.performancelab.CsvDatasetGenerator \
             10000
+
       - name: List JMH benchmarks
         run: java -jar target/benchmarks.jar -l
+
+      - name: Run JMH smoke benchmark
+        run: |
+          java -jar target/benchmarks.jar \
+            CsvFullRowBenchmark \
+            -p rowCount=10000 \
+            -wi 1 \
+            -i 1 \
+            -f 1 \
+            -r 1s \
+            -w 1s \
+            -rf json \
+            -rff target/jmh-smoke.json
