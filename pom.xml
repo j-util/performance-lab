@@ -32,6 +32,9 @@
 
         <jmh.version>1.37</jmh.version>
         <junit.version>5.14.3</junit.version>
+        <fastutil.version>8.5.19</fastutil.version>
+        <eclipse-collections.version>13.0.0</eclipse-collections.version>
+        <tablesaw.version>0.44.4</tablesaw.version>
 
         <maven.compiler.plugin.version>3.15.0</maven.compiler.plugin.version>
         <maven.shade.plugin.version>3.6.2</maven.shade.plugin.version>

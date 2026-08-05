@@ -57,10 +57,11 @@ For a quick development run, generate the benchmark's default 10,000-row dataset
 java -cp benchmark-jmh/target/benchmarks.jar io.github.jutil.performancelab.CsvDatasetGenerator 10000
 ```
 
-## Run the CSV benchmarks
+## Run the benchmarks
 
-The 15 benchmark methods are organized into four classes so that each class
-contains only directly comparable operations.
+The original 15 benchmark methods are organized into four classes so that each
+class contains only directly comparable operations. A fifth class adds the
+ready-data price-average comparison described below.
 
 ### `CsvFullRowProcessingBenchmark`
 
@@ -132,19 +133,62 @@ The initial-capacity comparison is intentionally limited to the end-to-end
 benchmarks because it measures construction and growth cost. Once a structure is
 already loaded, its starting capacity is not part of the measured scan.
 
+### `ReadyPriceAverageBenchmark`
+
+This benchmark asks: after the same deterministic collection of complete
+`PriceTick(long timestamp, double price)` records has already been materialized,
+how long does each representation's natural efficient public operation take to
+calculate the average price?
+
+Every comparator stores both timestamp and price even though the calculation
+reads only price. `ArrayList<PriceTick>`, FastUtil
+`ObjectArrayList<PriceTick>`, and Eclipse Collections `FastList<PriceTick>`
+store records as objects. Tablesaw stores the same logical records column-wise
+in a `Table` with timestamp and price columns, while Columnar Projection Store
+stores both timestamp and price projections.
+
+The measured operation selected for each representation is:
+
+- `ArrayList`: indexed traversal with ordinary addition, divided by list size;
+- FastUtil `ObjectArrayList`: traversal of the public `elements()` backing array
+  through its logical size with ordinary addition, divided by list size;
+- Eclipse Collections `FastList`: `sumOfDouble(PriceTick::price)`, divided by
+  list size;
+- Tablesaw: the price column's native `mean()` operation on the complete table; and
+- Columnar Projection Store: price summation through its public cursor API,
+  divided by store size.
+
+Construction, deterministic data generation, row-count checks, and correctness
+validation run in JMH trial setup and are excluded from measurement. Each JMH
+state retains only its own representation. Numerical algorithms are allowed to
+differ: notably, Eclipse Collections uses compensated summation. Results are
+validated with a small floating-point tolerance instead of requiring
+bit-identical output.
+
+Run only the five price-average methods with a chosen positive row count:
+
+```shell
+java -jar benchmark-jmh/target/benchmarks.jar \
+  ReadyPriceAverageBenchmark \
+  -p rowCount=10000
+```
+
+This in-memory benchmark generates its deterministic records directly by row
+index and does not read or generate a CSV dataset.
+
 Run all methods with:
 
 ```shell
 java -jar benchmark-jmh/target/benchmarks.jar \
-  'CsvFullRowProcessingBenchmark|CsvFilteredPriceSumEndToEndBenchmark|ReadyPriceSumBenchmark|ReadyFilteredPriceSumBenchmark'
+  'CsvFullRowProcessingBenchmark|CsvFilteredPriceSumEndToEndBenchmark|ReadyPriceSumBenchmark|ReadyFilteredPriceSumBenchmark|ReadyPriceAverageBenchmark'
 ```
 
 Override the `rowCount` JMH parameter with `-p`; the corresponding dataset must
-already exist:
+already exist for the CSV-backed benchmarks:
 
 ```shell
 java -jar benchmark-jmh/target/benchmarks.jar \
-  'CsvFullRowProcessingBenchmark|CsvFilteredPriceSumEndToEndBenchmark|ReadyPriceSumBenchmark|ReadyFilteredPriceSumBenchmark' \
+  'CsvFullRowProcessingBenchmark|CsvFilteredPriceSumEndToEndBenchmark|ReadyPriceSumBenchmark|ReadyFilteredPriceSumBenchmark|ReadyPriceAverageBenchmark' \
   -p rowCount=100000
 ```
 
@@ -152,7 +196,7 @@ Add JMH's GC profiler to collect allocation and garbage-collection metrics:
 
 ```shell
 java -jar benchmark-jmh/target/benchmarks.jar \
-  'CsvFullRowProcessingBenchmark|CsvFilteredPriceSumEndToEndBenchmark|ReadyPriceSumBenchmark|ReadyFilteredPriceSumBenchmark' \
+  'CsvFullRowProcessingBenchmark|CsvFilteredPriceSumEndToEndBenchmark|ReadyPriceSumBenchmark|ReadyFilteredPriceSumBenchmark|ReadyPriceAverageBenchmark' \
   -p rowCount=10000 \
   -prof gc
 ```

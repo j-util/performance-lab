@@ -15,6 +15,24 @@
 
     <dependencies>
         <dependency>
+            <groupId>it.unimi.dsi</groupId>
+            <artifactId>fastutil</artifactId>
+            <version>${fastutil.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.eclipse.collections</groupId>
+            <artifactId>eclipse-collections</artifactId>
+            <version>${eclipse-collections.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>tech.tablesaw</groupId>
+            <artifactId>tablesaw-core</artifactId>
+            <version>${tablesaw.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>io.github.j-util</groupId>
             <artifactId>inputstream-processor-core</artifactId>
             <version>1.0.0</version>
