@@ -60,8 +60,8 @@ java -cp benchmark-jmh/target/benchmarks.jar io.github.jutil.performancelab.CsvD
 ## Run the benchmarks
 
 The original 15 benchmark methods are organized into four classes so that each
-class contains only directly comparable operations. A fifth class adds the
-ready-data price-average comparison described below.
+class contains only directly comparable operations. Two separate ready-data
+classes add the narrow and wide average comparisons described below.
 
 ### `CsvFullRowProcessingBenchmark`
 
@@ -202,11 +202,48 @@ java -jar benchmark-jmh/target/benchmarks.jar \
 This in-memory benchmark generates its deterministic records directly by row
 index and does not read or generate a CSV dataset.
 
+### `ReadyMarketDataSnapshotAverageBenchmark`
+
+This separate wide-record suite performs the same ready-data average operation
+over a realistic `MarketDataSnapshot` containing capture time, symbol, last
+trade price and size, best bid and ask prices, and best bid and ask sizes. Each
+fixture row is the state immediately after a distinct completed trade, and the
+measured operation reads only `lastTradePrice`.
+
+Unlike the narrow `PriceTick(timestamp, price)` suite, every complete comparator
+in this suite retains all eight snapshot fields. This applies to
+`ArrayList<MarketDataSnapshot>`, FastUtil
+`ObjectArrayList<MarketDataSnapshot>`, Eclipse Collections
+`FastList<MarketDataSnapshot>`, Tablesaw `Table`, and Columnar Projection Store.
+The representations therefore compare the same complete logical records even
+though the calculation selects a single field.
+
+As in the narrow suite, the separate `double[]` baseline contains only the
+generated `lastTradePrice` values. It is a calculation-only reference and must
+not be included in complete-record retained-memory comparisons. Eclipse
+Collections' native `sumOfDouble()` method and Tablesaw's native `mean()` method
+retain their richer numerical semantics; their results can differ slightly
+from the ordinary encounter-order additions used by the other methods.
+
+The suite uses the same JMH configuration and default row counts as
+`ReadyPriceAverageBenchmark`. Run all eight wide-record methods at one positive
+row count with:
+
+```shell
+java -jar benchmark-jmh/target/benchmarks.jar \
+  ReadyMarketDataSnapshotAverageBenchmark \
+  -p rowCount=10000
+```
+
+Construction, fixture generation, and validation remain outside measured time.
+No performance conclusion is claimed before controlled results are collected
+on the intended hardware and row counts.
+
 Run all methods with:
 
 ```shell
 java -jar benchmark-jmh/target/benchmarks.jar \
-  'CsvFullRowProcessingBenchmark|CsvFilteredPriceSumEndToEndBenchmark|ReadyPriceSumBenchmark|ReadyFilteredPriceSumBenchmark|ReadyPriceAverageBenchmark'
+  'CsvFullRowProcessingBenchmark|CsvFilteredPriceSumEndToEndBenchmark|ReadyPriceSumBenchmark|ReadyFilteredPriceSumBenchmark|ReadyPriceAverageBenchmark|ReadyMarketDataSnapshotAverageBenchmark'
 ```
 
 Override the `rowCount` JMH parameter with `-p`; the corresponding dataset must
@@ -214,7 +251,7 @@ already exist for the CSV-backed benchmarks:
 
 ```shell
 java -jar benchmark-jmh/target/benchmarks.jar \
-  'CsvFullRowProcessingBenchmark|CsvFilteredPriceSumEndToEndBenchmark|ReadyPriceSumBenchmark|ReadyFilteredPriceSumBenchmark|ReadyPriceAverageBenchmark' \
+  'CsvFullRowProcessingBenchmark|CsvFilteredPriceSumEndToEndBenchmark|ReadyPriceSumBenchmark|ReadyFilteredPriceSumBenchmark|ReadyPriceAverageBenchmark|ReadyMarketDataSnapshotAverageBenchmark' \
   -p rowCount=100000
 ```
 
@@ -222,7 +259,7 @@ Add JMH's GC profiler to collect allocation and garbage-collection metrics:
 
 ```shell
 java -jar benchmark-jmh/target/benchmarks.jar \
-  'CsvFullRowProcessingBenchmark|CsvFilteredPriceSumEndToEndBenchmark|ReadyPriceSumBenchmark|ReadyFilteredPriceSumBenchmark|ReadyPriceAverageBenchmark' \
+  'CsvFullRowProcessingBenchmark|CsvFilteredPriceSumEndToEndBenchmark|ReadyPriceSumBenchmark|ReadyFilteredPriceSumBenchmark|ReadyPriceAverageBenchmark|ReadyMarketDataSnapshotAverageBenchmark' \
   -p rowCount=10000 \
   -prof gc
 ```

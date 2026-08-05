@@ -4,6 +4,8 @@ All notable changes to this repository will be documented in this file.
 
 ## Unreleased
 
+- Add a separate ready-data average benchmark over complete eight-field market
+  data snapshots while retaining a calculation-only last-trade-price baseline.
 - Add ordinary-addition Eclipse Collections and Tablesaw variants alongside
   their native price-average operations.
 - Simplify and rename the primitive price-average baseline as a price-only
