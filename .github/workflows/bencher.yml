@@ -30,15 +30,24 @@ jobs:
       - name: List JMH benchmarks
         run: java -jar target/benchmarks.jar -l
 
-      - name: Run JMH smoke benchmark
+      - name: Validate Bencher integration
+        env:
+          BENCHER_API_KEY: ${{ secrets.BENCHER_API_KEY }}
         run: |
-          java -jar target/benchmarks.jar \
-            CsvFullRowBenchmark \
-            -p rowCount=10000 \
-            -wi 1 \
-            -i 1 \
-            -f 1 \
-            -r 1s \
-            -w 1s \
-            -rf json \
-            -rff target/jmh-smoke.json
+          bencher run \
+            --project performance-lab \
+            --branch bencher-integration \
+            --testbed github-ubuntu-latest \
+            --adapter java_jmh \
+            --file target/jmh-smoke.json \
+            --dry-run \
+            "java -jar target/benchmarks.jar \
+              CsvFullRowBenchmark \
+              -p rowCount=10000 \
+              -wi 1 \
+              -i 1 \
+              -f 1 \
+              -r 1s \
+              -w 1s \
+              -rf json \
+              -rff target/jmh-smoke.json"
