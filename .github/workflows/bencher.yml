@@ -45,7 +45,7 @@ jobs:
               CsvFullRowBenchmark \
               -p rowCount=10000 \
               -wi 1 \
-              -i 1 \
+              -i 3 \
               -f 1 \
               -r 1s \
               -w 1s \
