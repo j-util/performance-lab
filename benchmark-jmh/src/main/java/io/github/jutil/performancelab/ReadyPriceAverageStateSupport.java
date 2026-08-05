@@ -23,7 +23,7 @@ public final class ReadyPriceAverageStateSupport {
     @State(Scope.Benchmark)
     public static class ArrayListState {
 
-        @Param({"10000"})
+        @Param({"1000", "100000", "1000000", "10000000"})
         public int rowCount;
 
         ArrayList<PriceTick> rows;
@@ -40,7 +40,7 @@ public final class ReadyPriceAverageStateSupport {
     @State(Scope.Benchmark)
     public static class FastUtilObjectArrayListState {
 
-        @Param({"10000"})
+        @Param({"1000", "100000", "1000000", "10000000"})
         public int rowCount;
 
         ObjectArrayList<PriceTick> rows;
@@ -59,7 +59,7 @@ public final class ReadyPriceAverageStateSupport {
     @State(Scope.Benchmark)
     public static class EclipseFastListState {
 
-        @Param({"10000"})
+        @Param({"1000", "100000", "1000000", "10000000"})
         public int rowCount;
 
         FastList<PriceTick> rows;
@@ -78,7 +78,7 @@ public final class ReadyPriceAverageStateSupport {
     @State(Scope.Benchmark)
     public static class TablesawTableState {
 
-        @Param({"10000"})
+        @Param({"1000", "100000", "1000000", "10000000"})
         public int rowCount;
 
         Table table;
@@ -97,7 +97,7 @@ public final class ReadyPriceAverageStateSupport {
     @State(Scope.Benchmark)
     public static class ColumnarProjectionStoreState {
 
-        @Param({"10000"})
+        @Param({"1000", "100000", "1000000", "10000000"})
         public int rowCount;
 
         ProjectionStore<PriceTickProjection> store;

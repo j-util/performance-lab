@@ -4,6 +4,8 @@ All notable changes to this repository will be documented in this file.
 
 ## Unreleased
 
+- Add four configurable default sizes to the ready-data price-average benchmark
+  and a manually dispatched workflow for running one benchmark suite at a time.
 - Add an in-memory average-price benchmark across complete-record JDK,
   FastUtil, Eclipse Collections, Tablesaw, and Columnar Projection Store
   representations.

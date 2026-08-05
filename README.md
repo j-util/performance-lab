@@ -165,6 +165,11 @@ differ: notably, Eclipse Collections uses compensated summation. Results are
 validated with a small floating-point tolerance instead of requiring
 bit-identical output.
 
+Without a `rowCount` override, `ReadyPriceAverageBenchmark` runs all five
+representations at each of its four default sizes: 1,000, 100,000, 1,000,000,
+and 10,000,000 rows. Passing `-p rowCount=...` overrides the source parameter
+list for that invocation, so only the requested size is run.
+
 Run only the five price-average methods with a chosen positive row count:
 
 ```shell
@@ -207,3 +212,25 @@ Dataset generation is separate and unmeasured for all categories. JMH warmup
 means filesystem and operating-system page-cache effects may be present in the
 end-to-end comparisons. No performance conclusions should be drawn without
 running controlled experiments on the intended hardware and dataset sizes.
+
+## Run a benchmark manually on GitHub Actions
+
+The `Manual Benchmarks` workflow is a manually dispatched, artifact-producing
+alternative to the Bencher workflow. Choose one suite, one supported row count,
+and one execution preset. Each workflow run maps the suite to exactly one
+existing benchmark class, generates a CSV dataset only when that class requires
+one, and uploads the JMH JSON results together with commit, input, command, Java,
+Maven, operating-system, and CPU metadata. The in-memory
+`ready-price-average` suite never uses a CSV dataset.
+
+The presets control JMH execution as follows:
+
+- `smoke`: 1 warmup iteration, 1 measurement iteration, and 1 fork;
+- `default`: 2 warmup iterations, 3 measurement iterations, and 1 fork;
+- `extended`: 5 warmup iterations, 10 measurement iterations, and 2 forks.
+
+One workflow run executes one comparable benchmark class. Results from a
+GitHub-hosted runner are suitable for comparing methods within that same
+controlled run. Separate workflow runs may be scheduled on different hardware,
+so their results should not be treated as directly comparable without accounting
+for the recorded environment metadata.
