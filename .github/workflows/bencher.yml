@@ -37,7 +37,7 @@ jobs:
         run: |
           bencher run \
             --project performance-lab \
-            --branch bencher-integration \
+            --branch "${GITHUB_REF_NAME}" \
             --testbed github-ubuntu-latest \
             --adapter java_jmh \
             --file target/jmh-smoke.json \
