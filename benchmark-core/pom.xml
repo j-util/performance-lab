@@ -33,6 +33,18 @@
         </dependency>
 
         <dependency>
+            <groupId>org.dflib</groupId>
+            <artifactId>dflib</artifactId>
+            <version>${dflib.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.carrotsearch</groupId>
+            <artifactId>hppc</artifactId>
+            <version>${hppc.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>io.github.j-util</groupId>
             <artifactId>inputstream-processor-core</artifactId>
             <version>1.0.0</version>

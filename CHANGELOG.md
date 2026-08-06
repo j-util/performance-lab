@@ -4,6 +4,9 @@ All notable changes to this repository will be documented in this file.
 
 ## Unreleased
 
+- Add complete eight-field DFLib DataFrame and manually assembled HPPC primitive
+  column comparators to the ready market-data snapshot average suite, including
+  DFLib native and ordinary-addition calculations.
 - Add MemorySegment rows, Chronicle Values over direct Chronicle Bytes rows,
   and Apache Arrow vectors to the complete-snapshot ready-data average suite,
   with deterministic native-resource teardown and correctness coverage.

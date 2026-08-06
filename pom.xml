@@ -35,6 +35,8 @@
         <fastutil.version>8.5.19</fastutil.version>
         <eclipse-collections.version>13.0.0</eclipse-collections.version>
         <tablesaw.version>0.44.4</tablesaw.version>
+        <dflib.version>1.3.0</dflib.version>
+        <hppc.version>0.10.0</hppc.version>
         <chronicle.bom.version>2026.22</chronicle.bom.version>
         <arrow.version>19.0.0</arrow.version>
 

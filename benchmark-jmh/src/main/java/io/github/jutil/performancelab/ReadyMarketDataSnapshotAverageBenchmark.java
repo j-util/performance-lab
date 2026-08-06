@@ -15,8 +15,10 @@ import io.github.jutil.performancelab.ReadyMarketDataSnapshotAverageStateSupport
 import io.github.jutil.performancelab.ReadyMarketDataSnapshotAverageStateSupport.ChronicleValuesBytesRowState;
 import io.github.jutil.performancelab.ReadyMarketDataSnapshotAverageStateSupport.ColumnarProjectionStoreState;
 import io.github.jutil.performancelab.ReadyMarketDataSnapshotAverageStateSupport.DoubleArrayBaselineState;
+import io.github.jutil.performancelab.ReadyMarketDataSnapshotAverageStateSupport.DflibDataFrameState;
 import io.github.jutil.performancelab.ReadyMarketDataSnapshotAverageStateSupport.EclipseFastListState;
 import io.github.jutil.performancelab.ReadyMarketDataSnapshotAverageStateSupport.FastUtilObjectArrayListState;
+import io.github.jutil.performancelab.ReadyMarketDataSnapshotAverageStateSupport.HppcColumnarState;
 import io.github.jutil.performancelab.ReadyMarketDataSnapshotAverageStateSupport.MemorySegmentRowState;
 import io.github.jutil.performancelab.ReadyMarketDataSnapshotAverageStateSupport.TablesawTableState;
 
@@ -60,6 +62,24 @@ public class ReadyMarketDataSnapshotAverageBenchmark {
     public double tablesawTableNaiveLastTradePriceAverage(TablesawTableState state) {
         return ReadyMarketDataSnapshotAverageCases
                 .tablesawTableNaiveLastTradePriceAverage(state.table);
+    }
+
+    @Benchmark
+    public double dflibDataFrameLastTradePriceAverage(DflibDataFrameState state) {
+        return ReadyMarketDataSnapshotAverageCases
+                .dflibDataFrameLastTradePriceAverage(state.dataFrame);
+    }
+
+    @Benchmark
+    public double dflibDataFrameNaiveLastTradePriceAverage(DflibDataFrameState state) {
+        return ReadyMarketDataSnapshotAverageCases
+                .dflibDataFrameNaiveLastTradePriceAverage(state.dataFrame);
+    }
+
+    @Benchmark
+    public double hppcColumnarLastTradePriceAverage(HppcColumnarState state) {
+        return ReadyMarketDataSnapshotAverageCases
+                .hppcColumnarLastTradePriceAverage(state.columns);
     }
 
     @Benchmark

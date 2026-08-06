@@ -2,6 +2,11 @@ package io.github.jutil.performancelab;
 
 import java.util.ArrayList;
 
+import org.dflib.DataFrame;
+import org.dflib.DoubleSeries;
+import org.dflib.builder.DoubleAccum;
+import org.dflib.builder.LongAccum;
+import org.dflib.builder.ObjectAccum;
 import org.eclipse.collections.impl.list.mutable.FastList;
 
 import io.github.jutil.columnarprojection.ProjectionCursor;
@@ -96,6 +101,59 @@ final class ReadyMarketDataSnapshotAverageCases {
         return table;
     }
 
+    static DataFrame newDflibDataFrame(int rowCount) {
+        MarketDataSnapshotFixtures.validateRowCount(rowCount);
+        LongAccum capturedAtNanos = new LongAccum(rowCount);
+        ObjectAccum<String> symbols = new ObjectAccum<>(rowCount);
+        DoubleAccum lastTradePrices = new DoubleAccum(rowCount);
+        DoubleAccum lastTradeSizes = new DoubleAccum(rowCount);
+        DoubleAccum bidPrices = new DoubleAccum(rowCount);
+        DoubleAccum askPrices = new DoubleAccum(rowCount);
+        DoubleAccum bidSizes = new DoubleAccum(rowCount);
+        DoubleAccum askSizes = new DoubleAccum(rowCount);
+
+        for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
+            MarketDataSnapshot snapshot = MarketDataSnapshotFixtures.snapshotAt(rowIndex);
+            capturedAtNanos.pushLong(snapshot.capturedAtNanos());
+            symbols.push(snapshot.symbol());
+            lastTradePrices.pushDouble(snapshot.lastTradePrice());
+            lastTradeSizes.pushDouble(snapshot.lastTradeSize());
+            bidPrices.pushDouble(snapshot.bidPrice());
+            askPrices.pushDouble(snapshot.askPrice());
+            bidSizes.pushDouble(snapshot.bidSize());
+            askSizes.pushDouble(snapshot.askSize());
+        }
+
+        DataFrame dataFrame = DataFrame.byColumn(
+                        CAPTURED_AT_NANOS_COLUMN,
+                        SYMBOL_COLUMN,
+                        LAST_TRADE_PRICE_COLUMN,
+                        LAST_TRADE_SIZE_COLUMN,
+                        BID_PRICE_COLUMN,
+                        ASK_PRICE_COLUMN,
+                        BID_SIZE_COLUMN,
+                        ASK_SIZE_COLUMN)
+                .of(
+                        capturedAtNanos.toSeries(),
+                        symbols.toSeries(),
+                        lastTradePrices.toSeries(),
+                        lastTradeSizes.toSeries(),
+                        bidPrices.toSeries(),
+                        askPrices.toSeries(),
+                        bidSizes.toSeries(),
+                        askSizes.toSeries());
+        validateSize("DFLib DataFrame", rowCount, dataFrame.height());
+        if (dataFrame.width() != 8) {
+            throw new IllegalStateException(
+                    "DFLib DataFrame contains " + dataFrame.width() + " columns; expected 8");
+        }
+        return dataFrame;
+    }
+
+    static HppcMarketDataSnapshotColumns newHppcColumns(int rowCount) {
+        return HppcMarketDataSnapshotColumns.fromFixture(rowCount);
+    }
+
     /**
      * Creates the calculation-only last-trade-price baseline. Like the narrow price-average
      * suite's baseline, this is deliberately not a complete-record representation.
@@ -175,6 +233,24 @@ final class ReadyMarketDataSnapshotAverageCases {
             sum += lastTradePrices.getDouble(index);
         }
         return sum / lastTradePrices.size();
+    }
+
+    static double dflibDataFrameLastTradePriceAverage(DataFrame dataFrame) {
+        return dataFrame.getColumn(LAST_TRADE_PRICE_COLUMN).castAsDouble().avg();
+    }
+
+    static double dflibDataFrameNaiveLastTradePriceAverage(DataFrame dataFrame) {
+        DoubleSeries lastTradePrices =
+                dataFrame.getColumn(LAST_TRADE_PRICE_COLUMN).castAsDouble();
+        double sum = 0.0d;
+        for (int index = 0, rowCount = dataFrame.height(); index < rowCount; index++) {
+            sum += lastTradePrices.getDouble(index);
+        }
+        return sum / dataFrame.height();
+    }
+
+    static double hppcColumnarLastTradePriceAverage(HppcMarketDataSnapshotColumns columns) {
+        return columns.lastTradePriceAverage();
     }
 
     static double columnarProjectionStoreLastTradePriceAverage(

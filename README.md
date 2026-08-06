@@ -220,7 +220,8 @@ into four categories:
 - off-heap row records: a raw JDK `MemorySegment` baseline with a fixed-width
   64-byte row layout, and typed Chronicle Values flyweights over consecutive
   direct Chronicle Bytes records;
-- on-heap columnar storage: Tablesaw `Table` and Columnar Projection Store; and
+- on-heap columnar storage: Tablesaw `Table`, a DFLib `DataFrame`, Columnar
+  Projection Store, and complete manually assembled HPPC primitive columns; and
 - off-heap columnar storage: an Apache Arrow `VectorSchemaRoot` containing one
   vector for each snapshot field.
 
@@ -235,12 +236,26 @@ complete eight-field snapshot and release native resources at JMH trial teardown
 The representations therefore compare the same complete logical records even
 though the calculation selects a single field.
 
+The DFLib comparator is one complete in-memory columnar `DataFrame` containing
+one long series, one String series, and six double series. Its native method
+delegates average calculation to DFLib's public `DoubleSeries.avg()` operation,
+while its naive method indexes that same retained `lastTradePrice` series and
+performs ordinary encounter-order addition. The HPPC comparator is not a
+DataFrame: it is a complete manual column layout made from one `LongArrayList`,
+one `ObjectArrayList<String>`, and six `DoubleArrayList` instances. Its measured
+method indexes only the retained `lastTradePrice` list with ordinary addition.
+Both representations retain all eight snapshot fields, while the measured
+operation reads only `lastTradePrice`.
+
 As in the narrow suite, the separate `double[]` baseline contains only the
 generated `lastTradePrice` values. It is a calculation-only reference and must
 not be included in complete-record retained-memory comparisons. Eclipse
-Collections' native `sumOfDouble()` method and Tablesaw's native `mean()` method
-retain their richer numerical semantics; their results can differ slightly
-from the ordinary encounter-order additions used by the other methods.
+Collections' native `sumOfDouble()`, Tablesaw's native `mean()`, and DFLib's
+native `avg()` methods retain their framework-defined numerical semantics; the
+naive companion methods define ordinary encounter-order addition explicitly.
+Native results are therefore validated with the existing small floating-point
+tolerance instead of making their arithmetic implementation part of this
+benchmark's contract.
 
 The suite measures hot sequential traversal of `lastTradePrice`; every ordinary
 implementation adds doubles in encounter order and divides by its logical row
@@ -251,7 +266,7 @@ assumed to be faster, and no performance claim is made before results are
 collected.
 
 The suite uses the same JMH configuration and default row counts as
-`ReadyPriceAverageBenchmark`. Run all eleven wide-record methods at one positive
+`ReadyPriceAverageBenchmark`. Run all fourteen wide-record methods at one positive
 row count with:
 
 ```shell
@@ -261,8 +276,8 @@ java -jar benchmark-jmh/target/benchmarks.jar \
 ```
 
 Construction, fixture generation, and validation remain outside measured time.
-No performance conclusion is claimed before controlled results are collected
-on the intended hardware and row counts.
+No comparative performance or retained-memory conclusion is claimed before
+controlled results are collected on the intended hardware and row counts.
 
 Chronicle Values performs runtime value-class generation and Apache Arrow's
 Netty allocator accesses direct-buffer internals. Maven tests configure the

@@ -2,6 +2,7 @@ package io.github.jutil.performancelab;
 
 import java.util.ArrayList;
 
+import org.dflib.DataFrame;
 import org.eclipse.collections.impl.list.mutable.FastList;
 import org.openjdk.jmh.annotations.Level;
 import org.openjdk.jmh.annotations.Param;
@@ -96,6 +97,51 @@ public final class ReadyMarketDataSnapshotAverageStateSupport {
                     rowCount,
                     ReadyMarketDataSnapshotAverageCases
                             .tablesawTableLastTradePriceAverage(table));
+        }
+    }
+
+    /** Retains only one complete DFLib DataFrame shared by its native and naive methods. */
+    @State(Scope.Benchmark)
+    public static class DflibDataFrameState {
+
+        @Param({"1000", "100000", "1000000", "10000000"})
+        public int rowCount;
+
+        DataFrame dataFrame;
+
+        @Setup(Level.Trial)
+        public void setup() {
+            dataFrame = ReadyMarketDataSnapshotAverageCases.newDflibDataFrame(rowCount);
+            ReadyMarketDataSnapshotAverageCases.validateAverage(
+                    "DFLib DataFrame native",
+                    rowCount,
+                    ReadyMarketDataSnapshotAverageCases
+                            .dflibDataFrameLastTradePriceAverage(dataFrame));
+            ReadyMarketDataSnapshotAverageCases.validateAverage(
+                    "DFLib DataFrame naive",
+                    rowCount,
+                    ReadyMarketDataSnapshotAverageCases
+                            .dflibDataFrameNaiveLastTradePriceAverage(dataFrame));
+        }
+    }
+
+    /** Retains only one complete manually assembled HPPC column representation. */
+    @State(Scope.Benchmark)
+    public static class HppcColumnarState {
+
+        @Param({"1000", "100000", "1000000", "10000000"})
+        public int rowCount;
+
+        HppcMarketDataSnapshotColumns columns;
+
+        @Setup(Level.Trial)
+        public void setup() {
+            columns = ReadyMarketDataSnapshotAverageCases.newHppcColumns(rowCount);
+            ReadyMarketDataSnapshotAverageCases.validateAverage(
+                    "HPPC columns",
+                    rowCount,
+                    ReadyMarketDataSnapshotAverageCases
+                            .hppcColumnarLastTradePriceAverage(columns));
         }
     }
 
