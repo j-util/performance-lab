@@ -8,6 +8,7 @@ import org.openjdk.jmh.annotations.Param;
 import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
+import org.openjdk.jmh.annotations.TearDown;
 
 import io.github.jutil.columnarprojection.ProjectionStore;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
@@ -136,6 +137,106 @@ public final class ReadyMarketDataSnapshotAverageStateSupport {
                     rowCount,
                     ReadyMarketDataSnapshotAverageCases
                             .columnarProjectionStoreLastTradePriceAverage(store));
+        }
+    }
+
+    /** Owns one fixed-width native MemorySegment row store per benchmark thread. */
+    @State(Scope.Thread)
+    public static class MemorySegmentRowState {
+
+        @Param({"1000", "100000", "1000000", "10000000"})
+        public int rowCount;
+
+        MemorySegmentMarketDataSnapshotStore store;
+
+        @Setup(Level.Trial)
+        public void setup() {
+            store = ReadyMarketDataSnapshotAverageCases.newMemorySegmentRowStore(rowCount);
+            try {
+                ReadyMarketDataSnapshotAverageCases.validateAverage(
+                        "MemorySegment row store",
+                        rowCount,
+                        ReadyMarketDataSnapshotAverageCases
+                                .memorySegmentRowLastTradePriceAverage(store));
+            } catch (RuntimeException | Error failure) {
+                tearDown();
+                throw failure;
+            }
+        }
+
+        @TearDown(Level.Trial)
+        public void tearDown() {
+            if (store != null) {
+                store.close();
+                store = null;
+            }
+        }
+    }
+
+    /** Owns one direct Chronicle Bytes row sequence and reusable value flyweight per thread. */
+    @State(Scope.Thread)
+    public static class ChronicleValuesBytesRowState {
+
+        @Param({"1000", "100000", "1000000", "10000000"})
+        public int rowCount;
+
+        ChronicleValuesBytesMarketDataSnapshotStore store;
+
+        @Setup(Level.Trial)
+        public void setup() {
+            store = ReadyMarketDataSnapshotAverageCases
+                    .newChronicleValuesBytesRowStore(rowCount);
+            try {
+                ReadyMarketDataSnapshotAverageCases.validateAverage(
+                        "Chronicle Values + Bytes row store",
+                        rowCount,
+                        ReadyMarketDataSnapshotAverageCases
+                                .chronicleValuesBytesRowLastTradePriceAverage(store));
+            } catch (RuntimeException | Error failure) {
+                tearDown();
+                throw failure;
+            }
+        }
+
+        @TearDown(Level.Trial)
+        public void tearDown() {
+            if (store != null) {
+                store.close();
+                store = null;
+            }
+        }
+    }
+
+    /** Owns one complete Apache Arrow vector root and allocator per benchmark thread. */
+    @State(Scope.Thread)
+    public static class ApacheArrowColumnarState {
+
+        @Param({"1000", "100000", "1000000", "10000000"})
+        public int rowCount;
+
+        ApacheArrowMarketDataSnapshotStore store;
+
+        @Setup(Level.Trial)
+        public void setup() {
+            store = ReadyMarketDataSnapshotAverageCases.newApacheArrowColumnarStore(rowCount);
+            try {
+                ReadyMarketDataSnapshotAverageCases.validateAverage(
+                        "Apache Arrow columnar store",
+                        rowCount,
+                        ReadyMarketDataSnapshotAverageCases
+                                .apacheArrowColumnarLastTradePriceAverage(store));
+            } catch (RuntimeException | Error failure) {
+                tearDown();
+                throw failure;
+            }
+        }
+
+        @TearDown(Level.Trial)
+        public void tearDown() {
+            if (store != null) {
+                store.close();
+                store = null;
+            }
         }
     }
 }

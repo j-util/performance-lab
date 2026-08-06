@@ -11,10 +11,13 @@ import org.openjdk.jmh.annotations.OutputTimeUnit;
 import org.openjdk.jmh.annotations.Warmup;
 
 import io.github.jutil.performancelab.ReadyMarketDataSnapshotAverageStateSupport.ArrayListState;
+import io.github.jutil.performancelab.ReadyMarketDataSnapshotAverageStateSupport.ApacheArrowColumnarState;
+import io.github.jutil.performancelab.ReadyMarketDataSnapshotAverageStateSupport.ChronicleValuesBytesRowState;
 import io.github.jutil.performancelab.ReadyMarketDataSnapshotAverageStateSupport.ColumnarProjectionStoreState;
 import io.github.jutil.performancelab.ReadyMarketDataSnapshotAverageStateSupport.DoubleArrayBaselineState;
 import io.github.jutil.performancelab.ReadyMarketDataSnapshotAverageStateSupport.EclipseFastListState;
 import io.github.jutil.performancelab.ReadyMarketDataSnapshotAverageStateSupport.FastUtilObjectArrayListState;
+import io.github.jutil.performancelab.ReadyMarketDataSnapshotAverageStateSupport.MemorySegmentRowState;
 import io.github.jutil.performancelab.ReadyMarketDataSnapshotAverageStateSupport.TablesawTableState;
 
 /** Last-trade-price averages over ready, complete market-data snapshots. */
@@ -70,5 +73,38 @@ public class ReadyMarketDataSnapshotAverageBenchmark {
     public double doubleArrayBaselineLastTradePriceAverage(DoubleArrayBaselineState state) {
         return ReadyMarketDataSnapshotAverageCases
                 .doubleArrayBaselineLastTradePriceAverage(state.lastTradePrices);
+    }
+
+    @Benchmark
+    public double memorySegmentRowLastTradePriceAverage(MemorySegmentRowState state) {
+        return ReadyMarketDataSnapshotAverageCases
+                .memorySegmentRowLastTradePriceAverage(state.store);
+    }
+
+    @Benchmark
+    @Fork(
+            value = 1,
+            jvmArgsAppend = {
+                "--add-opens=java.base/java.lang=ALL-UNNAMED",
+                "--add-exports=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED",
+                "--enable-native-access=ALL-UNNAMED",
+                "--sun-misc-unsafe-memory-access=allow"
+            })
+    public double chronicleValuesBytesRowLastTradePriceAverage(
+            ChronicleValuesBytesRowState state) {
+        return ReadyMarketDataSnapshotAverageCases
+                .chronicleValuesBytesRowLastTradePriceAverage(state.store);
+    }
+
+    @Benchmark
+    @Fork(
+            value = 1,
+            jvmArgsAppend = {
+                "--add-opens=java.base/java.nio=ALL-UNNAMED",
+                "--sun-misc-unsafe-memory-access=allow"
+            })
+    public double apacheArrowColumnarLastTradePriceAverage(ApacheArrowColumnarState state) {
+        return ReadyMarketDataSnapshotAverageCases
+                .apacheArrowColumnarLastTradePriceAverage(state.store);
     }
 }

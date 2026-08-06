@@ -26,7 +26,7 @@
     </modules>
 
     <properties>
-        <maven.compiler.release>17</maven.compiler.release>
+        <maven.compiler.release>25</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
@@ -35,6 +35,8 @@
         <fastutil.version>8.5.19</fastutil.version>
         <eclipse-collections.version>13.0.0</eclipse-collections.version>
         <tablesaw.version>0.44.4</tablesaw.version>
+        <chronicle.bom.version>2026.22</chronicle.bom.version>
+        <arrow.version>19.0.0</arrow.version>
 
         <maven.compiler.plugin.version>3.15.0</maven.compiler.plugin.version>
         <maven.shade.plugin.version>3.6.2</maven.shade.plugin.version>
@@ -42,6 +44,26 @@
         <columnar-projection-store.version>1.1.0</columnar-projection-store.version>
         <reduction-store.version>1.0.0</reduction-store.version>
     </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>net.openhft</groupId>
+                <artifactId>chronicle-bom</artifactId>
+                <version>${chronicle.bom.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.arrow</groupId>
+                <artifactId>arrow-bom</artifactId>
+                <version>${arrow.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <build>
         <pluginManagement>

@@ -9,7 +9,7 @@ must not be treated as universal performance claims.
 
 ## Requirements
 
-- JDK 17 or newer
+- JDK 25 or newer
 
 The Maven Wrapper downloads the project's Maven version automatically.
 
@@ -211,10 +211,27 @@ fixture row is the state immediately after a distinct completed trade, and the
 measured operation reads only `lastTradePrice`.
 
 Unlike the narrow `PriceTick(timestamp, price)` suite, every complete comparator
-in this suite retains all eight snapshot fields. This applies to
-`ArrayList<MarketDataSnapshot>`, FastUtil
-`ObjectArrayList<MarketDataSnapshot>`, Eclipse Collections
-`FastList<MarketDataSnapshot>`, Tablesaw `Table`, and Columnar Projection Store.
+in this suite retains all eight snapshot fields. The storage representations fall
+into four categories:
+
+- heap row objects: `ArrayList<MarketDataSnapshot>`, FastUtil
+  `ObjectArrayList<MarketDataSnapshot>`, and Eclipse Collections
+  `FastList<MarketDataSnapshot>`;
+- off-heap row records: a raw JDK `MemorySegment` baseline with a fixed-width
+  64-byte row layout, and typed Chronicle Values flyweights over consecutive
+  direct Chronicle Bytes records;
+- on-heap columnar storage: Tablesaw `Table` and Columnar Projection Store; and
+- off-heap columnar storage: an Apache Arrow `VectorSchemaRoot` containing one
+  vector for each snapshot field.
+
+The MemorySegment representation is the raw off-heap row baseline. Its symbol
+field stores a one-byte UTF-8 length followed by up to seven UTF-8 bytes, and it
+uses explicit `Arena` ownership. Chronicle Values + Bytes provides the typed
+off-heap row representation with the same seven-byte UTF-8 symbol capacity and
+one reusable flyweight. Apache Arrow is the established off-heap columnar
+representation, using `BigIntVector` for capture time, `VarCharVector` for the
+symbol, and `Float8Vector` for all six double fields. All three retain the
+complete eight-field snapshot and release native resources at JMH trial teardown.
 The representations therefore compare the same complete logical records even
 though the calculation selects a single field.
 
@@ -225,8 +242,16 @@ Collections' native `sumOfDouble()` method and Tablesaw's native `mean()` method
 retain their richer numerical semantics; their results can differ slightly
 from the ordinary encounter-order additions used by the other methods.
 
+The suite measures hot sequential traversal of `lastTradePrice`; every ordinary
+implementation adds doubles in encounter order and divides by its logical row
+count. Setup, allocation, fixture generation, population, and validation are
+excluded from the measured operation. Off-heap storage primarily provides an
+explicit lifecycle and reduced heap and garbage-collection pressure; it is not
+assumed to be faster, and no performance claim is made before results are
+collected.
+
 The suite uses the same JMH configuration and default row counts as
-`ReadyPriceAverageBenchmark`. Run all eight wide-record methods at one positive
+`ReadyPriceAverageBenchmark`. Run all eleven wide-record methods at one positive
 row count with:
 
 ```shell
@@ -238,6 +263,15 @@ java -jar benchmark-jmh/target/benchmarks.jar \
 Construction, fixture generation, and validation remain outside measured time.
 No performance conclusion is claimed before controlled results are collected
 on the intended hardware and row counts.
+
+Chronicle Values performs runtime value-class generation and Apache Arrow's
+Netty allocator accesses direct-buffer internals. Maven tests configure the
+required module access. The packaged JMH methods also append the narrowly scoped
+fork arguments automatically: Chronicle opens `java.lang`, exports
+`jdk.compiler/com.sun.tools.javac.file`, and enables native access; Arrow opens
+`java.nio`. Both native-library forks allow the legacy `sun.misc.Unsafe` memory
+operations required when running on JDK 26. Users do not need to discover or add
+these flags when running the packaged benchmark normally.
 
 Run all methods with:
 

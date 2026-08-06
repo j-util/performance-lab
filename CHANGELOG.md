@@ -4,6 +4,9 @@ All notable changes to this repository will be documented in this file.
 
 ## Unreleased
 
+- Add MemorySegment rows, Chronicle Values over direct Chronicle Bytes rows,
+  and Apache Arrow vectors to the complete-snapshot ready-data average suite,
+  with deterministic native-resource teardown and correctness coverage.
 - Add a separate ready-data average benchmark over complete eight-field market
   data snapshots while retaining a calculation-only last-trade-price baseline.
 - Add ordinary-addition Eclipse Collections and Tablesaw variants alongside

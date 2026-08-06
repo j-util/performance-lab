@@ -121,6 +121,19 @@ final class ReadyMarketDataSnapshotAverageCases {
         return store;
     }
 
+    static MemorySegmentMarketDataSnapshotStore newMemorySegmentRowStore(int rowCount) {
+        return MemorySegmentMarketDataSnapshotStore.fromFixture(rowCount);
+    }
+
+    static ChronicleValuesBytesMarketDataSnapshotStore newChronicleValuesBytesRowStore(
+            int rowCount) {
+        return ChronicleValuesBytesMarketDataSnapshotStore.fromFixture(rowCount);
+    }
+
+    static ApacheArrowMarketDataSnapshotStore newApacheArrowColumnarStore(int rowCount) {
+        return ApacheArrowMarketDataSnapshotStore.fromFixture(rowCount);
+    }
+
     static double arrayListLastTradePriceAverage(ArrayList<MarketDataSnapshot> rows) {
         double sum = 0.0d;
         for (int index = 0, size = rows.size(); index < size; index++) {
@@ -180,6 +193,21 @@ final class ReadyMarketDataSnapshotAverageCases {
             sum += lastTradePrice;
         }
         return sum / lastTradePrices.length;
+    }
+
+    static double memorySegmentRowLastTradePriceAverage(
+            MemorySegmentMarketDataSnapshotStore store) {
+        return store.lastTradePriceAverage();
+    }
+
+    static double chronicleValuesBytesRowLastTradePriceAverage(
+            ChronicleValuesBytesMarketDataSnapshotStore store) {
+        return store.lastTradePriceAverage();
+    }
+
+    static double apacheArrowColumnarLastTradePriceAverage(
+            ApacheArrowMarketDataSnapshotStore store) {
+        return store.lastTradePriceAverage();
     }
 
     static void validateAverage(String representation, int rowCount, double actualAverage) {
