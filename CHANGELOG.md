@@ -4,6 +4,10 @@ All notable changes to this repository will be documented in this file.
 
 ## Unreleased
 
+- Add a focused Columnar Projection Store iteration benchmark comparing its
+  reusable cursor, indexed stable views, and OO-style `forEach` traversal for
+  narrow-field work and full-row checksums, including allocation profiling
+  guidance.
 - Add complete eight-field DFLib DataFrame and manually assembled HPPC primitive
   column comparators to the ready market-data snapshot average suite, including
   DFLib native and ordinary-addition calculations.

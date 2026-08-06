@@ -61,7 +61,9 @@ java -cp benchmark-jmh/target/benchmarks.jar io.github.jutil.performancelab.CsvD
 
 The original 15 benchmark methods are organized into four classes so that each
 class contains only directly comparable operations. Two separate ready-data
-classes add the narrow and wide average comparisons described below.
+classes add the narrow and wide average comparisons described below, and a
+focused iteration suite compares traversal APIs within Columnar Projection
+Store.
 
 ### `CsvFullRowProcessingBenchmark`
 
@@ -288,11 +290,60 @@ fork arguments automatically: Chronicle opens `java.lang`, exports
 operations required when running on JDK 26. Users do not need to discover or add
 these flags when running the packaged benchmark normally.
 
+### `ColumnarProjectionStoreIterationBenchmark`
+
+This focused ready-data suite compares the ergonomics and efficiency of the
+three public row-oriented traversal APIs on the same sealed Columnar Projection
+Store. The cursor exposes one reusable projection view whose contents advance
+with the cursor and therefore must not be retained. Indexed `viewAt(index)`
+provides explicit random access through stable, retainable views. `forEach` is
+the conventional OO traversal API and also supplies stable, retainable views.
+
+The benchmark measures the cost of the stable-view convenience; it does not
+assume in advance that one traversal will be faster or allocate more at runtime.
+JIT escape analysis may eliminate some temporary stable-view allocations. Run
+with JMH's GC profiler to observe the allocation behavior that remains in the
+measured runtime:
+
+```shell
+java -jar benchmark-jmh/target/benchmarks.jar \
+  ColumnarProjectionStoreIterationBenchmark \
+  -p rowCount=1000000 \
+  -prof gc
+```
+
+Each API runs both a narrow `lastTradePrice` sum and a checksum that reads all
+eight fields. Within a workload, all traversal mechanisms pass every row to the
+same resettable accumulator, visit rows in encounter order, and reuse the
+Consumer between invocations. Store construction, fixture generation, sealing,
+and validation happen in trial setup rather than measured code. The cursor
+itself is created inside each cursor operation, matching normal public usage.
+
+For publication-quality measurements, increase warmup, measurement, and fork
+counts and use the largest configured data set:
+
+```shell
+java -jar benchmark-jmh/target/benchmarks.jar \
+  ColumnarProjectionStoreIterationBenchmark \
+  -p rowCount=10000000 \
+  -wi 5 \
+  -i 10 \
+  -f 2 \
+  -prof gc
+```
+
+These APIs deliberately have different contracts: the cursor prioritizes
+maximum traversal efficiency through a reusable view, `viewAt` provides stable
+views for explicit random access, and `forEach` provides conventional OO
+traversal through stable views. Interpret timing and allocation results in that
+ergonomics-versus-efficiency context rather than treating convenience as an
+inferior contract.
+
 Run all methods with:
 
 ```shell
 java -jar benchmark-jmh/target/benchmarks.jar \
-  'CsvFullRowProcessingBenchmark|CsvFilteredPriceSumEndToEndBenchmark|ReadyPriceSumBenchmark|ReadyFilteredPriceSumBenchmark|ReadyPriceAverageBenchmark|ReadyMarketDataSnapshotAverageBenchmark'
+  'CsvFullRowProcessingBenchmark|CsvFilteredPriceSumEndToEndBenchmark|ReadyPriceSumBenchmark|ReadyFilteredPriceSumBenchmark|ReadyPriceAverageBenchmark|ReadyMarketDataSnapshotAverageBenchmark|ColumnarProjectionStoreIterationBenchmark'
 ```
 
 Override the `rowCount` JMH parameter with `-p`; the corresponding dataset must
@@ -300,7 +351,7 @@ already exist for the CSV-backed benchmarks:
 
 ```shell
 java -jar benchmark-jmh/target/benchmarks.jar \
-  'CsvFullRowProcessingBenchmark|CsvFilteredPriceSumEndToEndBenchmark|ReadyPriceSumBenchmark|ReadyFilteredPriceSumBenchmark|ReadyPriceAverageBenchmark|ReadyMarketDataSnapshotAverageBenchmark' \
+  'CsvFullRowProcessingBenchmark|CsvFilteredPriceSumEndToEndBenchmark|ReadyPriceSumBenchmark|ReadyFilteredPriceSumBenchmark|ReadyPriceAverageBenchmark|ReadyMarketDataSnapshotAverageBenchmark|ColumnarProjectionStoreIterationBenchmark' \
   -p rowCount=100000
 ```
 
@@ -308,7 +359,7 @@ Add JMH's GC profiler to collect allocation and garbage-collection metrics:
 
 ```shell
 java -jar benchmark-jmh/target/benchmarks.jar \
-  'CsvFullRowProcessingBenchmark|CsvFilteredPriceSumEndToEndBenchmark|ReadyPriceSumBenchmark|ReadyFilteredPriceSumBenchmark|ReadyPriceAverageBenchmark|ReadyMarketDataSnapshotAverageBenchmark' \
+  'CsvFullRowProcessingBenchmark|CsvFilteredPriceSumEndToEndBenchmark|ReadyPriceSumBenchmark|ReadyFilteredPriceSumBenchmark|ReadyPriceAverageBenchmark|ReadyMarketDataSnapshotAverageBenchmark|ColumnarProjectionStoreIterationBenchmark' \
   -p rowCount=10000 \
   -prof gc
 ```
