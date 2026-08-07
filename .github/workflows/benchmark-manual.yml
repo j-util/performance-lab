@@ -13,6 +13,7 @@ on:
           - csv-filtered-price-sum-end-to-end
           - ready-price-sum
           - ready-filtered-price-sum
+          - max-by-double
       row_count:
         description: Number of rows
         required: true
@@ -75,6 +76,9 @@ jobs:
             ready-filtered-price-sum)
               benchmark_class=io.github.jutil.performancelab.ReadyFilteredPriceSumBenchmark
               ;;
+            max-by-double)
+              benchmark_class=io.github.jutil.performancelab.MaxByDoubleBenchmark
+              ;;
             *)
               echo "Unsupported suite: $SUITE" >&2
               exit 1
@@ -112,7 +116,7 @@ jobs:
         run: ./mvnw --batch-mode --no-transfer-progress clean verify
 
       - name: Generate requested CSV dataset
-        if: ${{ inputs.suite != 'ready-price-average' }}
+        if: ${{ inputs.suite != 'ready-price-average' && inputs.suite != 'max-by-double' }}
         env:
           ROW_COUNT: ${{ inputs.row_count }}
         run: |

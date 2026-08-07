@@ -59,11 +59,11 @@ java -cp benchmark-jmh/target/benchmarks.jar io.github.jutil.performancelab.CsvD
 
 ## Run the benchmarks
 
-The original 15 benchmark methods are organized into four classes so that each
-class contains only directly comparable operations. Two separate ready-data
-classes add the narrow and wide average comparisons described below, and a
-focused iteration suite compares traversal APIs within Columnar Projection
-Store.
+The benchmark methods are organized into classes so that each class contains
+only directly comparable operations. Separate ready-data classes add the narrow
+and wide average comparisons and the maximum-by-double comparison described
+below, and a focused iteration suite compares traversal APIs within Columnar
+Projection Store.
 
 ### `CsvFullRowProcessingBenchmark`
 
@@ -204,6 +204,70 @@ java -jar benchmark-jmh/target/benchmarks.jar \
 This in-memory benchmark generates its deterministic records directly by row
 index and does not read or generate a CSV dataset.
 
+### `MaxByDoubleBenchmark`
+
+This serial ready-data suite is an
+[Eclipse Collections `MaxByDoubleTest`](https://github.com/eclipse-collections/eclipse-collections/blob/master/jmh-tests/src/main/java/org/eclipse/collections/impl/jmh/MaxByDoubleTest.java)
+JMH-derived workload. It uses project-owned deterministic domain and fixture
+code; it is not an official Eclipse Collections benchmark result.
+
+Every method performs the same logical operation: scan all `Position` rows by
+the primitive `double marketValue`, calculated as `quantity * product.price()`,
+and return the original `Position` having the maximum value. A deterministic
+shared product population and row order are used. The fixture places one unique
+maximum at a non-terminal position for datasets of at least three rows,
+avoiding tie-semantics differences between implementations.
+
+The five benchmark methods are:
+
+- `arrayListImperativeMaxByDouble`: indexed imperative traversal of a JDK
+  `ArrayList<Position>`;
+- `arrayListStreamMaxByDouble`: a serial JDK stream using
+  `Comparator.comparingDouble`;
+- `eclipseFastListMaxByDouble`: Eclipse Collections `FastList.maxBy`;
+- `columnarProjectionStoreMaxByDouble`: one Columnar Projection Store cursor
+  over projected market values and retained original references; and
+- `manualHybridMaxByDouble`: a manual lower-bound baseline pairing a complete
+  `Position[]` reference array with a precomputed `double[]` market-value array.
+
+This is intentionally a repeated-query comparison after construction.
+Generation, allocation, representation population, projection evaluation,
+sealing, and correctness validation occur in JMH trial setup and are excluded
+from the measured scan. Columnar Projection Store and the manual hybrid compute
+and retain `marketValue` during population. The object collections instead call
+`Position.marketValue()` during every measured scan. This asymmetry is part of
+the ready-data comparison and means the suite does not measure total end-to-end
+cost.
+
+The only default `rowCount` is 3,000,000, matching the scale of the source
+workload. A command-line `-p rowCount=...` overrides that value. Run a quick
+smoke test with:
+
+```shell
+java -jar benchmark-jmh/target/benchmarks.jar \
+  MaxByDoubleBenchmark \
+  -p rowCount=1000 \
+  -wi 1 \
+  -i 1 \
+  -f 1
+```
+
+For a publication-quality run at the default scale:
+
+```shell
+java -jar benchmark-jmh/target/benchmarks.jar \
+  MaxByDoubleBenchmark \
+  -p rowCount=3000000 \
+  -wi 5 \
+  -i 10 \
+  -f 2
+```
+
+Results are not directly comparable with official Eclipse Collections runs:
+this suite has a different implementation set, deterministic project-owned
+fixtures, and different harness modes and configuration. No parallel variants
+are included because they would add a separate execution-model comparison.
+
 ### `ReadyMarketDataSnapshotAverageBenchmark`
 
 This separate wide-record suite performs the same ready-data average operation
@@ -343,7 +407,7 @@ Run all methods with:
 
 ```shell
 java -jar benchmark-jmh/target/benchmarks.jar \
-  'CsvFullRowProcessingBenchmark|CsvFilteredPriceSumEndToEndBenchmark|ReadyPriceSumBenchmark|ReadyFilteredPriceSumBenchmark|ReadyPriceAverageBenchmark|ReadyMarketDataSnapshotAverageBenchmark|ColumnarProjectionStoreIterationBenchmark'
+  'CsvFullRowProcessingBenchmark|CsvFilteredPriceSumEndToEndBenchmark|ReadyPriceSumBenchmark|ReadyFilteredPriceSumBenchmark|ReadyPriceAverageBenchmark|MaxByDoubleBenchmark|ReadyMarketDataSnapshotAverageBenchmark|ColumnarProjectionStoreIterationBenchmark'
 ```
 
 Override the `rowCount` JMH parameter with `-p`; the corresponding dataset must
@@ -351,7 +415,7 @@ already exist for the CSV-backed benchmarks:
 
 ```shell
 java -jar benchmark-jmh/target/benchmarks.jar \
-  'CsvFullRowProcessingBenchmark|CsvFilteredPriceSumEndToEndBenchmark|ReadyPriceSumBenchmark|ReadyFilteredPriceSumBenchmark|ReadyPriceAverageBenchmark|ReadyMarketDataSnapshotAverageBenchmark|ColumnarProjectionStoreIterationBenchmark' \
+  'CsvFullRowProcessingBenchmark|CsvFilteredPriceSumEndToEndBenchmark|ReadyPriceSumBenchmark|ReadyFilteredPriceSumBenchmark|ReadyPriceAverageBenchmark|MaxByDoubleBenchmark|ReadyMarketDataSnapshotAverageBenchmark|ColumnarProjectionStoreIterationBenchmark' \
   -p rowCount=100000
 ```
 
@@ -359,7 +423,7 @@ Add JMH's GC profiler to collect allocation and garbage-collection metrics:
 
 ```shell
 java -jar benchmark-jmh/target/benchmarks.jar \
-  'CsvFullRowProcessingBenchmark|CsvFilteredPriceSumEndToEndBenchmark|ReadyPriceSumBenchmark|ReadyFilteredPriceSumBenchmark|ReadyPriceAverageBenchmark|ReadyMarketDataSnapshotAverageBenchmark|ColumnarProjectionStoreIterationBenchmark' \
+  'CsvFullRowProcessingBenchmark|CsvFilteredPriceSumEndToEndBenchmark|ReadyPriceSumBenchmark|ReadyFilteredPriceSumBenchmark|ReadyPriceAverageBenchmark|MaxByDoubleBenchmark|ReadyMarketDataSnapshotAverageBenchmark|ColumnarProjectionStoreIterationBenchmark' \
   -p rowCount=10000 \
   -prof gc
 ```
@@ -379,7 +443,7 @@ and one execution preset. Each workflow run maps the suite to exactly one
 existing benchmark class, generates a CSV dataset only when that class requires
 one, and uploads the JMH JSON results together with commit, input, command, Java,
 Maven, operating-system, and CPU metadata. The in-memory
-`ready-price-average` suite never uses a CSV dataset.
+`ready-price-average` and `max-by-double` suites never use a CSV dataset.
 
 The presets control JMH execution as follows:
 
