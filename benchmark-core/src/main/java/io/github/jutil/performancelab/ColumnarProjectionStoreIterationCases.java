@@ -36,6 +36,8 @@ final class ColumnarProjectionStoreIterationCases {
         return accumulator.result();
     }
 
+    // TODO: Restore after columnar-projection-store:1.2.0 is published.
+    /*
     static double forEachLastTradePriceSum(
             ProjectionStore<MarketDataSnapshotProjection> store,
             LastTradePriceSumAccumulator accumulator) {
@@ -43,6 +45,7 @@ final class ColumnarProjectionStoreIterationCases {
         store.forEach(accumulator);
         return accumulator.result();
     }
+    */
 
     static long cursorFullRowChecksum(
             ProjectionStore<MarketDataSnapshotProjection> store,
@@ -65,6 +68,7 @@ final class ColumnarProjectionStoreIterationCases {
         return accumulator.result();
     }
 
+    /*
     static long forEachFullRowChecksum(
             ProjectionStore<MarketDataSnapshotProjection> store,
             FullRowChecksumAccumulator accumulator) {
@@ -72,6 +76,7 @@ final class ColumnarProjectionStoreIterationCases {
         store.forEach(accumulator);
         return accumulator.result();
     }
+    */
 
     static void validate(ProjectionStore<MarketDataSnapshotProjection> store, int rowCount) {
         if (store.size() != rowCount) {
@@ -85,13 +90,14 @@ final class ColumnarProjectionStoreIterationCases {
         validateVisited("cursor last-trade-price sum", rowCount, sumAccumulator.count());
         double indexedSum = indexedStableViewLastTradePriceSum(store, sumAccumulator);
         validateVisited("indexed stable-view last-trade-price sum", rowCount, sumAccumulator.count());
+        /*
         double forEachSum = forEachLastTradePriceSum(store, sumAccumulator);
         validateVisited("forEach last-trade-price sum", rowCount, sumAccumulator.count());
-        if (Double.doubleToLongBits(cursorSum) != Double.doubleToLongBits(indexedSum)
-                || Double.doubleToLongBits(cursorSum) != Double.doubleToLongBits(forEachSum)) {
+        */
+        if (Double.doubleToLongBits(cursorSum) != Double.doubleToLongBits(indexedSum)) {
             throw new IllegalStateException(
                     "Last-trade-price traversal results differ: cursor=" + cursorSum
-                            + ", indexed=" + indexedSum + ", forEach=" + forEachSum);
+                            + ", indexed=" + indexedSum);
         }
 
         FullRowChecksumAccumulator checksumAccumulator = new FullRowChecksumAccumulator();
@@ -99,12 +105,14 @@ final class ColumnarProjectionStoreIterationCases {
         validateVisited("cursor full-row checksum", rowCount, checksumAccumulator.count());
         long indexedChecksum = indexedStableViewFullRowChecksum(store, checksumAccumulator);
         validateVisited("indexed stable-view full-row checksum", rowCount, checksumAccumulator.count());
+        /*
         long forEachChecksum = forEachFullRowChecksum(store, checksumAccumulator);
         validateVisited("forEach full-row checksum", rowCount, checksumAccumulator.count());
-        if (cursorChecksum != indexedChecksum || cursorChecksum != forEachChecksum) {
+        */
+        if (cursorChecksum != indexedChecksum) {
             throw new IllegalStateException(
                     "Full-row traversal results differ: cursor=" + cursorChecksum
-                            + ", indexed=" + indexedChecksum + ", forEach=" + forEachChecksum);
+                            + ", indexed=" + indexedChecksum);
         }
     }
 

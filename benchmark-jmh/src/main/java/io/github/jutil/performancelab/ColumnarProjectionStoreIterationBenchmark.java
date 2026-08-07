@@ -38,12 +38,15 @@ public class ColumnarProjectionStoreIterationBenchmark {
                 storeState.store, accumulatorState.lastTradePriceSum);
     }
 
+    // TODO: Restore after columnar-projection-store:1.2.0 is published.
+    /*
     @Benchmark
     public double forEachLastTradePriceSum(
             StoreState storeState, AccumulatorState accumulatorState) {
         return ColumnarProjectionStoreIterationCases.forEachLastTradePriceSum(
                 storeState.store, accumulatorState.lastTradePriceSum);
     }
+    */
 
     @Benchmark
     public long cursorFullRowChecksum(StoreState storeState, AccumulatorState accumulatorState) {
@@ -58,12 +61,14 @@ public class ColumnarProjectionStoreIterationBenchmark {
                 storeState.store, accumulatorState.fullRowChecksum);
     }
 
+    /*
     @Benchmark
     public long forEachFullRowChecksum(
             StoreState storeState, AccumulatorState accumulatorState) {
         return ColumnarProjectionStoreIterationCases.forEachFullRowChecksum(
                 storeState.store, accumulatorState.fullRowChecksum);
     }
+    */
 
     /** Sealed immutable store shared by all benchmark threads. */
     @State(Scope.Benchmark)
