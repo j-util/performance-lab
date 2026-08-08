@@ -43,6 +43,9 @@
         <maven.compiler.plugin.version>3.15.0</maven.compiler.plugin.version>
         <maven.shade.plugin.version>3.6.2</maven.shade.plugin.version>
         <maven.surefire.plugin.version>3.5.5</maven.surefire.plugin.version>
+        <inputstream-processor-core.version>1.0.0</inputstream-processor-core.version>
+        <parallel-range-processor.version>1.0.0</parallel-range-processor.version>
+        <commons-csv.version>1.14.1</commons-csv.version>
         <columnar-projection-store.version>1.1.0</columnar-projection-store.version>
         <reduction-store.version>1.0.0</reduction-store.version>
     </properties>

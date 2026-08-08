@@ -57,6 +57,37 @@ For a quick development run, generate the benchmark's default 10,000-row dataset
 java -cp benchmark-jmh/target/benchmarks.jar io.github.jutil.performancelab.CsvDatasetGenerator 10000
 ```
 
+### Generate the 1BRC-style processor dataset
+
+The processor comparison uses a separate deterministic, headerless UTF-8
+dataset with one ordinary Commons CSV record per line:
+
+```text
+station-name;temperature
+```
+
+Station names repeat realistically and temperatures always have one decimal
+digit. The default is 10,000,000 measurements. Build with the configured Maven
+settings and run the generator without arguments to use that default:
+
+```shell
+./mvnw -s /Users/karenbarseghyan/.m2/settings-j-util.xml clean package
+java -cp benchmark-jmh/target/benchmarks.jar \
+  io.github.jutil.performancelab.OneBrcStyleDatasetGenerator
+```
+
+Pass a row count to generate another scale. The conventional output is
+`target/benchmark-data/1brc-style-measurements-<row-count>.csv`:
+
+```shell
+java -cp benchmark-jmh/target/benchmarks.jar \
+  io.github.jutil.performancelab.OneBrcStyleDatasetGenerator 50000000
+```
+
+The generator reuses an existing file at that path when it has the requested
+line count. Pass a second argument for an explicit output path. Generated data
+stays under the ignored `target/` tree and must not be committed.
+
 ## Run the benchmarks
 
 The benchmark methods are organized into classes so that each class contains
@@ -64,6 +95,96 @@ only directly comparable operations. Separate ready-data classes add the narrow
 and wide average comparisons and the maximum-by-double comparison described
 below, and a focused iteration suite compares traversal APIs within Columnar
 Projection Store.
+
+### `OneBrcStyleProcessorBenchmark`
+
+This is a fair 1BRC-style processor benchmark, not an optimized or official
+1BRC submission. All five variants parse the same two fields with the same
+immutable Apache Commons CSV format (semicolon delimiter, no header, no
+trimming or surrounding-space assumptions) and map each record to
+`Item(String key, double value)` using `Double.parseDouble`:
+
+| Benchmark | Execution strategy | Parallelism |
+| --- | --- | ---: |
+| `filesLinesSequential` | sequential `Files.lines()` | 1 |
+| `filesLinesParallelForkJoinPool` | `Files.lines().parallel()` in a caller-created `ForkJoinPool` | 2, 4, 8 |
+| `inputStreamProcessorCore` | sequential `inputstream-processor-core` | 1 |
+| `parallelRangeProcessorForkJoinPool` | `parallel-range-processor` with a caller-created `ForkJoinPool` | 1, 2, 4, 8 |
+| `parallelRangeProcessorFixedThreadPool` | `parallel-range-processor` with a caller-created fixed-thread-pool `ExecutorService` | 1, 2, 4, 8 |
+
+Every aggregation uses `Storage` with a `HashMap<String, Counter>`. Each
+`Counter` maintains minimum, maximum, sum, and count and calculates mean only as
+`sum / count`. Parallel stream partitions and range-processor parsers create
+local `Storage` instances; their partial results merge only after local work,
+without a shared `ConcurrentHashMap`.
+
+The range-processor states construct the processor and their caller-owned
+executor once in JMH trial setup. The processor receives that executor through
+its public constructor, never owns it, and never shuts it down. Trial teardown
+shuts down and awaits the `ForkJoinPool` or fixed thread pool. The parallel
+`Files.lines()` state likewise creates one dedicated reusable `ForkJoinPool`, so
+it never relies on the common pool. The fixed thread pool is an additional
+caller-supplied executor comparison for `parallel-range-processor`; it is not a
+library default or an internally owned pool.
+
+Measured execution includes file opening, processing, parsing, aggregation,
+and partial-result merging. Dataset generation, executor construction,
+processor construction, and correctness assertions are outside measurement.
+Each invocation starts with fresh aggregation storage, and no benchmark method
+prints results.
+
+Commons CSV parser lifecycle necessarily follows each API's natural boundary.
+`inputstream-processor-core` uses one parser for the complete input,
+`parallel-range-processor` creates one independent parser per actual range and
+another for reconstructed boundary records when needed, and each already-framed
+line from `Files.lines()` is parsed by its own Commons CSV parser. Thus parsing
+logic and format are shared, while parser-instance counts are an unavoidable
+fairness difference. The range variants also include byte-range framing and
+partial aggregation merging; the stream variants include the JDK stream's own
+splitting and line-decoding behavior.
+
+For a short smoke run after generating 1,000 rows:
+
+```shell
+java -cp benchmark-jmh/target/benchmarks.jar \
+  io.github.jutil.performancelab.OneBrcStyleDatasetGenerator 1000
+java -jar benchmark-jmh/target/benchmarks.jar \
+  OneBrcStyleProcessorBenchmark \
+  -p rowCount=1000 \
+  -wi 1 \
+  -i 1 \
+  -f 1
+```
+
+Run the full default 10,000,000-row comparison with:
+
+```shell
+java -cp benchmark-jmh/target/benchmarks.jar \
+  io.github.jutil.performancelab.OneBrcStyleDatasetGenerator 10000000
+java -jar benchmark-jmh/target/benchmarks.jar \
+  OneBrcStyleProcessorBenchmark \
+  -p rowCount=10000000 \
+  -wi 5 \
+  -i 10 \
+  -f 2
+```
+
+Run the 50,000,000-row scaling comparison without code changes with:
+
+```shell
+java -cp benchmark-jmh/target/benchmarks.jar \
+  io.github.jutil.performancelab.OneBrcStyleDatasetGenerator 50000000
+java -jar benchmark-jmh/target/benchmarks.jar \
+  OneBrcStyleProcessorBenchmark \
+  -p rowCount=50000000 \
+  -wi 5 \
+  -i 10 \
+  -f 2
+```
+
+Because the same file is read repeatedly across warmup and measurement
+iterations, results primarily represent warm OS-page-cache processing rather
+than raw disk throughput.
 
 ### `CsvFullRowProcessingBenchmark`
 
