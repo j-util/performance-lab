@@ -46,12 +46,22 @@
         <inputstream-processor-core.version>1.0.0</inputstream-processor-core.version>
         <parallel-range-processor.version>1.0.0</parallel-range-processor.version>
         <commons-csv.version>1.14.1</commons-csv.version>
-        <columnar-projection-store.version>1.1.0</columnar-projection-store.version>
+        <columnar-projection-store.version>1.2.0</columnar-projection-store.version>
+        <columnar-projection-store-hardwood.version>0.1.0-SNAPSHOT</columnar-projection-store-hardwood.version>
+        <hardwood.version>1.0.0.Final</hardwood.version>
+        <parquet.version>1.17.0</parquet.version>
+        <hadoop.version>3.4.2</hadoop.version>
         <reduction-store.version>1.0.0</reduction-store.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>dev.hardwood</groupId>
+                <artifactId>hardwood-core</artifactId>
+                <version>${hardwood.version}</version>
+            </dependency>
+
             <dependency>
                 <groupId>net.openhft</groupId>
                 <artifactId>chronicle-bom</artifactId>

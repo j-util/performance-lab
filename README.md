@@ -96,6 +96,82 @@ and wide average comparisons and the maximum-by-double comparison described
 below, and a focused iteration suite compares traversal APIs within Columnar
 Projection Store.
 
+### `HardwoodMaterializationBenchmark`
+
+This benchmark reads one deterministic flat market-data Parquet dataset through
+Hardwood with an identical projection and a 4,096-row configured batch size in
+all four paths:
+
+- `hardwoodDirectProcessing` checksums all eight fields directly from each
+  decoded Hardwood batch without creating row objects or retaining the dataset.
+  It is the no-secondary-storage baseline for one-pass work. It performs a
+  different responsibility from materialization and is not an `ArrayList`
+  replacement benchmark.
+- `hardwoodToColumnarBatch` passes caller-configured `ColumnReaders` to the
+  generated `HardwoodMarketDataProjectionHardwoodLoader`. The loader uses the
+  generated common-range batch API, loads the complete pre-sized columnar store,
+  and seals it.
+- `hardwoodToColumnarPerRow` reads the same Hardwood arrays, advances one
+  reusable projection view through each batch, calls `store.add(view)` once per
+  row, and seals the same pre-sized generated store representation. It isolates
+  generated batch append from per-row append.
+- `hardwoodToArrayList` creates one immutable `HardwoodMarketDataRow` record per
+  decoded row and appends it to a pre-sized `ArrayList`, representing
+  conventional object materialization.
+
+Every invocation opens a fresh consumable Parquet reader and closes both the
+caller-owned projected column readers and the Parquet reader. The timed boundary
+includes file opening, Parquet reading, Hardwood decoding, checksum work or
+materialization, resource closing, and `seal()` for columnar results. Trial
+setup generates the input file and trial teardown deletes it, so input
+generation and correctness validation are outside measurement. The fixture uses
+uncompressed Parquet with dictionary encoding disabled and deterministic
+low-cardinality strings and exactly representable numeric values.
+
+JMH consumes the direct checksum or returned materialized representation. The
+GC profiler reports allocation rate and bytes per operation; it does not measure
+peak heap. This is specifically an end-to-end decoding and materialization
+benchmark, not a general claim that a columnar store is better than an
+`ArrayList` for unrelated storage or access patterns.
+
+Run the ordinary small correctness test, which checks row counts, row order,
+all-field checksums, multiple batches, sealed stores, and representation
+equivalence:
+
+```shell
+./mvnw -pl benchmark-core \
+  -Dtest=HardwoodMaterializationCasesTest test
+```
+
+Build and run a short 10,000-row smoke invocation of all four methods (smoke
+output is diagnostic, not a stable benchmark result):
+
+```shell
+./mvnw clean package
+java -jar benchmark-jmh/target/benchmarks.jar \
+  HardwoodMaterializationBenchmark \
+  -p rowCount=10000 \
+  -wi 0 \
+  -i 1 \
+  -f 1
+```
+
+Run a representative 1,000,000-row measurement with JMH GC allocation metrics:
+
+```shell
+java -jar benchmark-jmh/target/benchmarks.jar \
+  HardwoodMaterializationBenchmark \
+  -p rowCount=1000000 \
+  -wi 2 \
+  -i 3 \
+  -f 1 \
+  -prof gc
+```
+
+The default `rowCount` parameters are 1,000,000 and 10,000,000. Because the
+same generated file is read for every invocation within a trial, measurements
+after the first read generally benefit from the operating system's page cache.
+
 ### `OneBrcStyleProcessorBenchmark`
 
 This is a fair 1BRC-style processor benchmark, not an optimized or official
