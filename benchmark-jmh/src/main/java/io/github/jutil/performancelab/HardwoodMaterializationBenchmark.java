@@ -22,7 +22,7 @@ import org.openjdk.jmh.annotations.Warmup;
 
 import io.github.jutil.columnarprojection.ProjectionStore;
 
-/** End-to-end Hardwood decoding, direct-processing, and materialization benchmarks. */
+/** End-to-end Hardwood decoding and destination materialization benchmarks. */
 @BenchmarkMode(Mode.SingleShotTime)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @Warmup(iterations = 2)
@@ -51,21 +51,9 @@ public class HardwoodMaterializationBenchmark {
     }
 
     @Benchmark
-    public long hardwoodDirectProcessing() throws IOException {
-        return HardwoodMaterializationCases.hardwoodDirectProcessing(parquetFile, BATCH_SIZE);
-    }
-
-    @Benchmark
     public ProjectionStore<HardwoodMarketDataProjection> hardwoodToColumnarBatch()
             throws IOException {
         return HardwoodMaterializationCases.hardwoodToColumnarBatch(
-                parquetFile, rowCount, BATCH_SIZE);
-    }
-
-    @Benchmark
-    public ProjectionStore<HardwoodMarketDataProjection> hardwoodToColumnarPerRow()
-            throws IOException {
-        return HardwoodMaterializationCases.hardwoodToColumnarPerRow(
                 parquetFile, rowCount, BATCH_SIZE);
     }
 

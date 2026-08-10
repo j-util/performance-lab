@@ -100,60 +100,57 @@ Projection Store.
 
 This benchmark reads one deterministic flat market-data Parquet dataset through
 Hardwood with an identical projection and a 4,096-row configured batch size in
-all four paths:
+exactly two paths:
 
-- `hardwoodDirectProcessing` checksums all eight fields directly from each
-  decoded Hardwood batch without creating row objects or retaining the dataset.
-  It is the no-secondary-storage baseline for one-pass work. It performs a
-  different responsibility from materialization and is not an `ArrayList`
-  replacement benchmark.
 - `hardwoodToColumnarBatch` passes caller-configured `ColumnReaders` to the
   generated `HardwoodMarketDataProjectionHardwoodLoader`. The loader uses the
   generated common-range batch API, loads the complete pre-sized columnar store,
   and seals it.
-- `hardwoodToColumnarPerRow` reads the same Hardwood arrays, advances one
-  reusable projection view through each batch, calls `store.add(view)` once per
-  row, and seals the same pre-sized generated store representation. It isolates
-  generated batch append from per-row append.
 - `hardwoodToArrayList` creates one immutable `HardwoodMarketDataRow` record per
   decoded row and appends it to a pre-sized `ArrayList`, representing
   conventional object materialization.
 
-Every invocation opens a fresh consumable Parquet reader and closes both the
-caller-owned projected column readers and the Parquet reader. The timed boundary
-includes file opening, Parquet reading, Hardwood decoding, checksum work or
-materialization, resource closing, and `seal()` for columnar results. Trial
-setup generates the input file and trial teardown deletes it, so input
-generation and correctness validation are outside measurement. The fixture uses
-uncompressed Parquet with dictionary encoding disabled and deterministic
-low-cardinality strings and exactly representable numeric values.
+Both paths open fresh readers at the beginning of every invocation, read the
+same Parquet file and projection through Hardwood, process exactly `rowCount`
+rows, and close the projected column readers and Parquet reader. Each invocation
+also creates a fresh destination with `rowCount` expected capacity. The timed
+boundary includes file opening, Parquet reading, Hardwood decoding, destination
+materialization, resource closing, and the generated loader's single `seal()`
+call for the columnar result. Trial setup generates the fixture outside benchmark
+timing, and trial teardown deletes it.
 
-JMH consumes the direct checksum or returned materialized representation. The
-GC profiler reports allocation rate and bytes per operation; it does not measure
-peak heap. This is specifically an end-to-end decoding and materialization
-benchmark, not a general claim that a columnar store is better than an
-`ArrayList` for unrelated storage or access patterns.
+This is a realistic end-to-end destination-materialization comparison, not an
+ingestion-only benchmark over retained decoded arrays. It does not measure any
+subsequent column operation, query, checksum, aggregation, or validation scan.
+Because Hardwood decoding is shared work, it can reduce the visible timing
+difference between the destinations. GC-profiler allocation measurements include
+both decoding and destination materialization; the columnar path avoids the one
+row object per record created by the `ArrayList` path. The returned destinations
+are JMH results, preventing dead-code elimination. The fixture uses uncompressed
+Parquet with dictionary encoding disabled and deterministic low-cardinality
+strings and exactly representable numeric values.
 
 Run the ordinary small correctness test, which checks row counts, row order,
-all-field checksums, multiple batches, sealed stores, and representation
-equivalence:
+every field, batch boundaries, a partial final batch, sealed stores, independent
+invocations, stable string references, and representation equivalence:
 
 ```shell
 ./mvnw -pl benchmark-core \
   -Dtest=HardwoodMaterializationCasesTest test
 ```
 
-Build and run a short 10,000-row smoke invocation of all four methods (smoke
-output is diagnostic, not a stable benchmark result):
+Build and run a short 10,000-row smoke invocation of both methods. Smoke output
+only confirms that the benchmark executes; it is not a stable benchmark result:
 
 ```shell
 ./mvnw clean package
 java -jar benchmark-jmh/target/benchmarks.jar \
-  HardwoodMaterializationBenchmark \
+  '.*HardwoodMaterializationBenchmark.*' \
   -p rowCount=10000 \
-  -wi 0 \
+  -wi 1 \
   -i 1 \
-  -f 1
+  -f 1 \
+  -prof gc
 ```
 
 Run a representative 1,000,000-row measurement with JMH GC allocation metrics:
