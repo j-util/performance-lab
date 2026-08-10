@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.openjdk.jmh.annotations.Benchmark;
@@ -31,35 +32,32 @@ import io.github.jutil.columnarprojection.ProjectionStore;
 @State(Scope.Benchmark)
 public class HardwoodMaterializationBenchmark {
 
-    private static final int BATCH_SIZE = 4_096;
-
     @Param({"1000000", "10000000"})
     public int rowCount;
 
-    private Path parquetFile;
+    private List<Path> parquetFiles;
 
     @Setup(Level.Trial)
     public void setup() throws IOException {
-        parquetFile = HardwoodParquetDatasetGenerator.writeTemporary(rowCount);
+        parquetFiles = HardwoodParquetDatasetGenerator.writeTemporary(rowCount);
     }
 
     @TearDown(Level.Trial)
     public void tearDown() throws IOException {
-        if (parquetFile != null) {
-            Files.deleteIfExists(parquetFile);
+        if (parquetFiles != null) {
+            Files.deleteIfExists(parquetFiles.get(0));
+            Files.deleteIfExists(parquetFiles.get(1));
         }
     }
 
     @Benchmark
     public ProjectionStore<HardwoodMarketDataProjection> hardwoodToColumnarBatch()
             throws IOException {
-        return HardwoodMaterializationCases.hardwoodToColumnarBatch(
-                parquetFile, rowCount, BATCH_SIZE);
+        return HardwoodMaterializationCases.hardwoodToColumnarBatch(parquetFiles);
     }
 
     @Benchmark
     public ArrayList<HardwoodMarketDataRow> hardwoodToArrayList() throws IOException {
-        return HardwoodMaterializationCases.hardwoodToArrayList(
-                parquetFile, rowCount, BATCH_SIZE);
+        return HardwoodMaterializationCases.hardwoodToArrayList(parquetFiles);
     }
 }

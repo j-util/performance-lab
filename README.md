@@ -98,40 +98,57 @@ Projection Store.
 
 ### `HardwoodMaterializationBenchmark`
 
-This benchmark reads one deterministic flat market-data Parquet dataset through
-Hardwood with an identical projection and a 4,096-row configured batch size in
-exactly two paths:
+This benchmark treats two independently written, valid Parquet files as one
+deterministic flat market-data input. The first file contains `rowCount / 4`
+rows and the second contains the remainder, with one shared schema and globally
+consecutive values across the file boundary. Both paths pass the files in the
+same order to one real Hardwood multi-file reader and use the same projection:
 
-- `hardwoodToColumnarBatch` passes caller-configured `ColumnReaders` to the
-  generated `HardwoodMarketDataProjectionHardwoodLoader`. The loader uses the
-  generated common-range batch API, loads the complete pre-sized columnar store,
-  and seals it.
+- `hardwoodToColumnarBatch` calls the generated
+  `HardwoodMarketDataProjectionHardwoodLoader.load(reader)` convenience method.
+  The loader creates the projected column readers, uses the generated
+  common-range batch API, materializes every file, and seals the store.
 - `hardwoodToArrayList` creates one immutable `HardwoodMarketDataRow` record per
-  decoded row and appends it to a pre-sized `ArrayList`, representing
-  conventional object materialization.
+  decoded row and appends it to an `ArrayList`, representing conventional object
+  materialization.
 
-Both paths open fresh readers at the beginning of every invocation, read the
-same Parquet file and projection through Hardwood, process exactly `rowCount`
-rows, and close the projected column readers and Parquet reader. Each invocation
-also creates a fresh destination with `rowCount` expected capacity. The timed
-boundary includes file opening, Parquet reading, Hardwood decoding, destination
-materialization, resource closing, and the generated loader's single `seal()`
-call for the columnar result. Trial setup generates the fixture outside benchmark
-timing, and trial teardown deletes it.
+Hardwood exposes the first file's metadata from a multi-file reader. Each
+destination therefore starts with capacity based only on
+`Math.toIntExact(reader.getFileMetaData().numRows())`, not the combined
+`rowCount`: the generated loader applies that logic to the columnar store, and
+the list path applies the same logic to `new ArrayList<>(firstFileRowCount)`.
+Because the first file is deliberately smaller than the complete dataset, both
+destinations include their natural growth behavior while the second file is
+materialized. Their internal growth algorithms are intentionally not equalized.
+
+Every invocation opens a fresh
+`ParquetFileReader.openAll(List.of(InputFile.of(firstPath),
+InputFile.of(secondPath)))`, lets Hardwood transition between the files, and
+closes its projected column readers and multi-file reader before returning the
+completed destination to JMH. The timed boundary includes opening the files,
+first-file metadata access for initial sizing, Hardwood column-reader creation,
+Parquet decoding across both files, the file transition, destination growth and
+writes, columnar sealing, and resource closing. Trial setup writes the two files
+outside benchmark timing, and trial teardown deletes them. Correctness checks,
+result traversal, checksums, and aggregations also remain outside measured code.
 
 This is a realistic end-to-end destination-materialization comparison, not an
 ingestion-only benchmark over retained decoded arrays. It does not measure any
 subsequent column operation, query, checksum, aggregation, or validation scan.
 Because Hardwood decoding is shared work, it can reduce the visible timing
 difference between the destinations. GC-profiler allocation measurements include
-both decoding and destination materialization; the columnar path avoids the one
-row object per record created by the `ArrayList` path. The returned destinations
-are JMH results, preventing dead-code elimination. The fixture uses uncompressed
-Parquet with dictionary encoding disabled and deterministic low-cardinality
-strings and exactly representable numeric values.
+Hardwood decoding and destination materialization, including destination growth;
+the columnar path avoids the one row object per record created by the `ArrayList`
+path. The returned destinations are JMH results, preventing dead-code
+elimination. The fixture uses uncompressed Parquet with dictionary encoding
+disabled and deterministic low-cardinality strings and exactly representable
+numeric values. Results from the earlier single-file, combined-capacity benchmark
+are not directly comparable with this multi-file workload.
 
-Run the ordinary small correctness test, which checks row counts, row order,
-every field, batch boundaries, a partial final batch, sealed stores, independent
+Run the ordinary small correctness test, which checks the unequal two-file
+fixture, Hardwood's multi-file state, first-file metadata sizing, the cross-file
+boundary and second-file consumption, row counts, global row order, every field,
+batch boundaries, a partial final batch, store growth and sealing, independent
 invocations, stable string references, and representation equivalence:
 
 ```shell
@@ -139,8 +156,9 @@ invocations, stable string references, and representation equivalence:
   -Dtest=HardwoodMaterializationCasesTest test
 ```
 
-Build and run a short 10,000-row smoke invocation of both methods. Smoke output
-only confirms that the benchmark executes; it is not a stable benchmark result:
+Build and run a short 10,000-row smoke invocation of both methods. Smoke-test
+output only confirms that the benchmark executes; it is not a stable benchmark
+result:
 
 ```shell
 ./mvnw clean package
@@ -166,7 +184,7 @@ java -jar benchmark-jmh/target/benchmarks.jar \
 ```
 
 The default `rowCount` parameters are 1,000,000 and 10,000,000. Because the
-same generated file is read for every invocation within a trial, measurements
+same generated files are read for every invocation within a trial, measurements
 after the first read generally benefit from the operating system's page cache.
 
 ### `OneBrcStyleProcessorBenchmark`

@@ -5,6 +5,7 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.util.List;
 
 import org.apache.parquet.example.data.Group;
 import org.apache.parquet.example.data.simple.SimpleGroup;
@@ -40,11 +41,51 @@ public final class HardwoodParquetDatasetGenerator {
 
     private HardwoodParquetDatasetGenerator() {}
 
-    /** Writes exactly {@code rowCount} deterministic rows to a new file. */
-    public static void write(Path path, int rowCount) throws IOException {
-        if (rowCount < 0) {
-            throw new IllegalArgumentException("rowCount must be greater than or equal to zero");
+    /** Writes exactly {@code rowCount} deterministic rows across two new files. */
+    public static void write(Path firstPath, Path secondPath, int rowCount) throws IOException {
+        requirePositiveRowCount(rowCount);
+        if (firstPath.equals(secondPath)) {
+            throw new IllegalArgumentException("The two Parquet paths must be distinct");
         }
+        int firstFileRowCount = firstFileRowCount(rowCount);
+        writeRange(firstPath, 0, firstFileRowCount);
+        try {
+            writeRange(secondPath, firstFileRowCount, rowCount - firstFileRowCount);
+        } catch (IOException | RuntimeException | Error failure) {
+            Files.deleteIfExists(firstPath);
+            Files.deleteIfExists(secondPath);
+            throw failure;
+        }
+    }
+
+    /** Creates and populates two temporary Parquet files for one JMH trial. */
+    public static List<Path> writeTemporary(int rowCount) throws IOException {
+        requirePositiveRowCount(rowCount);
+        Path firstPath = Files.createTempFile(
+                "hardwood-market-data-first-" + rowCount + "-", ".parquet");
+        Path secondPath = null;
+        try {
+            secondPath = Files.createTempFile(
+                    "hardwood-market-data-second-" + rowCount + "-", ".parquet");
+            Files.delete(firstPath);
+            Files.delete(secondPath);
+            write(firstPath, secondPath, rowCount);
+            return List.of(firstPath, secondPath);
+        } catch (IOException | RuntimeException | Error failure) {
+            Files.deleteIfExists(firstPath);
+            if (secondPath != null) {
+                Files.deleteIfExists(secondPath);
+            }
+            throw failure;
+        }
+    }
+
+    static int firstFileRowCount(int rowCount) {
+        requirePositiveRowCount(rowCount);
+        return rowCount / 4;
+    }
+
+    private static void writeRange(Path path, int firstRowIndex, int rowCount) throws IOException {
         Path parent = path.toAbsolutePath().normalize().getParent();
         if (parent != null) {
             Files.createDirectories(parent);
@@ -56,22 +97,10 @@ public final class HardwoodParquetDatasetGenerator {
                 .withPageSize(1024 * 1024)
                 .withRowGroupSize(64L * 1024L * 1024L)
                 .build()) {
-            for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
+            int toRowIndex = Math.addExact(firstRowIndex, rowCount);
+            for (int rowIndex = firstRowIndex; rowIndex < toRowIndex; rowIndex++) {
                 writer.write(group(rowIndex));
             }
-        }
-    }
-
-    /** Creates and populates a temporary Parquet file for one JMH trial. */
-    public static Path writeTemporary(int rowCount) throws IOException {
-        Path path = Files.createTempFile("hardwood-market-data-" + rowCount + "-", ".parquet");
-        Files.delete(path);
-        try {
-            write(path, rowCount);
-            return path;
-        } catch (IOException | RuntimeException | Error failure) {
-            Files.deleteIfExists(path);
-            throw failure;
         }
     }
 
@@ -103,6 +132,12 @@ public final class HardwoodParquetDatasetGenerator {
                 .append("bidPrice", row.bidPrice())
                 .append("askPrice", row.askPrice())
                 .append("lastTradePrice", row.lastTradePrice());
+    }
+
+    private static void requirePositiveRowCount(int rowCount) {
+        if (rowCount <= 0) {
+            throw new IllegalArgumentException("rowCount must be greater than zero");
+        }
     }
 
     private record NioOutputFile(Path path) implements OutputFile {

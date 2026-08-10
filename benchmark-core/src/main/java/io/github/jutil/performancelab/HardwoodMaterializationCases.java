@@ -3,6 +3,7 @@ package io.github.jutil.performancelab;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.List;
 
 import dev.hardwood.InputFile;
 import dev.hardwood.reader.ColumnReader;
@@ -17,56 +18,61 @@ public final class HardwoodMaterializationCases {
 
     /** Uses the generated ranged-batch loader to build and seal a columnar store. */
     public static ProjectionStore<HardwoodMarketDataProjection> hardwoodToColumnarBatch(
-            Path parquetFile, int rowCount, int batchSize) throws IOException {
-        try (ParquetFileReader reader = ParquetFileReader.open(InputFile.of(parquetFile));
-                ColumnReaders columns = reader
-                        .buildColumnReaders(HardwoodMarketDataProjectionHardwoodLoader.projection())
-                        .batchSize(batchSize)
-                        .build()) {
-            return HardwoodMarketDataProjectionHardwoodLoader.load(columns, rowCount);
+            List<Path> parquetFiles) throws IOException {
+        try (ParquetFileReader reader = openAll(parquetFiles)) {
+            return HardwoodMarketDataProjectionHardwoodLoader.load(reader);
         }
     }
 
-    /** Creates one immutable row per decoded record and retains it in a pre-sized ArrayList. */
+    /** Creates one immutable row per decoded record and retains it in an ArrayList. */
     public static ArrayList<HardwoodMarketDataRow> hardwoodToArrayList(
-            Path parquetFile, int rowCount, int batchSize) throws IOException {
-        ArrayList<HardwoodMarketDataRow> rows = new ArrayList<>(rowCount);
-        try (ParquetFileReader reader = ParquetFileReader.open(InputFile.of(parquetFile));
-                ColumnReaders columns = reader
+            List<Path> parquetFiles) throws IOException {
+        try (ParquetFileReader reader = openAll(parquetFiles)) {
+            int firstFileRowCount = Math.toIntExact(reader.getFileMetaData().numRows());
+            ArrayList<HardwoodMarketDataRow> rows = new ArrayList<>(firstFileRowCount);
+            try (ColumnReaders columns = reader
                         .buildColumnReaders(HardwoodMarketDataProjectionHardwoodLoader.projection())
-                        .batchSize(batchSize)
                         .build()) {
-            ColumnReader timestamp = columns.getColumnReader("timestamp");
-            ColumnReader symbol = columns.getColumnReader("symbol");
-            ColumnReader venue = columns.getColumnReader("venue");
-            ColumnReader side = columns.getColumnReader("side");
-            ColumnReader sequenceNumber = columns.getColumnReader("sequenceNumber");
-            ColumnReader bidPrice = columns.getColumnReader("bidPrice");
-            ColumnReader askPrice = columns.getColumnReader("askPrice");
-            ColumnReader lastTradePrice = columns.getColumnReader("lastTradePrice");
-            while (columns.nextBatch()) {
-                int recordCount = columns.getRecordCount();
-                long[] timestamps = timestamp.getLongs();
-                String[] symbols = symbol.getStrings();
-                String[] venues = venue.getStrings();
-                String[] sides = side.getStrings();
-                long[] sequenceNumbers = sequenceNumber.getLongs();
-                double[] bidPrices = bidPrice.getDoubles();
-                double[] askPrices = askPrice.getDoubles();
-                double[] lastTradePrices = lastTradePrice.getDoubles();
-                for (int rowIndex = 0; rowIndex < recordCount; rowIndex++) {
-                    rows.add(new HardwoodMarketDataRow(
-                            timestamps[rowIndex],
-                            symbols[rowIndex],
-                            venues[rowIndex],
-                            sides[rowIndex],
-                            sequenceNumbers[rowIndex],
-                            bidPrices[rowIndex],
-                            askPrices[rowIndex],
-                            lastTradePrices[rowIndex]));
+                ColumnReader timestamp = columns.getColumnReader("timestamp");
+                ColumnReader symbol = columns.getColumnReader("symbol");
+                ColumnReader venue = columns.getColumnReader("venue");
+                ColumnReader side = columns.getColumnReader("side");
+                ColumnReader sequenceNumber = columns.getColumnReader("sequenceNumber");
+                ColumnReader bidPrice = columns.getColumnReader("bidPrice");
+                ColumnReader askPrice = columns.getColumnReader("askPrice");
+                ColumnReader lastTradePrice = columns.getColumnReader("lastTradePrice");
+                while (columns.nextBatch()) {
+                    int recordCount = columns.getRecordCount();
+                    long[] timestamps = timestamp.getLongs();
+                    String[] symbols = symbol.getStrings();
+                    String[] venues = venue.getStrings();
+                    String[] sides = side.getStrings();
+                    long[] sequenceNumbers = sequenceNumber.getLongs();
+                    double[] bidPrices = bidPrice.getDoubles();
+                    double[] askPrices = askPrice.getDoubles();
+                    double[] lastTradePrices = lastTradePrice.getDoubles();
+                    for (int rowIndex = 0; rowIndex < recordCount; rowIndex++) {
+                        rows.add(new HardwoodMarketDataRow(
+                                timestamps[rowIndex],
+                                symbols[rowIndex],
+                                venues[rowIndex],
+                                sides[rowIndex],
+                                sequenceNumbers[rowIndex],
+                                bidPrices[rowIndex],
+                                askPrices[rowIndex],
+                                lastTradePrices[rowIndex]));
+                    }
                 }
             }
+            return rows;
         }
-        return rows;
+    }
+
+    private static ParquetFileReader openAll(List<Path> parquetFiles) throws IOException {
+        if (parquetFiles.size() != 2) {
+            throw new IllegalArgumentException("Exactly two Parquet files are required");
+        }
+        return ParquetFileReader.openAll(List.of(
+                InputFile.of(parquetFiles.get(0)), InputFile.of(parquetFiles.get(1))));
     }
 }
