@@ -23,7 +23,7 @@ import org.openjdk.jmh.annotations.Warmup;
 import io.github.jutil.inputstreamprocessor.core.InputStreamProcessor;
 import io.github.jutil.splicelist.SpliceList;
 
-/** End-to-end single-thread ingestion with two storage settings that both start at 10. */
+/** End-to-end single-thread ingestion with two configurable starting-storage policies. */
 @BenchmarkMode(Mode.SingleShotTime)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @Warmup(iterations = 2)
@@ -33,17 +33,19 @@ import io.github.jutil.splicelist.SpliceList;
 public class SingleThreadCollectionGrowthBenchmark {
 
     @Benchmark
-    public ArrayList<Item> arrayListInitialCapacity10(BenchmarkState state) throws IOException {
-        return SingleThreadCollectionGrowthWorkload.arrayListInitialCapacity10(
+    public ArrayList<Item> arrayListInitialCapacity(BenchmarkState state) throws IOException {
+        return SingleThreadCollectionGrowthWorkload.arrayList(
                 state.input,
-                state.processor);
+                state.processor,
+                state.storageSize);
     }
 
     @Benchmark
-    public SpliceList<Item> spliceListSegmentSize10(BenchmarkState state) throws IOException {
-        return SingleThreadCollectionGrowthWorkload.spliceListSegmentSize10(
+    public SpliceList<Item> spliceListSegmentSize(BenchmarkState state) throws IOException {
+        return SingleThreadCollectionGrowthWorkload.spliceList(
                 state.input,
-                state.processor);
+                state.processor,
+                state.storageSize);
     }
 
     @State(Scope.Benchmark)
@@ -51,6 +53,9 @@ public class SingleThreadCollectionGrowthBenchmark {
 
         @Param({"10000000", "20000000"})
         public int rowCount;
+
+        @Param({"100"})
+        public int storageSize;
 
         Path input;
         InputStreamProcessor<Item> processor;

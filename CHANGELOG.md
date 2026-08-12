@@ -5,8 +5,9 @@ All notable changes to this repository will be documented in this file.
 ## Unreleased
 
 - Add a single-thread, end-to-end collection-growth benchmark comparing an
-  `ArrayList` initial capacity of 10 with a `SpliceList` regular segment size of
-  10 across the deterministic 10-million- and 20-million-row 1BRC-style inputs.
+  `ArrayList` initial capacity with a `SpliceList` regular segment size through
+  a shared storage-size parameter defaulting to 100 across the deterministic
+  10-million- and 20-million-row 1BRC-style inputs.
 - Update the parallel collection benchmark to use `splice-list:2.0.0-SNAPSHOT`
   with parser-local segment capacity estimated from row count and parallelism.
 - Add a focused Columnar Projection Store iteration benchmark comparing its

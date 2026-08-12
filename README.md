@@ -377,15 +377,15 @@ java -jar benchmark-jmh/target/benchmarks.jar \
 ### `SingleThreadCollectionGrowthBenchmark`
 
 This benchmark asks how single-thread, end-to-end file-to-collection ingestion
-compares when `ArrayList` and `SpliceList` both begin with storage for 10 items
-but use different growth policies. `arrayListInitialCapacity10` constructs an
-`ArrayList<Item>` with an initial capacity of 10; when it fills, the list grows
-geometrically by replacing and copying its backing array.
-`spliceListSegmentSize10` constructs a `SpliceList<Item>` with a regular segment
-size of 10; when a segment fills, the list appends another ten-element segment.
-The settings therefore produce the same first storage capacity but do not mean
-the same thing after that point: 10 is an initial capacity for `ArrayList` and a
-regular segment size for `SpliceList`.
+compares when `ArrayList` and `SpliceList` both use the same configurable
+`storageSize`, which defaults to 100, but apply different growth policies.
+`arrayListInitialCapacity` constructs an `ArrayList<Item>` whose initial capacity
+is `storageSize`; when it fills, the list grows geometrically by replacing and
+copying its backing array. `spliceListSegmentSize` constructs a `SpliceList<Item>`
+whose regular segment size is `storageSize`; when a segment fills, the list
+appends another same-sized segment. The parameter therefore produces the same
+first storage capacity but does not mean the same thing after that point: it is
+an initial capacity for `ArrayList` and a regular segment size for `SpliceList`.
 
 The default parameters process the existing deterministic 1BRC-style datasets
 at both 10,000,000 and 20,000,000 rows with exactly one JMH thread. Every
@@ -416,6 +416,7 @@ Run both row counts with extended settings, GC profiling, and JSON output:
 java -jar benchmark-jmh/target/benchmarks.jar \
   SingleThreadCollectionGrowthBenchmark \
   -p rowCount=10000000,20000000 \
+  -p storageSize=100 \
   -wi 5 \
   -i 10 \
   -f 3 \

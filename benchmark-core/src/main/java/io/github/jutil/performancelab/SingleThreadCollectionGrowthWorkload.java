@@ -16,14 +16,15 @@ public final class SingleThreadCollectionGrowthWorkload {
     }
 
     /**
-     * Parses the file into a fresh {@link ArrayList} with initial capacity 10.
+     * Parses the file into a fresh {@link ArrayList} with the requested initial capacity.
      * The list grows geometrically by replacing and copying its backing array.
      */
-    public static ArrayList<Item> arrayListInitialCapacity10(
+    public static ArrayList<Item> arrayList(
             Path input,
-            InputStreamProcessor<Item> processor
+            InputStreamProcessor<Item> processor,
+            int initialCapacity
     ) throws IOException {
-        ArrayList<Item> destination = new ArrayList<>(10);
+        ArrayList<Item> destination = new ArrayList<>(initialCapacity);
         try (InputStream stream = Files.newInputStream(input)) {
             processor.process(stream, destination::add);
         }
@@ -31,14 +32,15 @@ public final class SingleThreadCollectionGrowthWorkload {
     }
 
     /**
-     * Parses the file into a fresh {@link SpliceList} with regular segment size 10.
-     * The list appends another ten-element segment when the current segment is full.
+     * Parses the file into a fresh {@link SpliceList} with the requested regular segment size.
+     * The list appends another same-sized segment when the current segment is full.
      */
-    public static SpliceList<Item> spliceListSegmentSize10(
+    public static SpliceList<Item> spliceList(
             Path input,
-            InputStreamProcessor<Item> processor
+            InputStreamProcessor<Item> processor,
+            int segmentSize
     ) throws IOException {
-        SpliceList<Item> destination = new SpliceList<>(10);
+        SpliceList<Item> destination = new SpliceList<>(segmentSize);
         try (InputStream stream = Files.newInputStream(input)) {
             processor.process(stream, destination::addLast);
         }

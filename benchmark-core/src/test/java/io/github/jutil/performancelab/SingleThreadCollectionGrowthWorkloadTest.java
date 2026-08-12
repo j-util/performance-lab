@@ -19,6 +19,7 @@ import io.github.jutil.splicelist.SpliceList;
 
 class SingleThreadCollectionGrowthWorkloadTest {
 
+    private static final int STORAGE_SIZE = 10;
     private static final List<Item> EXPECTED = expectedItems();
 
     @TempDir
@@ -47,22 +48,30 @@ class SingleThreadCollectionGrowthWorkloadTest {
                 SpliceListParallelCollectionWorkload.newSequentialProcessor();
 
         ArrayList<Item> firstArray =
-                SingleThreadCollectionGrowthWorkload.arrayListInitialCapacity10(full, processor);
+                SingleThreadCollectionGrowthWorkload.arrayList(
+                        full, processor, STORAGE_SIZE);
         ArrayList<Item> secondArray =
-                SingleThreadCollectionGrowthWorkload.arrayListInitialCapacity10(full, processor);
+                SingleThreadCollectionGrowthWorkload.arrayList(
+                        full, processor, STORAGE_SIZE);
         ArrayList<Item> emptyArray =
-                SingleThreadCollectionGrowthWorkload.arrayListInitialCapacity10(empty, processor);
+                SingleThreadCollectionGrowthWorkload.arrayList(
+                        empty, processor, STORAGE_SIZE);
         ArrayList<Item> partialArray =
-                SingleThreadCollectionGrowthWorkload.arrayListInitialCapacity10(partial, processor);
+                SingleThreadCollectionGrowthWorkload.arrayList(
+                        partial, processor, STORAGE_SIZE);
 
         SpliceList<Item> firstSplice =
-                SingleThreadCollectionGrowthWorkload.spliceListSegmentSize10(full, processor);
+                SingleThreadCollectionGrowthWorkload.spliceList(
+                        full, processor, STORAGE_SIZE);
         SpliceList<Item> secondSplice =
-                SingleThreadCollectionGrowthWorkload.spliceListSegmentSize10(full, processor);
+                SingleThreadCollectionGrowthWorkload.spliceList(
+                        full, processor, STORAGE_SIZE);
         SpliceList<Item> emptySplice =
-                SingleThreadCollectionGrowthWorkload.spliceListSegmentSize10(empty, processor);
+                SingleThreadCollectionGrowthWorkload.spliceList(
+                        empty, processor, STORAGE_SIZE);
         SpliceList<Item> partialSplice =
-                SingleThreadCollectionGrowthWorkload.spliceListSegmentSize10(partial, processor);
+                SingleThreadCollectionGrowthWorkload.spliceList(
+                        partial, processor, STORAGE_SIZE);
 
         assertNotSame(firstArray, secondArray);
         assertNotSame(firstSplice, secondSplice);
@@ -77,18 +86,20 @@ class SingleThreadCollectionGrowthWorkloadTest {
     }
 
     private void assertCompleteOrderedResults(Path fixture) throws Exception {
-        assertTrue(EXPECTED.size() > 10);
+        assertTrue(EXPECTED.size() > STORAGE_SIZE);
         InputStreamProcessor<Item> processor =
                 SpliceListParallelCollectionWorkload.newSequentialProcessor();
 
         ArrayList<Item> arrayList =
-                SingleThreadCollectionGrowthWorkload.arrayListInitialCapacity10(
+                SingleThreadCollectionGrowthWorkload.arrayList(
                         fixture,
-                        processor);
+                        processor,
+                        STORAGE_SIZE);
         SpliceList<Item> spliceList =
-                SingleThreadCollectionGrowthWorkload.spliceListSegmentSize10(
+                SingleThreadCollectionGrowthWorkload.spliceList(
                         fixture,
-                        processor);
+                        processor,
+                        STORAGE_SIZE);
 
         assertEquals(EXPECTED.size(), arrayList.size());
         assertEquals(EXPECTED.size(), spliceList.size());
