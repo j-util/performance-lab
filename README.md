@@ -112,44 +112,50 @@ same order to one real Hardwood multi-file reader and use the same projection:
   decoded row and appends it to an `ArrayList`, representing conventional object
   materialization.
 
-Hardwood exposes the first file's metadata from a multi-file reader. Each
-destination therefore starts with capacity based only on
-`Math.toIntExact(reader.getFileMetaData().numRows())`, not the combined
-`rowCount`: the generated loader applies that logic to the columnar store, and
-the list path applies the same logic to `new ArrayList<>(firstFileRowCount)`.
-Because the first file is deliberately smaller than the complete dataset, both
-destinations include their natural growth behavior while the second file is
-materialized. Their internal growth algorithms are intentionally not equalized.
+Both paths inspect every file through
+`reader.getFileMetaData(fileIndex).numRows()`, combine the row counts with
+`Math.addExact`, and convert the result to an exact initial capacity with
+`Math.toIntExact`. The `ArrayList` and the store created by the generated
+columnar loader therefore both start with the exact combined row capacity for
+the two-file input.
 
 Every invocation opens a fresh
 `ParquetFileReader.openAll(List.of(InputFile.of(firstPath),
 InputFile.of(secondPath)))`, lets Hardwood transition between the files, and
 closes its projected column readers and multi-file reader before returning the
 completed destination to JMH. The timed boundary includes opening the files,
-first-file metadata access for initial sizing, Hardwood column-reader creation,
-Parquet decoding across both files, the file transition, destination growth and
-writes, columnar sealing, and resource closing. Trial setup writes the two files
-outside benchmark timing, and trial teardown deletes them. Correctness checks,
-result traversal, checksums, and aggregations also remain outside measured code.
+indexed metadata access for exact initial sizing, Hardwood column-reader
+construction, Parquet decoding across both files, the file transition,
+destination materialization, columnar sealing, and resource closing. Trial
+setup generates the two-file dataset outside benchmark timing, and trial
+teardown deletes it. Correctness checks, result traversal, checksums, and
+aggregations also remain outside measured code.
 
 This is a realistic end-to-end destination-materialization comparison, not an
 ingestion-only benchmark over retained decoded arrays. It does not measure any
 subsequent column operation, query, checksum, aggregation, or validation scan.
 Because Hardwood decoding is shared work, it can reduce the visible timing
 difference between the destinations. GC-profiler allocation measurements include
-Hardwood decoding and destination materialization, including destination growth;
-the columnar path avoids the one row object per record created by the `ArrayList`
-path. The returned destinations are JMH results, preventing dead-code
+Hardwood decoding and destination materialization; the columnar path avoids the
+one row object per record created by the `ArrayList` path. The returned
+destinations are JMH results, preventing dead-code
 elimination. The fixture uses uncompressed Parquet with dictionary encoding
 disabled and deterministic low-cardinality strings and exactly representable
 numeric values. Results from the earlier single-file, combined-capacity benchmark
 are not directly comparable with this multi-file workload.
 
+Development note: this configuration requires the locally installed
+`1.1.0-SNAPSHOT` Hardwood Core artifact and Columnar Projection Store Hardwood
+runtime and annotation-processor artifacts in `~/.m2`. It will not resolve on
+ordinary CI until Hardwood 1.1.0 is published or the dependency becomes
+otherwise available.
+
 Run the ordinary small correctness test, which checks the unequal two-file
-fixture, Hardwood's multi-file state, first-file metadata sizing, the cross-file
-boundary and second-file consumption, row counts, global row order, every field,
-batch boundaries, a partial final batch, store growth and sealing, independent
-invocations, stable string references, and representation equivalence:
+fixture, Hardwood's multi-file state, both indexed file-metadata entries, the
+cross-file boundary and second-file consumption, row counts, global row order,
+every field, batch boundaries, a partial final batch, exact combined store
+capacity and sealing, independent invocations, stable string references, and
+representation equivalence:
 
 ```shell
 ./mvnw -pl benchmark-core \

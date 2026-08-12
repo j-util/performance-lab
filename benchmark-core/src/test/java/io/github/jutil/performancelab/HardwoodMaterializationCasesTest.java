@@ -87,7 +87,7 @@ class HardwoodMaterializationCasesTest {
         assertEquals(ROW_COUNT, store.size());
         assertEquals(ROW_COUNT, rows.size());
         assertInstanceOf(HardwoodMarketDataProjectionStore.class, store);
-        assertTrue(storeCapacity(store) > FIRST_FILE_ROW_COUNT);
+        assertEquals(ROW_COUNT, storeCapacity(store));
         assertSealed(store);
 
         for (int rowIndex = 0; rowIndex < ROW_COUNT; rowIndex++) {
@@ -159,7 +159,7 @@ class HardwoodMaterializationCasesTest {
                 HardwoodMaterializationCases.hardwoodToArrayList(parquetFiles);
         assertEquals(1, store.size());
         assertEquals(1, rows.size());
-        assertTrue(storeCapacity(store) > 0);
+        assertEquals(1, storeCapacity(store));
         assertProjectionEquals(HardwoodParquetDatasetGenerator.rowAt(0), store.viewAt(0),
                 "small columnar row");
         assertEquals(HardwoodParquetDatasetGenerator.rowAt(0), rows.get(0));
