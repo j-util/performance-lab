@@ -374,6 +374,56 @@ java -jar benchmark-jmh/target/benchmarks.jar \
   -prof gc
 ```
 
+### `SingleThreadCollectionGrowthBenchmark`
+
+This benchmark asks how single-thread, end-to-end file-to-collection ingestion
+compares when `ArrayList` and `SpliceList` both begin with storage for 10 items
+but use different growth policies. `arrayListInitialCapacity10` constructs an
+`ArrayList<Item>` with an initial capacity of 10; when it fills, the list grows
+geometrically by replacing and copying its backing array.
+`spliceListSegmentSize10` constructs a `SpliceList<Item>` with a regular segment
+size of 10; when a segment fills, the list appends another ten-element segment.
+The settings therefore produce the same first storage capacity but do not mean
+the same thing after that point: 10 is an initial capacity for `ArrayList` and a
+regular segment size for `SpliceList`.
+
+The default parameters process the existing deterministic 1BRC-style datasets
+at both 10,000,000 and 20,000,000 rows with exactly one JMH thread. Every
+measured invocation creates a fresh destination and includes opening the file,
+reading it completely, identical UTF-8 and Commons CSV parsing, allocating every
+`Item(String key, double value)`, appending every item in source encounter order,
+and performing all destination growth: `ArrayList` backing-array replacement and
+copying, or `SpliceList` segment allocation and linking.
+
+Dataset generation, processor construction, correctness validation, result
+traversal, checksums, logging, and printing are outside measurement. This is an
+end-to-end file-to-collection ingestion benchmark, not a collection-only
+microbenchmark. Parsing and I/O are shared costs, so no performance conclusion
+is claimed before results are collected.
+
+Generate both default datasets with:
+
+```shell
+java -cp benchmark-jmh/target/benchmarks.jar \
+  io.github.jutil.performancelab.OneBrcStyleDatasetGenerator 10000000
+java -cp benchmark-jmh/target/benchmarks.jar \
+  io.github.jutil.performancelab.OneBrcStyleDatasetGenerator 20000000
+```
+
+Run both row counts with extended settings, GC profiling, and JSON output:
+
+```shell
+java -jar benchmark-jmh/target/benchmarks.jar \
+  SingleThreadCollectionGrowthBenchmark \
+  -p rowCount=10000000,20000000 \
+  -wi 5 \
+  -i 10 \
+  -f 3 \
+  -prof gc \
+  -rf json \
+  -rff target/single-thread-collection-growth.json
+```
+
 ### `CsvFullRowProcessingBenchmark`
 
 - streaming directly to the full-row consumer;
