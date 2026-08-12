@@ -78,13 +78,15 @@ public class SpliceListParallelCollectionBenchmark {
         public void setup() {
             input = requireDataset(rowCount);
             executor = Executors.newFixedThreadPool(parallelism);
+            int segmentSize = Math.ceilDiv(rowCount, parallelism);
             sequentialProcessor = SpliceListParallelCollectionWorkload.newSequentialProcessor();
             arrayListProcessor = SpliceListParallelCollectionWorkload.newArrayListProcessor(
                     parallelism,
                     executor);
             spliceListProcessor = SpliceListParallelCollectionWorkload.newSpliceListProcessor(
                     parallelism,
-                    executor);
+                    executor,
+                    segmentSize);
         }
 
         @TearDown(Level.Trial)

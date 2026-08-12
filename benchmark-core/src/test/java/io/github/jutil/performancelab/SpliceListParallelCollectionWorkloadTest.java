@@ -82,6 +82,29 @@ class SpliceListParallelCollectionWorkloadTest {
         assertTrue(third.isEmpty());
     }
 
+    @Test
+    void spliceListParserProducesExpectedResultBeyondConfiguredSegmentSize() throws Exception {
+        Path fixture = writeFixture("multiple-splice-list-segments.csv", true);
+        int segmentSize = 2;
+        assertTrue(EXPECTED.size() > segmentSize);
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        try {
+            ParallelRangeProcessor<SpliceList<Item>> processor =
+                    SpliceListParallelCollectionWorkload.newSpliceListProcessor(
+                            1,
+                            executor,
+                            segmentSize,
+                            7);
+
+            SpliceList<Item> actual = runParallelSplice(fixture, processor);
+
+            assertEquals(EXPECTED, actual);
+        } finally {
+            executor.shutdown();
+            assertTrue(executor.awaitTermination(10, TimeUnit.SECONDS));
+        }
+    }
+
     private Path writeFixture(String fileName, boolean trailingNewline) throws Exception {
         String content = EXPECTED.stream()
                 .map(item -> item.key() + ";" + item.value())
@@ -107,6 +130,7 @@ class SpliceListParallelCollectionWorkloadTest {
                     SpliceListParallelCollectionWorkload.newSpliceListProcessor(
                             PARALLELISM,
                             executor,
+                            EXPECTED.size(),
                             7);
 
             ArrayList<Item> firstSequential = runSequential(fixture, sequentialProcessor);

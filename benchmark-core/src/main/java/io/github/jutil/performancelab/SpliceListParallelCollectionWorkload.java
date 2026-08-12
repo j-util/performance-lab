@@ -78,9 +78,13 @@ public final class SpliceListParallelCollectionWorkload {
     /** Creates the reusable range processor for parser-local splice lists. */
     public static ParallelRangeProcessor<SpliceList<Item>> newSpliceListProcessor(
             int parallelism,
-            Executor executor
+            Executor executor,
+            int segmentSize
     ) {
-        return newParallelProcessor(parallelism, executor, SpliceListParser::new);
+        return newParallelProcessor(
+                parallelism,
+                executor,
+                () -> new SpliceListParser(segmentSize));
     }
 
     static ParallelRangeProcessor<ArrayList<Item>> newArrayListProcessor(
@@ -98,12 +102,13 @@ public final class SpliceListParallelCollectionWorkload {
     static ParallelRangeProcessor<SpliceList<Item>> newSpliceListProcessor(
             int parallelism,
             Executor executor,
+            int segmentSize,
             int readBufferSize
     ) {
         return newParallelProcessor(
                 parallelism,
                 executor,
-                SpliceListParser::new,
+                () -> new SpliceListParser(segmentSize),
                 readBufferSize);
     }
 
@@ -182,12 +187,18 @@ public final class SpliceListParallelCollectionWorkload {
 
     private static final class SpliceListParser implements InputParser<SpliceList<Item>> {
 
+        private final int segmentSize;
+
+        private SpliceListParser(int segmentSize) {
+            this.segmentSize = segmentSize;
+        }
+
         @Override
         public void parse(
                 InputStream input,
                 Consumer<? super SpliceList<Item>> emitter
         ) throws IOException {
-            SpliceList<Item> items = new SpliceList<>();
+            SpliceList<Item> items = new SpliceList<>(segmentSize);
             OneBrcStyleCsvParser.parseItems(input, items::addLast);
             emitter.accept(items);
         }

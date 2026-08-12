@@ -300,6 +300,14 @@ deterministic 1BRC-style file as `Item(String key, double value)` objects:
   destination with destructive `spliceTail` operations. Each transferred source
   list is empty afterward.
 
+The benchmark currently uses `splice-list:2.0.0-SNAPSHOT`, which must already
+be installed in the local Maven repository. Parser-local SpliceLists use a
+segment capacity derived as `ceil(rowCount / parallelism)`. Because
+`parallel-range-processor` divides the input by bytes rather than row counts,
+this capacity is an estimate; a parser that receives more records allocates
+another segment. At 10,000,000 rows and parallelism 8, the derived segment size
+is 1,250,000. At 20,000,000 rows and parallelism 8, it is 2,500,000.
+
 These paths represent the intended parallel-list-assembly use case: independent
 parsers populate unsynchronized local lists, publish only completed results, and
 assemble one destination after all file ranges and reconstructed boundary
