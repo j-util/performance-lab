@@ -58,6 +58,12 @@
 
         <dependency>
             <groupId>io.github.j-util</groupId>
+            <artifactId>splice-list</artifactId>
+            <version>${splice-list.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.github.j-util</groupId>
             <artifactId>columnar-projection-store</artifactId>
             <version>${columnar-projection-store.version}</version>
         </dependency>

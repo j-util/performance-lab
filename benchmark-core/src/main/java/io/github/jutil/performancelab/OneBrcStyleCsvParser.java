@@ -29,12 +29,16 @@ final class OneBrcStyleCsvParser implements InputParser<Storage> {
     @Override
     public void parse(InputStream input, Consumer<? super Storage> emitter) throws IOException {
         Storage storage = new Storage();
+        parseItems(input, storage::store);
+        emitter.accept(storage);
+    }
+
+    static void parseItems(InputStream input, Consumer<? super Item> consumer) throws IOException {
         InputStreamReader reader = new InputStreamReader(input, StandardCharsets.UTF_8);
         CSVParser parser = CSV_FORMAT.parse(reader);
         for (CSVRecord record : parser) {
-            storage.store(toItem(record));
+            consumer.accept(toItem(record));
         }
-        emitter.accept(storage);
     }
 
     static Item parseLine(String line) {

@@ -283,6 +283,89 @@ Because the same file is read repeatedly across warmup and measurement
 iterations, results primarily represent warm OS-page-cache processing rather
 than raw disk throughput.
 
+### `SpliceListParallelCollectionBenchmark`
+
+This focused benchmark compares three ways to materialize the existing
+deterministic 1BRC-style file as `Item(String key, double value)` objects:
+
+- `parallelArrayListAddAll` uses `parallel-range-processor`; every parser owns a
+  separate mutable `ArrayList<Item>`, completed partial lists are published to a
+  thread-safe queue, and the caller copies all partials into one exactly
+  pre-sized `ArrayList` with `addAll`.
+- `sequentialArrayList` uses `inputstream-processor-core` to append records in
+  natural source order directly into one exactly pre-sized `ArrayList<Item>`.
+- `parallelSpliceListSpliceTail` uses `parallel-range-processor`; every parser
+  owns a separate mutable `SpliceList<Item>`, completed partial lists are
+  published through the same queue mechanism, and the caller assembles the
+  destination with destructive `spliceTail` operations. Each transferred source
+  list is empty afterward.
+
+These paths represent the intended parallel-list-assembly use case: independent
+parsers populate unsynchronized local lists, publish only completed results, and
+assemble one destination after all file ranges and reconstructed boundary
+records finish. Parallel partials can arrive in any order, so both parallel
+destinations have unspecified global order. Only the sequential destination
+preserves source order.
+
+The measured operation includes opening and reading the file, Commons CSV
+parsing, allocating every `Item`, populating direct or parser-local lists,
+publishing parallel partials, and final `ArrayList.addAll` or
+`SpliceList.spliceTail` assembly. Dataset generation, executor and processor
+construction, correctness checks, result traversal, and checksums are outside
+measurement. This is an end-to-end file-to-collection benchmark; parsing and I/O
+are shared costs that can reduce the visible difference between collection
+strategies. The defaults are 10,000,000 rows and parallelism 8, and both can be
+overridden with JMH parameters.
+
+Build and generate the existing deterministic 10-million-row dataset:
+
+```shell
+./mvnw -s /Users/karenbarseghyan/.m2/settings-j-util.xml clean package
+java -cp benchmark-jmh/target/benchmarks.jar \
+  io.github.jutil.performancelab.OneBrcStyleDatasetGenerator 10000000
+```
+
+For a small smoke run of all three methods, generate 1,000 rows and use one
+warmup iteration, one measurement iteration, and one fork:
+
+```shell
+java -cp benchmark-jmh/target/benchmarks.jar \
+  io.github.jutil.performancelab.OneBrcStyleDatasetGenerator 1000
+java -jar benchmark-jmh/target/benchmarks.jar \
+  SpliceListParallelCollectionBenchmark \
+  -p rowCount=1000 \
+  -p parallelism=8 \
+  -wi 1 \
+  -i 1 \
+  -f 1
+```
+
+Run the full 10-million-row benchmark with the class's standard two warmup
+iterations, three measurement iterations, and one fork:
+
+```shell
+java -jar benchmark-jmh/target/benchmarks.jar \
+  SpliceListParallelCollectionBenchmark \
+  -p rowCount=10000000 \
+  -p parallelism=8 \
+  -wi 2 \
+  -i 3 \
+  -f 1
+```
+
+Add JMH's GC profiler to the same 10-million-row run with:
+
+```shell
+java -jar benchmark-jmh/target/benchmarks.jar \
+  SpliceListParallelCollectionBenchmark \
+  -p rowCount=10000000 \
+  -p parallelism=8 \
+  -wi 2 \
+  -i 3 \
+  -f 1 \
+  -prof gc
+```
+
 ### `CsvFullRowProcessingBenchmark`
 
 - streaming directly to the full-row consumer;
