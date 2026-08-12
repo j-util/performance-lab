@@ -28,8 +28,13 @@ public final class HardwoodMaterializationCases {
     public static ArrayList<HardwoodMarketDataRow> hardwoodToArrayList(
             List<Path> parquetFiles) throws IOException {
         try (ParquetFileReader reader = openAll(parquetFiles)) {
-            int firstFileRowCount = Math.toIntExact(reader.getFileMetaData().numRows());
-            ArrayList<HardwoodMarketDataRow> rows = new ArrayList<>(firstFileRowCount);
+            long totalRowCount = 0;
+            for (int fileIndex = 0; fileIndex < reader.getFileCount(); fileIndex++) {
+                totalRowCount = Math.addExact(
+                        totalRowCount, reader.getFileMetaData(fileIndex).numRows());
+            }
+            ArrayList<HardwoodMarketDataRow> rows =
+                    new ArrayList<>(Math.toIntExact(totalRowCount));
             try (ColumnReaders columns = reader
                         .buildColumnReaders(HardwoodMarketDataProjectionHardwoodLoader.projection())
                         .build()) {

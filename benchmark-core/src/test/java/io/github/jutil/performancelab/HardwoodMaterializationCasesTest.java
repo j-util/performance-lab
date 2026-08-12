@@ -50,6 +50,9 @@ class HardwoodMaterializationCasesTest {
                         .batchSize(OBSERVATION_BATCH_SIZE)
                         .build()) {
             assertTrue(reader.isMultiFile());
+            assertEquals(2, reader.getFileCount());
+            assertEquals(FIRST_FILE_ROW_COUNT, reader.getFileMetaData(0).numRows());
+            assertEquals(SECOND_FILE_ROW_COUNT, reader.getFileMetaData(1).numRows());
             assertEquals(FIRST_FILE_ROW_COUNT, reader.getFileMetaData().numRows());
 
             ColumnReader sequenceNumber = columns.getColumnReader("sequenceNumber");
@@ -132,7 +135,7 @@ class HardwoodMaterializationCasesTest {
     }
 
     @Test
-    void oneRowDatasetKeepsBothFilesValidAndGrowsFromZeroInitialCapacity()
+    void oneRowDatasetKeepsBothFilesValidAndUsesAllFileMetadata()
             throws Exception {
         int rowCount = 1;
         Path firstPath = temporaryDirectory.resolve("small-first.parquet");
@@ -144,6 +147,9 @@ class HardwoodMaterializationCasesTest {
         assertEquals(1, fileRowCount(secondPath));
         try (ParquetFileReader reader = openAll(parquetFiles)) {
             assertTrue(reader.isMultiFile());
+            assertEquals(2, reader.getFileCount());
+            assertEquals(0, reader.getFileMetaData(0).numRows());
+            assertEquals(1, reader.getFileMetaData(1).numRows());
             assertEquals(0, reader.getFileMetaData().numRows());
         }
 
