@@ -374,6 +374,43 @@ java -jar benchmark-jmh/target/benchmarks.jar \
   -prof gc
 ```
 
+### `ReadyCollectionIterationBenchmark`
+
+This separate ready-data benchmark asks only what sequential iterator traversal
+costs after complete `Item` objects have already been materialized. Construction,
+fixture generation, population, and correctness validation happen during JMH
+trial setup and are excluded from measurement. The three representations are an
+`ArrayList<Item>` with exact initial capacity `rowCount`, a `SpliceList<Item>`
+whose one regular segment has capacity `rowCount`, and a `SpliceList<Item>` whose
+regular segment capacity is `ceil(rowCount / 10)`.
+
+The default 10,000,000-item input is divisible by ten, so the last representation
+has exactly ten full regular segments of 1,000,000 elements each. Other positive
+row-count overrides use `Math.ceilDiv(rowCount, 10)` and may end with a partially
+filled segment.
+
+All three benchmark methods invoke the same shared enhanced-for/iterator loop,
+visit every item once in encounter order, add the same deterministic finite
+`Item.value()` values to a `double` sum, and return that sum. Indexed access is
+intentionally excluded because it has fundamentally different complexity for
+`SpliceList`; streams, spliterators, `forEach`, parallelism, and
+collection-specific traversal shortcuts are also outside this comparison. No
+performance conclusion is claimed before controlled results are collected.
+
+Run the extended default-size comparison with GC profiling and JSON output:
+
+```shell
+java -jar benchmark-jmh/target/benchmarks.jar \
+  ReadyCollectionIterationBenchmark \
+  -p rowCount=10000000 \
+  -wi 5 \
+  -i 10 \
+  -f 3 \
+  -prof gc \
+  -rf json \
+  -rff target/ready-collection-iteration-10m.json
+```
+
 ### `SingleThreadCollectionGrowthBenchmark`
 
 This benchmark asks how single-thread, end-to-end file-to-collection ingestion

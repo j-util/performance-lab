@@ -4,6 +4,9 @@ All notable changes to this repository will be documented in this file.
 
 ## Unreleased
 
+- Add a separate ready-data iterator benchmark comparing an exactly pre-sized
+  `ArrayList<Item>` with one- and ten-segment `SpliceList<Item>` representations
+  over the same deterministic 10-million-item fixture.
 - Add a single-thread, end-to-end collection-growth benchmark comparing an
   `ArrayList` initial capacity with a `SpliceList` regular segment size through
   a shared storage-size parameter defaulting to 100 across the deterministic
