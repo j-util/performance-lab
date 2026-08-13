@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executor;
 
 import dev.hardwood.InputFile;
 import dev.hardwood.reader.ColumnReader;
@@ -21,6 +22,17 @@ public final class HardwoodMaterializationCases {
             List<Path> parquetFiles) throws IOException {
         try (ParquetFileReader reader = openAll(parquetFiles)) {
             return HardwoodMarketDataProjectionHardwoodLoader.load(reader);
+        }
+    }
+
+    /** Uses a caller-owned executor to copy each generated batch's columns. */
+    public static ProjectionStore<HardwoodMarketDataProjection>
+            hardwoodToExecutorBackedColumnarBatch(
+                    List<Path> parquetFiles,
+                    Executor columnCopyExecutor) throws IOException {
+        try (ParquetFileReader reader = openAll(parquetFiles)) {
+            return HardwoodMarketDataProjectionHardwoodLoader.load(
+                    reader, columnCopyExecutor);
         }
     }
 

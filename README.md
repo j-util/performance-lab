@@ -101,18 +101,24 @@ Projection Store.
 This benchmark treats two independently written, valid Parquet files as one
 deterministic flat market-data input. The first file contains `rowCount / 4`
 rows and the second contains the remainder, with one shared schema and globally
-consecutive values across the file boundary. Both paths pass the files in the
+consecutive values across the file boundary. All paths pass the files in the
 same order to one real Hardwood multi-file reader and use the same projection:
 
 - `hardwoodToColumnarBatch` calls the generated
   `HardwoodMarketDataProjectionHardwoodLoader.load(reader)` convenience method.
   The loader creates the projected column readers, uses the generated
   common-range batch API, materializes every file, and seals the store.
+- `hardwoodToExecutorBackedColumnarBatch` calls the additive generated
+  `load(reader, executor)` overload. The JMH client creates and reuses one
+  caller-owned fixed thread pool with eight workers, matching the projection's
+  eight columns. Hardwood still advances and materializes each input batch on
+  the benchmark thread; the generated store submits only the eight independent
+  destination-column copies and waits for them before advancing the next batch.
 - `hardwoodToArrayList` creates one immutable `HardwoodMarketDataRow` record per
   decoded row and appends it to an `ArrayList`, representing conventional object
   materialization.
 
-Both paths inspect every file through
+All paths inspect every file through
 `reader.getFileMetaData(fileIndex).numRows()`, combine the row counts with
 `Math.addExact`, and convert the result to an exact initial capacity with
 `Math.toIntExact`. The `ArrayList` and the store created by the generated
@@ -127,16 +133,17 @@ completed destination to JMH. The timed boundary includes opening the files,
 indexed metadata access for exact initial sizing, Hardwood column-reader
 construction, Parquet decoding across both files, the file transition,
 destination materialization, columnar sealing, and resource closing. Trial
-setup generates the two-file dataset outside benchmark timing, and trial
-teardown deletes it. Correctness checks, result traversal, checksums, and
-aggregations also remain outside measured code.
+setup generates the two-file dataset and creates the reusable eight-thread
+copy executor outside benchmark timing. Trial teardown shuts down that
+caller-owned executor and deletes the files. Correctness checks, result
+traversal, checksums, and aggregations also remain outside measured code.
 
 This is a realistic end-to-end destination-materialization comparison, not an
 ingestion-only benchmark over retained decoded arrays. It does not measure any
 subsequent column operation, query, checksum, aggregation, or validation scan.
 Because Hardwood decoding is shared work, it can reduce the visible timing
 difference between the destinations. GC-profiler allocation measurements include
-Hardwood decoding and destination materialization; the columnar path avoids the
+Hardwood decoding and destination materialization; both columnar paths avoid the
 one row object per record created by the `ArrayList` path. The returned
 destinations are JMH results, preventing dead-code
 elimination. The fixture uses uncompressed Parquet with dictionary encoding
@@ -144,25 +151,26 @@ disabled and deterministic low-cardinality strings and exactly representable
 numeric values. Results from the earlier single-file, combined-capacity benchmark
 are not directly comparable with this multi-file workload.
 
-Development note: this configuration requires the locally installed
-`1.1.0-SNAPSHOT` Hardwood Core artifact and Columnar Projection Store Hardwood
-runtime and annotation-processor artifacts in `~/.m2`. It will not resolve on
-ordinary CI until Hardwood 1.1.0 is published or the dependency becomes
-otherwise available.
+Development note: this configuration requires locally installed
+`1.3.0-SNAPSHOT` Columnar Projection Store artifacts and `1.1.0-SNAPSHOT`
+Hardwood Core and Columnar Projection Store Hardwood runtime and processor
+artifacts in `~/.m2`. It will not resolve on ordinary CI until those versions
+are published or the dependencies become otherwise available.
 
 Run the ordinary small correctness test, which checks the unequal two-file
 fixture, Hardwood's multi-file state, both indexed file-metadata entries, the
 cross-file boundary and second-file consumption, row counts, global row order,
 every field, batch boundaries, a partial final batch, exact combined store
-capacity and sealing, independent invocations, stable string references, and
-representation equivalence:
+capacity and sealing, independent invocations, stable string references,
+sequential and executor-backed representation equivalence, and caller executor
+ownership:
 
 ```shell
 ./mvnw -pl benchmark-core \
   -Dtest=HardwoodMaterializationCasesTest test
 ```
 
-Build and run a short 10,000-row smoke invocation of both methods. Smoke-test
+Build and run a short 10,000-row smoke invocation of all three methods. Smoke-test
 output only confirms that the benchmark executes; it is not a stable benchmark
 result:
 

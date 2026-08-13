@@ -13,6 +13,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import dev.hardwood.InputFile;
 import dev.hardwood.reader.ColumnReader;
@@ -25,6 +28,7 @@ import io.github.jutil.columnarprojection.ProjectionStore;
 
 class HardwoodMaterializationCasesTest {
 
+    private static final int PROJECTION_COLUMN_COUNT = 8;
     private static final int OBSERVATION_BATCH_SIZE = 7;
     private static final int ROW_COUNT = OBSERVATION_BATCH_SIZE * 2 + 5;
     private static final int FIRST_FILE_ROW_COUNT = ROW_COUNT / 4;
@@ -103,6 +107,35 @@ class HardwoodMaterializationCasesTest {
                 OBSERVATION_BATCH_SIZE * 2 - 1, OBSERVATION_BATCH_SIZE * 2,
                 ROW_COUNT - 1);
         assertStableStringReferences(store, rows, FIRST_FILE_ROW_COUNT);
+    }
+
+    @Test
+    void executorBackedLoaderMaterializesEquivalentRowsAndBorrowsExecutor()
+            throws Exception {
+        List<Path> parquetFiles = writeFixture("executor-backed");
+        ExecutorService executor =
+                Executors.newFixedThreadPool(PROJECTION_COLUMN_COUNT);
+        try {
+            ProjectionStore<HardwoodMarketDataProjection> store =
+                    HardwoodMaterializationCases
+                            .hardwoodToExecutorBackedColumnarBatch(
+                                    parquetFiles, executor);
+
+            assertEquals(ROW_COUNT, store.size());
+            assertEquals(ROW_COUNT, storeCapacity(store));
+            assertSealed(store);
+            for (int rowIndex = 0; rowIndex < ROW_COUNT; rowIndex++) {
+                assertProjectionEquals(
+                        HardwoodParquetDatasetGenerator.rowAt(rowIndex),
+                        store.viewAt(rowIndex),
+                        "executor-backed columnar row " + rowIndex);
+            }
+            assertEquals("caller still owns executor",
+                    executor.submit(() -> "caller still owns executor").get());
+        } finally {
+            executor.shutdown();
+            assertTrue(executor.awaitTermination(30, TimeUnit.SECONDS));
+        }
     }
 
     @Test
