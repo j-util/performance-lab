@@ -105,18 +105,23 @@ consecutive values across the file boundary. All paths pass the files in the
 same order to one real Hardwood multi-file reader and use the same projection:
 
 - `hardwoodToColumnarBatch` calls the generated
-  `HardwoodMarketDataProjectionHardwoodLoader.load(reader)` convenience method.
-  The loader creates the projected column readers, uses the generated
-  common-range batch API, materializes every file, and seals the store.
+  `HardwoodMarketDataProjectionHardwoodLoader.load(reader, batchSize)` method.
+  The loader creates the projected column readers, uses the generated common-range
+  batch API, materializes every file, and seals the store.
 - `hardwoodToExecutorBackedColumnarBatch` calls the additive generated
-  `load(reader, executor)` overload. The JMH client creates and reuses one
+  `load(reader, batchSize, executor)` overload. The JMH client creates and reuses one
   caller-owned fixed thread pool with eight workers, matching the projection's
   eight columns. Hardwood still advances and materializes each input batch on
   the benchmark thread; the generated store submits only the eight independent
   destination-column copies and waits for them before advancing the next batch.
 - `hardwoodToArrayList` creates one immutable `HardwoodMarketDataRow` record per
   decoded row and appends it to an `ArrayList`, representing conventional object
-  materialization.
+  materialization. Its column readers use the same `batchSize` as both generated
+  loader paths so that destination materialization remains the measured difference.
+
+The JMH `batchSize` parameter defaults to `1_000_000` and specifies the maximum
+records in a Hardwood column batch. Batches at file boundaries and the final
+batch may contain fewer records.
 
 All paths inspect every file through
 `reader.getFileMetaData(fileIndex).numRows()`, combine the row counts with
@@ -179,6 +184,7 @@ result:
 java -jar benchmark-jmh/target/benchmarks.jar \
   '.*HardwoodMaterializationBenchmark.*' \
   -p rowCount=10000 \
+  -p batchSize=1000 \
   -wi 1 \
   -i 1 \
   -f 1 \
@@ -191,15 +197,17 @@ Run a representative 1,000,000-row measurement with JMH GC allocation metrics:
 java -jar benchmark-jmh/target/benchmarks.jar \
   HardwoodMaterializationBenchmark \
   -p rowCount=1000000 \
+  -p batchSize=1000000 \
   -wi 2 \
   -i 3 \
   -f 1 \
   -prof gc
 ```
 
-The default `rowCount` parameters are 1,000,000 and 10,000,000. Because the
-same generated files are read for every invocation within a trial, measurements
-after the first read generally benefit from the operating system's page cache.
+The default `rowCount` parameters are 1,000,000 and 10,000,000, and the default
+`batchSize` is 1,000,000. Because the same generated files are read for every
+invocation within a trial, measurements after the first read generally benefit
+from the operating system's page cache.
 
 ### `OneBrcStyleProcessorBenchmark`
 

@@ -19,9 +19,10 @@ public final class HardwoodMaterializationCases {
 
     /** Uses the generated ranged-batch loader to build and seal a columnar store. */
     public static ProjectionStore<HardwoodMarketDataProjection> hardwoodToColumnarBatch(
-            List<Path> parquetFiles) throws IOException {
+            List<Path> parquetFiles,
+            int batchSize) throws IOException {
         try (ParquetFileReader reader = openAll(parquetFiles)) {
-            return HardwoodMarketDataProjectionHardwoodLoader.load(reader);
+            return HardwoodMarketDataProjectionHardwoodLoader.load(reader, batchSize);
         }
     }
 
@@ -29,16 +30,18 @@ public final class HardwoodMaterializationCases {
     public static ProjectionStore<HardwoodMarketDataProjection>
             hardwoodToExecutorBackedColumnarBatch(
                     List<Path> parquetFiles,
+                    int batchSize,
                     Executor columnCopyExecutor) throws IOException {
         try (ParquetFileReader reader = openAll(parquetFiles)) {
             return HardwoodMarketDataProjectionHardwoodLoader.load(
-                    reader, columnCopyExecutor);
+                    reader, batchSize, columnCopyExecutor);
         }
     }
 
     /** Creates one immutable row per decoded record and retains it in an ArrayList. */
     public static ArrayList<HardwoodMarketDataRow> hardwoodToArrayList(
-            List<Path> parquetFiles) throws IOException {
+            List<Path> parquetFiles,
+            int batchSize) throws IOException {
         try (ParquetFileReader reader = openAll(parquetFiles)) {
             long totalRowCount = 0;
             for (int fileIndex = 0; fileIndex < reader.getFileCount(); fileIndex++) {
@@ -49,6 +52,7 @@ public final class HardwoodMaterializationCases {
                     new ArrayList<>(Math.toIntExact(totalRowCount));
             try (ColumnReaders columns = reader
                         .buildColumnReaders(HardwoodMarketDataProjectionHardwoodLoader.projection())
+                        .batchSize(batchSize)
                         .build()) {
                 ColumnReader timestamp = columns.getColumnReader("timestamp");
                 ColumnReader symbol = columns.getColumnReader("symbol");

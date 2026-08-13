@@ -39,6 +39,9 @@ public class HardwoodMaterializationBenchmark {
     @Param({"1000000", "10000000"})
     public int rowCount;
 
+    @Param({"1000000"})
+    public int batchSize;
+
     private List<Path> parquetFiles;
     private ExecutorService columnCopyExecutor;
 
@@ -63,19 +66,21 @@ public class HardwoodMaterializationBenchmark {
     @Benchmark
     public ProjectionStore<HardwoodMarketDataProjection> hardwoodToColumnarBatch()
             throws IOException {
-        return HardwoodMaterializationCases.hardwoodToColumnarBatch(parquetFiles);
+        return HardwoodMaterializationCases.hardwoodToColumnarBatch(
+                parquetFiles, batchSize);
     }
 
     @Benchmark
     public ProjectionStore<HardwoodMarketDataProjection>
             hardwoodToExecutorBackedColumnarBatch() throws IOException {
         return HardwoodMaterializationCases.hardwoodToExecutorBackedColumnarBatch(
-                parquetFiles, columnCopyExecutor);
+                parquetFiles, batchSize, columnCopyExecutor);
     }
 
     @Benchmark
     public ArrayList<HardwoodMarketDataRow> hardwoodToArrayList() throws IOException {
-        return HardwoodMaterializationCases.hardwoodToArrayList(parquetFiles);
+        return HardwoodMaterializationCases.hardwoodToArrayList(
+                parquetFiles, batchSize);
     }
 
     private static void shutDown(ExecutorService executor)

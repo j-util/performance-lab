@@ -84,9 +84,11 @@ class HardwoodMaterializationCasesTest {
         List<Path> parquetFiles = writeFixture("materialized");
 
         ProjectionStore<HardwoodMarketDataProjection> store =
-                HardwoodMaterializationCases.hardwoodToColumnarBatch(parquetFiles);
+                HardwoodMaterializationCases.hardwoodToColumnarBatch(
+                        parquetFiles, OBSERVATION_BATCH_SIZE);
         ArrayList<HardwoodMarketDataRow> rows =
-                HardwoodMaterializationCases.hardwoodToArrayList(parquetFiles);
+                HardwoodMaterializationCases.hardwoodToArrayList(
+                        parquetFiles, OBSERVATION_BATCH_SIZE);
 
         assertEquals(ROW_COUNT, store.size());
         assertEquals(ROW_COUNT, rows.size());
@@ -119,7 +121,7 @@ class HardwoodMaterializationCasesTest {
             ProjectionStore<HardwoodMarketDataProjection> store =
                     HardwoodMaterializationCases
                             .hardwoodToExecutorBackedColumnarBatch(
-                                    parquetFiles, executor);
+                                    parquetFiles, OBSERVATION_BATCH_SIZE, executor);
 
             assertEquals(ROW_COUNT, store.size());
             assertEquals(ROW_COUNT, storeCapacity(store));
@@ -144,13 +146,17 @@ class HardwoodMaterializationCasesTest {
         List<Path> parquetFiles = writeFixture("repeated");
 
         ProjectionStore<HardwoodMarketDataProjection> firstStore =
-                HardwoodMaterializationCases.hardwoodToColumnarBatch(parquetFiles);
+                HardwoodMaterializationCases.hardwoodToColumnarBatch(
+                        parquetFiles, OBSERVATION_BATCH_SIZE);
         ProjectionStore<HardwoodMarketDataProjection> secondStore =
-                HardwoodMaterializationCases.hardwoodToColumnarBatch(parquetFiles);
+                HardwoodMaterializationCases.hardwoodToColumnarBatch(
+                        parquetFiles, OBSERVATION_BATCH_SIZE);
         ArrayList<HardwoodMarketDataRow> firstRows =
-                HardwoodMaterializationCases.hardwoodToArrayList(parquetFiles);
+                HardwoodMaterializationCases.hardwoodToArrayList(
+                        parquetFiles, OBSERVATION_BATCH_SIZE);
         ArrayList<HardwoodMarketDataRow> secondRows =
-                HardwoodMaterializationCases.hardwoodToArrayList(parquetFiles);
+                HardwoodMaterializationCases.hardwoodToArrayList(
+                        parquetFiles, OBSERVATION_BATCH_SIZE);
 
         assertNotSame(firstStore, secondStore);
         assertNotSame(firstRows, secondRows);
@@ -187,9 +193,11 @@ class HardwoodMaterializationCasesTest {
         }
 
         ProjectionStore<HardwoodMarketDataProjection> store =
-                HardwoodMaterializationCases.hardwoodToColumnarBatch(parquetFiles);
+                HardwoodMaterializationCases.hardwoodToColumnarBatch(
+                        parquetFiles, OBSERVATION_BATCH_SIZE);
         ArrayList<HardwoodMarketDataRow> rows =
-                HardwoodMaterializationCases.hardwoodToArrayList(parquetFiles);
+                HardwoodMaterializationCases.hardwoodToArrayList(
+                        parquetFiles, OBSERVATION_BATCH_SIZE);
         assertEquals(1, store.size());
         assertEquals(1, rows.size());
         assertEquals(1, storeCapacity(store));
