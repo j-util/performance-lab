@@ -19,7 +19,7 @@ import org.openjdk.jmh.annotations.Warmup;
 
 import io.github.jutil.splicelist.SpliceList;
 
-/** Fresh-list ordinary-add loops plus a separate optimized SpliceList endpoint loop. */
+/** Fresh-list matched ordinary-add loops plus explicitly contextual baselines. */
 @BenchmarkMode(Mode.SingleShotTime)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @Warmup(iterations = 2)
@@ -29,32 +29,43 @@ import io.github.jutil.splicelist.SpliceList;
 public class ListAppendBenchmark {
 
     @Benchmark
-    public ArrayList<Object> arrayListAdd(BenchmarkState state) {
-        return ListAppendWorkload.arrayListAdd(state.elementCount, state.marker);
-    }
-
-    /** ArrayList's known-size best case: initial capacity equals the final size. */
-    @Benchmark
-    public ArrayList<Object> arrayListExactCapacityAdd(BenchmarkState state) {
-        return ListAppendWorkload.arrayListExactCapacityAdd(
+    public ArrayList<Object> matchedArrayListOrdinaryAdd(CapacityHintState state) {
+        return ListAppendWorkload.arrayListCapacityHintAdd(
                 state.elementCount,
+                state.capacityHint,
                 state.marker);
     }
 
     @Benchmark
-    public SpliceList<Object> spliceListAdd(SegmentSizeState state) {
-        return ListAppendWorkload.spliceListAdd(
+    public SpliceList<Object> matchedSpliceListOrdinaryAdd(CapacityHintState state) {
+        return ListAppendWorkload.spliceListSegmentSizeAdd(
                 state.elementCount,
-                state.segmentSize,
+                state.capacityHint,
                 state.marker);
     }
 
-    /** Explicit optimized-endpoint counterpart to ordinary List.add. */
+    /** Context only: ArrayList grows from its default initial state. */
     @Benchmark
-    public SpliceList<Object> spliceListAddLast(SegmentSizeState state) {
-        return ListAppendWorkload.spliceListAddLast(
+    public ArrayList<Object> contextArrayListDefaultGrowing(BenchmarkState state) {
+        return ListAppendWorkload.arrayListDefaultGrowingAdd(
                 state.elementCount,
-                state.segmentSize,
+                state.marker);
+    }
+
+    /** Context only: ArrayList's initial capacity equals the final size. */
+    @Benchmark
+    public ArrayList<Object> contextArrayListExactFinalCapacity(BenchmarkState state) {
+        return ListAppendWorkload.arrayListExactFinalCapacityAdd(
+                state.elementCount,
+                state.marker);
+    }
+
+    /** Context only: SpliceList uses its optimized endpoint instead of ordinary List.add. */
+    @Benchmark
+    public SpliceList<Object> contextSpliceListOptimizedAddLast(CapacityHintState state) {
+        return ListAppendWorkload.spliceListSegmentSizeAddLast(
+                state.elementCount,
+                state.capacityHint,
                 state.marker);
     }
 
@@ -76,11 +87,11 @@ public class ListAppendBenchmark {
         }
     }
 
-    /** State shared by the ordinary and optimized SpliceList append methods. */
+    /** Shared constructor argument for the matched pair and optimized SpliceList context. */
     @State(Scope.Benchmark)
-    public static class SegmentSizeState extends BenchmarkState {
+    public static class CapacityHintState extends BenchmarkState {
 
         @Param({"256", "1024", "4096", "10000", "20000", "30000"})
-        public int segmentSize;
+        public int capacityHint;
     }
 }

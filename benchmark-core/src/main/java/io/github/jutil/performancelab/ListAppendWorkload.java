@@ -10,26 +10,19 @@ final class ListAppendWorkload {
     private ListAppendWorkload() {
     }
 
-    static <E> ArrayList<E> arrayListExactCapacityAdd(int elementCount, E marker) {
-        ArrayList<E> list = new ArrayList<>(elementCount);
-        for (int index = 0; index < elementCount; index++) {
-            list.add(marker);
-        }
-        return list;
-    }
-
-    static <E> ArrayList<E> arrayListAdd(
+    static <E> ArrayList<E> arrayListCapacityHintAdd(
             int elementCount,
+            int capacityHint,
             E marker
     ) {
-        ArrayList<E> list = new ArrayList<>();
+        ArrayList<E> list = new ArrayList<>(capacityHint);
         for (int index = 0; index < elementCount; index++) {
             list.add(marker);
         }
         return list;
     }
 
-    static <E> SpliceList<E> spliceListAdd(
+    static <E> SpliceList<E> spliceListSegmentSizeAdd(
             int elementCount,
             int segmentSize,
             E marker
@@ -41,7 +34,26 @@ final class ListAppendWorkload {
         return list;
     }
 
-    static <E> SpliceList<E> spliceListAddLast(
+    static <E> ArrayList<E> arrayListExactFinalCapacityAdd(int elementCount, E marker) {
+        ArrayList<E> list = new ArrayList<>(elementCount);
+        for (int index = 0; index < elementCount; index++) {
+            list.add(marker);
+        }
+        return list;
+    }
+
+    static <E> ArrayList<E> arrayListDefaultGrowingAdd(
+            int elementCount,
+            E marker
+    ) {
+        ArrayList<E> list = new ArrayList<>();
+        for (int index = 0; index < elementCount; index++) {
+            list.add(marker);
+        }
+        return list;
+    }
+
+    static <E> SpliceList<E> spliceListSegmentSizeAddLast(
             int elementCount,
             int segmentSize,
             E marker

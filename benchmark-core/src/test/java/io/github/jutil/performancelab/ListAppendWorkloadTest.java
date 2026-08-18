@@ -12,12 +12,12 @@ import org.junit.jupiter.api.Test;
 
 class ListAppendWorkloadTest {
 
-    private static final int[] SEGMENT_SIZES = {
+    private static final int[] CAPACITY_HINTS = {
         256, 1_024, 4_096, 10_000, 20_000, 30_000
     };
 
     @Test
-    void everyRepresentationHasTheRequestedSizeAndMarkerContent() {
+    void everyBenchmarkPathHasTheRequestedSizeAndMarkerContent() {
         Object marker = new Object();
 
         for (List<Object> result : results(257, marker)) {
@@ -25,6 +25,24 @@ class ListAppendWorkloadTest {
             for (Object element : result) {
                 assertSame(marker, element);
             }
+        }
+    }
+
+    @Test
+    void matchedOrdinaryAddPathsProduceEquivalentListsForEveryCapacityHint() {
+        Object marker = new Object();
+
+        for (int capacityHint : CAPACITY_HINTS) {
+            List<Object> arrayList = ListAppendWorkload.arrayListCapacityHintAdd(
+                    257,
+                    capacityHint,
+                    marker);
+            List<Object> spliceList = ListAppendWorkload.spliceListSegmentSizeAdd(
+                    257,
+                    capacityHint,
+                    marker);
+
+            assertEquals(arrayList, spliceList, "capacityHint=" + capacityHint);
         }
     }
 
@@ -67,16 +85,20 @@ class ListAppendWorkloadTest {
 
     private static List<List<Object>> results(int elementCount, Object marker) {
         ArrayList<List<Object>> results = new ArrayList<>();
-        results.add(ListAppendWorkload.arrayListAdd(elementCount, marker));
-        results.add(ListAppendWorkload.arrayListExactCapacityAdd(elementCount, marker));
-        for (int segmentSize : SEGMENT_SIZES) {
-            results.add(ListAppendWorkload.spliceListAdd(
+        results.add(ListAppendWorkload.arrayListDefaultGrowingAdd(elementCount, marker));
+        results.add(ListAppendWorkload.arrayListExactFinalCapacityAdd(elementCount, marker));
+        for (int capacityHint : CAPACITY_HINTS) {
+            results.add(ListAppendWorkload.arrayListCapacityHintAdd(
                     elementCount,
-                    segmentSize,
+                    capacityHint,
                     marker));
-            results.add(ListAppendWorkload.spliceListAddLast(
+            results.add(ListAppendWorkload.spliceListSegmentSizeAdd(
                     elementCount,
-                    segmentSize,
+                    capacityHint,
+                    marker));
+            results.add(ListAppendWorkload.spliceListSegmentSizeAddLast(
+                    elementCount,
+                    capacityHint,
                     marker));
         }
         return results;

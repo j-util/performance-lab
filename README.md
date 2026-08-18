@@ -437,22 +437,28 @@ the loop measures collection allocation and reference addition rather than
 element construction. File I/O, CSV parsing, logging, `Item` allocation,
 validation, traversal, and consolidation are excluded.
 
-The four results remain separate:
+The primary comparison is a matched pair at every shared `capacityHint` value:
 
-- `arrayListAdd`: `new ArrayList<>()` followed by ordinary `List.add`, exposing
-  the default-growing ArrayList path;
-- `arrayListExactCapacityAdd`: `new ArrayList<>(elementCount)` followed by
-  ordinary `List.add`, the known-size ArrayList best case;
-- `spliceListAdd`: `new SpliceList<>(segmentSize)` followed by ordinary
-  `List.add`, which is the standard comparator against `arrayListAdd`; and
-- `spliceListAddLast`: the same state, marker, element count, and explicit
-  segment size as `spliceListAdd`, but using SpliceList's optimized endpoint
+- `matchedArrayListOrdinaryAdd`: `new ArrayList<>(capacityHint)` followed by
+  `elementCount` ordinary `List.add` calls; and
+- `matchedSpliceListOrdinaryAdd`: `new SpliceList<>(capacityHint)` followed by
+  the same `elementCount` ordinary `List.add` calls.
+
+The parameter is an ArrayList initial-capacity hint in the first method and a
+SpliceList segment size in the second. Its shared values are 256, 1024, 4096,
+10,000, 20,000, and 30,000. The released SpliceList production default remains
+1024 and is included in that matrix; the benchmark does not modify it. The
+10,000, 20,000, and 30,000 values are explicitly tuned configurations.
+
+Three clearly named results are context only, not members of the primary
+comparison:
+
+- `contextArrayListDefaultGrowing`: `new ArrayList<>()` plus ordinary add;
+- `contextArrayListExactFinalCapacity`: `new ArrayList<>(elementCount)` plus
+  ordinary add; and
+- `contextSpliceListOptimizedAddLast`: the same constructor argument and append
+  count as the matched SpliceList method, but using the optimized endpoint
   `addLast` API.
-
-The explicit `segmentSize` values are 256, 1024, 4096, 10,000, 20,000, and
-30,000. The released production default remains 1024 and is included in that
-matrix; the benchmark does not modify it. The 10,000, 20,000, and 30,000 values
-are explicitly tuned configurations.
 
 The normal default is `elementCount=10000`. For an append-only completed
 `SpliceList`, allocated element slots are
@@ -465,15 +471,15 @@ matrix case. This capacity accounting is descriptive and is not a performance
 recommendation. Normalized allocation per operation is the primary append-suite
 result; execution time is secondary.
 
-Run the normal 10,000-element smoke suite with all six explicit segment sizes,
-normalized allocation from `-prof gc`, and JSON output:
+Run the normal 10,000-element smoke suite with all six shared constructor
+arguments, normalized allocation from `-prof gc`, and JSON output:
 
 ```shell
 mkdir -p target
 java -jar benchmark-jmh/target/benchmarks.jar \
   ListAppendBenchmark \
   -p elementCount=10000 \
-  -p segmentSize=256,1024,4096,10000,20000,30000 \
+  -p capacityHint=256,1024,4096,10000,20000,30000 \
   -wi 1 \
   -i 1 \
   -f 1 \
@@ -490,7 +496,7 @@ mkdir -p target
 java -jar benchmark-jmh/target/benchmarks.jar \
   ListAppendBenchmark \
   -p elementCount=10000,100000,1000000,10000000,20000000,30000000 \
-  -p segmentSize=256,1024,4096,10000,20000,30000 \
+  -p capacityHint=256,1024,4096,10000,20000,30000 \
   -wi 5 \
   -i 10 \
   -f 3 \
@@ -501,8 +507,18 @@ java -jar benchmark-jmh/target/benchmarks.jar \
 
 The profiler's `gc.alloc.rate.norm` secondary result reports normalized bytes
 allocated per benchmark operation. It is allocation volume, not peak or
-retained memory. Review normalized allocation, unused capacity, and then timing
-before recommending any candidate segment size.
+retained memory.
+
+Build the primary result table with one row per `(elementCount, capacityHint)`
+and side-by-side time and normalized-allocation columns for only
+`matchedArrayListOrdinaryAdd` and `matchedSpliceListOrdinaryAdd`. Calculate any
+comparative ratio from that matched pair at the same parameter values. Put the
+three `context...` results in a separate table or appendix; do not repeat an
+ArrayList context result across capacity-hint rows or use either ArrayList
+context baseline for the primary comparative claim. Review normalized
+allocation, unused capacity, and then timing before recommending any candidate
+segment size. No ArrayList-versus-SpliceList performance claim is established
+until the matched-capacity results have been run and reviewed.
 
 ### `CsvFullRowProcessingBenchmark`
 

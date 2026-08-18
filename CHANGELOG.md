@@ -9,11 +9,13 @@ All notable changes to this repository will be documented in this file.
 - Add a separate ready-data iterator benchmark comparing an exactly pre-sized
   `ArrayList<Item>` with one- and ten-segment `SpliceList<Item>` representations
   over the same deterministic 10-million-item fixture.
-- Replace the CSV-backed collection-growth experiments with a pure ordinary-add
-  benchmark covering default-growing and exactly sized `ArrayList` cases plus
-  separate ordinary `SpliceList.add` and optimized `SpliceList.addLast` methods
-  across a six-by-six element-count and segment-size matrix extending through
-  30 million elements and 30,000-element segments.
+- Replace the CSV-backed collection-growth experiments with a pure append
+  benchmark whose primary comparison gives `ArrayList` initial capacity and
+  `SpliceList` segment size the same six values before the same ordinary-add
+  loop. Keep default-growing and exact-final-capacity `ArrayList` plus optimized
+  `SpliceList.addLast` as clearly labelled contextual baselines across a
+  six-by-six matrix extending through 30 million elements and a 30,000-element
+  capacity hint.
 - Add a collection-only parallel fill-and-combine benchmark with deterministic
   partitions, worker-owned local lists, exactly matched local capacity
   knowledge, and deterministic `addAll` or destructive `spliceTail`
