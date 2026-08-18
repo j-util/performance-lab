@@ -12,7 +12,9 @@ import org.junit.jupiter.api.Test;
 
 class ListAppendWorkloadTest {
 
-    private static final int[] SEGMENT_SIZES = {256, 1_024, 4_096, 10_000};
+    private static final int[] SEGMENT_SIZES = {
+        256, 1_024, 4_096, 10_000, 20_000, 30_000
+    };
 
     @Test
     void everyRepresentationHasTheRequestedSizeAndMarkerContent() {
@@ -59,6 +61,8 @@ class ListAppendWorkloadTest {
         assertEquals(240L, ListAppendWorkload.unusedSpliceListCapacity(10_000, 1_024));
         assertEquals(2_288L, ListAppendWorkload.unusedSpliceListCapacity(10_000, 4_096));
         assertEquals(0L, ListAppendWorkload.unusedSpliceListCapacity(10_000, 10_000));
+        assertEquals(10_000L, ListAppendWorkload.unusedSpliceListCapacity(10_000, 20_000));
+        assertEquals(20_000L, ListAppendWorkload.unusedSpliceListCapacity(10_000, 30_000));
     }
 
     private static List<List<Object>> results(int elementCount, Object marker) {

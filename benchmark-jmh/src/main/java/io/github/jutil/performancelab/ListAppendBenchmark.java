@@ -80,7 +80,7 @@ public class ListAppendBenchmark {
     @State(Scope.Benchmark)
     public static class SegmentSizeState extends BenchmarkState {
 
-        @Param({"256", "1024", "4096", "10000"})
+        @Param({"256", "1024", "4096", "10000", "20000", "30000"})
         public int segmentSize;
     }
 }

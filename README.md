@@ -372,14 +372,14 @@ java -jar benchmark-jmh/target/benchmarks.jar \
   -rff target/parallel-list-fill-and-combine-smoke.json
 ```
 
-Run the extended 4-by-3 matrix with longer measurement settings, the GC
+Run the extended 6-by-3 matrix with longer measurement settings, the GC
 profiler, and saved JSON output:
 
 ```shell
 mkdir -p target
 java -jar benchmark-jmh/target/benchmarks.jar \
   ParallelListFillAndCombineBenchmark \
-  -p elementCount=10000,100000,1000000,10000000 \
+  -p elementCount=10000,100000,1000000,10000000,20000000,30000000 \
   -p parallelism=2,4,8 \
   -wi 5 \
   -i 10 \
@@ -449,21 +449,23 @@ The four results remain separate:
   segment size as `spliceListAdd`, but using SpliceList's optimized endpoint
   `addLast` API.
 
-The explicit `segmentSize` values are 256, 1024, 4096, and 10,000. The released
-production default remains 1024 and is included in that matrix; the benchmark
-does not modify it. The 10,000 value is an explicitly tuned configuration.
+The explicit `segmentSize` values are 256, 1024, 4096, 10,000, 20,000, and
+30,000. The released production default remains 1024 and is included in that
+matrix; the benchmark does not modify it. The 10,000, 20,000, and 30,000 values
+are explicitly tuned configurations.
 
 The normal default is `elementCount=10000`. For an append-only completed
 `SpliceList`, allocated element slots are
 `ceil(elementCount / segmentSize) * segmentSize`, so unused capacity is that
 value minus `elementCount` (and zero for an empty list). At 10,000 elements the
-explicit sizes 256, 1024, 4096, and 10,000 leave 240, 240, 2,288, and 0 unused
-slots respectively. A production-default `new SpliceList<>()` has the same 1024
-capacity calculation as the explicit 1024 matrix case. This capacity accounting
-is descriptive and is not a performance recommendation. Normalized allocation
-per operation is the primary append-suite result; execution time is secondary.
+explicit sizes 256, 1024, 4096, 10,000, 20,000, and 30,000 leave 240, 240,
+2,288, 0, 10,000, and 20,000 unused slots respectively. A production-default
+`new SpliceList<>()` has the same 1024 capacity calculation as the explicit 1024
+matrix case. This capacity accounting is descriptive and is not a performance
+recommendation. Normalized allocation per operation is the primary append-suite
+result; execution time is secondary.
 
-Run the normal 10,000-element smoke suite with all four explicit segment sizes,
+Run the normal 10,000-element smoke suite with all six explicit segment sizes,
 normalized allocation from `-prof gc`, and JSON output:
 
 ```shell
@@ -471,7 +473,7 @@ mkdir -p target
 java -jar benchmark-jmh/target/benchmarks.jar \
   ListAppendBenchmark \
   -p elementCount=10000 \
-  -p segmentSize=256,1024,4096,10000 \
+  -p segmentSize=256,1024,4096,10000,20000,30000 \
   -wi 1 \
   -i 1 \
   -f 1 \
@@ -480,15 +482,15 @@ java -jar benchmark-jmh/target/benchmarks.jar \
   -rff target/list-append-smoke.json
 ```
 
-Run the extended small-to-large append matrix with longer settings, the GC
-profiler, and saved JSON output:
+Run the extended 6-by-6 append matrix with longer settings, the GC profiler,
+and saved JSON output:
 
 ```shell
 mkdir -p target
 java -jar benchmark-jmh/target/benchmarks.jar \
   ListAppendBenchmark \
-  -p elementCount=1,10,100,1000,5000,10000,50000,100000,1000000,10000000 \
-  -p segmentSize=256,1024,4096,10000 \
+  -p elementCount=10000,100000,1000000,10000000,20000000,30000000 \
+  -p segmentSize=256,1024,4096,10000,20000,30000 \
   -wi 5 \
   -i 10 \
   -f 3 \

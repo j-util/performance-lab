@@ -12,7 +12,8 @@ All notable changes to this repository will be documented in this file.
 - Replace the CSV-backed collection-growth experiments with a pure ordinary-add
   benchmark covering default-growing and exactly sized `ArrayList` cases plus
   separate ordinary `SpliceList.add` and optimized `SpliceList.addLast` methods
-  across parameterized segment sizes.
+  across a six-by-six element-count and segment-size matrix extending through
+  30 million elements and 30,000-element segments.
 - Add a collection-only parallel fill-and-combine benchmark with deterministic
   partitions, worker-owned local lists, exactly matched local capacity
   knowledge, and deterministic `addAll` or destructive `spliceTail`
