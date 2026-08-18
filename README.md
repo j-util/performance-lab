@@ -299,95 +299,94 @@ Because the same file is read repeatedly across warmup and measurement
 iterations, results primarily represent warm OS-page-cache processing rather
 than raw disk throughput.
 
-### `SpliceListParallelCollectionBenchmark`
+### `ParallelListFillAndCombineBenchmark`
 
-This focused benchmark compares three ways to materialize the existing
-deterministic 1BRC-style file as `Item(String key, double value)` objects:
+This collection-only benchmark isolates the workload for which destructive
+whole-list splicing may matter: parallel workers fill separate local lists and
+the caller consolidates those completed partitions into one final collection.
+It reports four separate methods:
 
-- `parallelArrayListAddAll` uses `parallel-range-processor`; every parser owns a
-  separate mutable `ArrayList<Item>`, completed partial lists are published to a
-  thread-safe queue, and the caller copies all partials into one exactly
-  pre-sized `ArrayList` with `addAll`.
-- `sequentialArrayList` uses `inputstream-processor-core` to append records in
-  natural source order directly into one exactly pre-sized `ArrayList<Item>`.
-- `parallelSpliceListSpliceTail` uses `parallel-range-processor`; every parser
-  owns a separate mutable `SpliceList<Item>`, completed partial lists are
-  published through the same queue mechanism, and the caller assembles the
-  destination with destructive `spliceTail` operations. Each transferred source
-  list is empty afterward.
+- `arrayListAddAll` gives each worker an `ArrayList` whose initial capacity is
+  exactly that partition's expected element count, then copies the local lists
+  in partition order into one destination with exact initial capacity
+  `elementCount`.
+- `spliceListSpliceTail` gives each worker a `SpliceList` whose regular segment
+  size is exactly that partition's expected element count, then destructively
+  transfers each local list in partition order with `spliceTail`. Every source
+  is empty after consolidation.
+- `arrayListAddAllMergeOnly` starts with prepared local `ArrayList` partitions
+  and measures only exactly sized destination construction and `addAll` copying.
+- `spliceListSpliceTailMergeOnly` starts with prepared local `SpliceList`
+  partitions and measures only empty destination construction and destructive
+  `spliceTail` relinking.
 
-The benchmark currently uses `splice-list:2.0.0-SNAPSHOT`, which must already
-be installed in the local Maven repository. Parser-local SpliceLists use a
-segment capacity derived as `ceil(rowCount / parallelism)`. Because
-`parallel-range-processor` divides the input by bytes rather than row counts,
-this capacity is an estimate; a parser that receives more records allocates
-another segment. At 10,000,000 rows and parallelism 8, the derived segment size
-is 1,250,000. At 20,000,000 rows and parallelism 8, it is 2,500,000.
+An `ArrayList` initial capacity reserves one contiguous backing array and may be
+replaced if the list outgrows it. A `SpliceList` segment size configures the
+capacity of each regular segment; transferred segments retain their capacities.
+These are different storage policies even when the numeric value is the same.
 
-These paths represent the intended parallel-list-assembly use case: independent
-parsers populate unsynchronized local lists, publish only completed results, and
-assemble one destination after all file ranges and reconstructed boundary
-records finish. Parallel partials can arrive in any order, so both parallel
-destinations have unspecified global order. Only the sequential destination
-preserves source order.
+Partitions are contiguous and deterministic. The quotient is assigned to every
+partition and the remainder is assigned one element at a time from the first
+partition. If there are fewer elements than executor workers, only non-empty
+partitions are submitted. Results are joined and consolidated in partition
+order, so both final collections preserve the pre-created source-array encounter
+order. Every worker owns its mutable local list exclusively; no `SpliceList` is
+ever mutated by multiple threads.
 
-The measured operation includes opening and reading the file, Commons CSV
-parsing, allocating every `Item`, populating direct or parser-local lists,
-publishing parallel partials, and final `ArrayList.addAll` or
-`SpliceList.spliceTail` assembly. Dataset generation, executor and processor
-construction, correctness checks, result traversal, and checksums are outside
-measurement. This is an end-to-end file-to-collection benchmark; parsing and I/O
-are shared costs that can reduce the visible difference between collection
-strategies. The defaults are 10,000,000 rows and parallelism 8, and both can be
-overridden with JMH parameters.
+For the two fill-and-combine methods, the measured operation includes task
+creation and submission, worker-local list construction, ordinary `List.add`
+filling, joining every task, final destination construction, and
+`ArrayList.addAll` copying or `SpliceList.spliceTail` relinking. Total execution
+time is the primary result for this suite. The merge-only methods prepare fresh
+partial lists in JMH invocation setup, outside measurement, because
+`spliceTail` consumes its sources. Their diagnostic timings isolate final
+copying from final relinking without fill, task-submission, executor, or join
+costs.
 
-Build and generate the existing deterministic 10-million-row dataset:
+JMH trial setup creates the fixed executor for the total-work methods and source
+reference arrays containing stable references to pre-created markers. Trial
+teardown closes the executor. Executor lifecycle, marker and source-array
+creation, merge-only partial-list preparation, file I/O, CSV parsing, logging,
+`Item` allocation, validation, result traversal, and subsequent consumption are
+excluded. Every method returns the completed collection so it escapes the
+measured invocation.
+
+The project uses the released `io.github.j-util:splice-list:2.0.0`. Default JMH
+parameters are `elementCount=10000` and `parallelism=8`; command-line overrides
+can exercise other positive worker counts and non-negative element counts.
+
+Run a 10,000-element smoke comparison with normalized GC allocation metrics and
+save the complete JMH result as JSON:
 
 ```shell
-./mvnw -s /Users/karenbarseghyan/.m2/settings-j-util.xml clean package
-java -cp benchmark-jmh/target/benchmarks.jar \
-  io.github.jutil.performancelab.OneBrcStyleDatasetGenerator 10000000
-```
-
-For a small smoke run of all three methods, generate 1,000 rows and use one
-warmup iteration, one measurement iteration, and one fork:
-
-```shell
-java -cp benchmark-jmh/target/benchmarks.jar \
-  io.github.jutil.performancelab.OneBrcStyleDatasetGenerator 1000
+mkdir -p target
 java -jar benchmark-jmh/target/benchmarks.jar \
-  SpliceListParallelCollectionBenchmark \
-  -p rowCount=1000 \
+  ParallelListFillAndCombineBenchmark \
+  -p elementCount=10000 \
   -p parallelism=8 \
   -wi 1 \
   -i 1 \
-  -f 1
-```
-
-Run the full 10-million-row benchmark with the class's standard two warmup
-iterations, three measurement iterations, and one fork:
-
-```shell
-java -jar benchmark-jmh/target/benchmarks.jar \
-  SpliceListParallelCollectionBenchmark \
-  -p rowCount=10000000 \
-  -p parallelism=8 \
-  -wi 2 \
-  -i 3 \
-  -f 1
-```
-
-Add JMH's GC profiler to the same 10-million-row run with:
-
-```shell
-java -jar benchmark-jmh/target/benchmarks.jar \
-  SpliceListParallelCollectionBenchmark \
-  -p rowCount=10000000 \
-  -p parallelism=8 \
-  -wi 2 \
-  -i 3 \
   -f 1 \
-  -prof gc
+  -prof gc \
+  -rf json \
+  -rff target/parallel-list-fill-and-combine-smoke.json
+```
+
+Run the extended 4-by-3 matrix with longer measurement settings, the GC
+profiler, and saved JSON output:
+
+```shell
+mkdir -p target
+java -jar benchmark-jmh/target/benchmarks.jar \
+  ParallelListFillAndCombineBenchmark \
+  -p elementCount=10000,100000,1000000,10000000 \
+  -p parallelism=2,4,8 \
+  -wi 5 \
+  -i 10 \
+  -f 3 \
+  -prof gc \
+  -rf json \
+  -rff target/parallel-list-fill-and-combine-extended.json
 ```
 
 ### `ReadyCollectionIterationBenchmark`
@@ -403,7 +402,9 @@ regular segment capacity is `ceil(rowCount / 10)`.
 The default 10,000,000-item input is divisible by ten, so the last representation
 has exactly ten full regular segments of 1,000,000 elements each. Other positive
 row-count overrides use `Math.ceilDiv(rowCount, 10)` and may end with a partially
-filled segment.
+filled segment. Neither the one-segment nor ten-segment representation uses the
+production default segment size of 1024 at the default row count, so their
+results are not evidence for the default configuration.
 
 All three benchmark methods invoke the same shared enhanced-for/iterator loop,
 visit every item once in encounter order, add the same deterministic finite
@@ -427,56 +428,79 @@ java -jar benchmark-jmh/target/benchmarks.jar \
   -rff target/ready-collection-iteration-10m.json
 ```
 
-### `SingleThreadCollectionGrowthBenchmark`
+### `ListAppendBenchmark`
 
-This benchmark asks how single-thread, end-to-end file-to-collection ingestion
-compares when `ArrayList` and `SpliceList` both use the same configurable
-`storageSize`, which defaults to 100, but apply different growth policies.
-`arrayListInitialCapacity` constructs an `ArrayList<Item>` whose initial capacity
-is `storageSize`; when it fills, the list grows geometrically by replacing and
-copying its backing array. `spliceListSegmentSize` constructs a `SpliceList<Item>`
-whose regular segment size is `storageSize`; when a segment fills, the list
-appends another same-sized segment. The parameter therefore produces the same
-first storage capacity but does not mean the same thing after that point: it is
-an initial capacity for `ArrayList` and a regular segment size for `SpliceList`.
+This collection-only suite separately measures append cost. Each measured
+invocation creates one fresh collection, runs one append loop, and returns the
+populated list. The single marker object is created during JMH trial setup, so
+the loop measures collection allocation and reference addition rather than
+element construction. File I/O, CSV parsing, logging, `Item` allocation,
+validation, traversal, and consolidation are excluded.
 
-The default parameters process the existing deterministic 1BRC-style datasets
-at both 10,000,000 and 20,000,000 rows with exactly one JMH thread. Every
-measured invocation creates a fresh destination and includes opening the file,
-reading it completely, identical UTF-8 and Commons CSV parsing, allocating every
-`Item(String key, double value)`, appending every item in source encounter order,
-and performing all destination growth: `ArrayList` backing-array replacement and
-copying, or `SpliceList` segment allocation and linking.
+The four results remain separate:
 
-Dataset generation, processor construction, correctness validation, result
-traversal, checksums, logging, and printing are outside measurement. This is an
-end-to-end file-to-collection ingestion benchmark, not a collection-only
-microbenchmark. Parsing and I/O are shared costs, so no performance conclusion
-is claimed before results are collected.
+- `arrayListAdd`: `new ArrayList<>()` followed by ordinary `List.add`, exposing
+  the default-growing ArrayList path;
+- `arrayListExactCapacityAdd`: `new ArrayList<>(elementCount)` followed by
+  ordinary `List.add`, the known-size ArrayList best case;
+- `spliceListAdd`: `new SpliceList<>(segmentSize)` followed by ordinary
+  `List.add`, which is the standard comparator against `arrayListAdd`; and
+- `spliceListAddLast`: the same state, marker, element count, and explicit
+  segment size as `spliceListAdd`, but using SpliceList's optimized endpoint
+  `addLast` API.
 
-Generate both default datasets with:
+The explicit `segmentSize` values are 256, 1024, 4096, and 10,000. The released
+production default remains 1024 and is included in that matrix; the benchmark
+does not modify it. The 10,000 value is an explicitly tuned configuration.
+
+The normal default is `elementCount=10000`. For an append-only completed
+`SpliceList`, allocated element slots are
+`ceil(elementCount / segmentSize) * segmentSize`, so unused capacity is that
+value minus `elementCount` (and zero for an empty list). At 10,000 elements the
+explicit sizes 256, 1024, 4096, and 10,000 leave 240, 240, 2,288, and 0 unused
+slots respectively. A production-default `new SpliceList<>()` has the same 1024
+capacity calculation as the explicit 1024 matrix case. This capacity accounting
+is descriptive and is not a performance recommendation. Normalized allocation
+per operation is the primary append-suite result; execution time is secondary.
+
+Run the normal 10,000-element smoke suite with all four explicit segment sizes,
+normalized allocation from `-prof gc`, and JSON output:
 
 ```shell
-java -cp benchmark-jmh/target/benchmarks.jar \
-  io.github.jutil.performancelab.OneBrcStyleDatasetGenerator 10000000
-java -cp benchmark-jmh/target/benchmarks.jar \
-  io.github.jutil.performancelab.OneBrcStyleDatasetGenerator 20000000
+mkdir -p target
+java -jar benchmark-jmh/target/benchmarks.jar \
+  ListAppendBenchmark \
+  -p elementCount=10000 \
+  -p segmentSize=256,1024,4096,10000 \
+  -wi 1 \
+  -i 1 \
+  -f 1 \
+  -prof gc \
+  -rf json \
+  -rff target/list-append-smoke.json
 ```
 
-Run both row counts with extended settings, GC profiling, and JSON output:
+Run the extended small-to-large append matrix with longer settings, the GC
+profiler, and saved JSON output:
 
 ```shell
+mkdir -p target
 java -jar benchmark-jmh/target/benchmarks.jar \
-  SingleThreadCollectionGrowthBenchmark \
-  -p rowCount=10000000,20000000 \
-  -p storageSize=100 \
+  ListAppendBenchmark \
+  -p elementCount=1,10,100,1000,5000,10000,50000,100000,1000000,10000000 \
+  -p segmentSize=256,1024,4096,10000 \
   -wi 5 \
   -i 10 \
   -f 3 \
   -prof gc \
   -rf json \
-  -rff target/single-thread-collection-growth.json
+  -rff target/list-append-extended.json
 ```
+
+The profiler's `gc.alloc.rate.norm` secondary result reports normalized bytes
+allocated per benchmark operation. It is allocation volume, not peak or
+retained memory. Review normalized allocation, unused capacity, and then timing
+before recommending any candidate segment size.
 
 ### `CsvFullRowProcessingBenchmark`
 

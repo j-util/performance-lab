@@ -9,12 +9,16 @@ All notable changes to this repository will be documented in this file.
 - Add a separate ready-data iterator benchmark comparing an exactly pre-sized
   `ArrayList<Item>` with one- and ten-segment `SpliceList<Item>` representations
   over the same deterministic 10-million-item fixture.
-- Add a single-thread, end-to-end collection-growth benchmark comparing an
-  `ArrayList` initial capacity with a `SpliceList` regular segment size through
-  a shared storage-size parameter defaulting to 100 across the deterministic
-  10-million- and 20-million-row 1BRC-style inputs.
-- Update the parallel collection benchmark to use `splice-list:2.0.0-SNAPSHOT`
-  with parser-local segment capacity estimated from row count and parallelism.
+- Replace the CSV-backed collection-growth experiments with a pure ordinary-add
+  benchmark covering default-growing and exactly sized `ArrayList` cases plus
+  separate ordinary `SpliceList.add` and optimized `SpliceList.addLast` methods
+  across parameterized segment sizes.
+- Add a collection-only parallel fill-and-combine benchmark with deterministic
+  partitions, worker-owned local lists, exactly matched local capacity
+  knowledge, and deterministic `addAll` or destructive `spliceTail`
+  consolidation, plus invocation-prepared merge-only methods.
+- Use the released `splice-list:2.0.0` benchmark dependency instead of the local
+  `2.0.0-SNAPSHOT` artifact.
 - Add a focused Columnar Projection Store iteration benchmark comparing its
   reusable cursor, indexed stable views, and OO-style `forEach` traversal for
   narrow-field work and full-row checksums, including allocation profiling

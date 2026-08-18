@@ -45,7 +45,7 @@
         <maven.surefire.plugin.version>3.5.5</maven.surefire.plugin.version>
         <inputstream-processor-core.version>1.0.0</inputstream-processor-core.version>
         <parallel-range-processor.version>1.0.0</parallel-range-processor.version>
-        <splice-list.version>2.0.0-SNAPSHOT</splice-list.version>
+        <splice-list.version>2.0.0</splice-list.version>
         <commons-csv.version>1.14.1</commons-csv.version>
         <columnar-projection-store.version>1.3.0-SNAPSHOT</columnar-projection-store.version>
         <columnar-projection-store-hardwood.version>1.1.0-SNAPSHOT</columnar-projection-store-hardwood.version>
