@@ -19,7 +19,7 @@ import org.openjdk.jmh.annotations.Warmup;
 
 import io.github.jutil.splicelist.SpliceList;
 
-/** Fresh-list matched ordinary-add loops plus explicitly contextual baselines. */
+/** Fresh-list matched ordinary-add loops plus contextual baselines. */
 @BenchmarkMode(Mode.SingleShotTime)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @Warmup(iterations = 2)
@@ -60,9 +60,9 @@ public class ListAppendBenchmark {
                 state.marker);
     }
 
-    /** Context only: SpliceList uses its optimized endpoint instead of ordinary List.add. */
+    /** Context only: explicit endpoint/equivalence regression baseline for ordinary add. */
     @Benchmark
-    public SpliceList<Object> contextSpliceListOptimizedAddLast(CapacityHintState state) {
+    public SpliceList<Object> contextSpliceListExplicitAddLast(CapacityHintState state) {
         return ListAppendWorkload.spliceListSegmentSizeAddLast(
                 state.elementCount,
                 state.capacityHint,
@@ -87,7 +87,7 @@ public class ListAppendBenchmark {
         }
     }
 
-    /** Shared constructor argument for the matched pair and optimized SpliceList context. */
+    /** Shared constructor argument for the matched pair and add/addLast equivalence context. */
     @State(Scope.Benchmark)
     public static class CapacityHintState extends BenchmarkState {
 

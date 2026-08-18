@@ -12,16 +12,18 @@ All notable changes to this repository will be documented in this file.
 - Replace the CSV-backed collection-growth experiments with a pure append
   benchmark whose primary comparison gives `ArrayList` initial capacity and
   `SpliceList` segment size the same six values before the same ordinary-add
-  loop. Keep default-growing and exact-final-capacity `ArrayList` plus optimized
-  `SpliceList.addLast` as clearly labelled contextual baselines across a
-  six-by-six matrix extending through 30 million elements and a 30,000-element
-  capacity hint.
+  loop. Keep default-growing and exact-final-capacity `ArrayList` as contextual
+  baselines and explicit `SpliceList.addLast` as an endpoint/equivalence
+  regression baseline, with separate extended commands through 30 million
+  elements and a 30,000-element capacity candidate.
 - Add a collection-only parallel fill-and-combine benchmark with deterministic
   partitions, worker-owned local lists, exactly matched local capacity
   knowledge, and deterministic `addAll` or destructive `spliceTail`
-  consolidation, plus invocation-prepared merge-only methods.
-- Use the released `splice-list:2.0.0` benchmark dependency instead of the local
-  `2.0.0-SNAPSHOT` artifact.
+  consolidation, plus single-threaded, iteration-prepared merge-only methods;
+  document merge-only timing separately from GC-profiler allocation counters.
+- Pin the benchmark dependency to `splice-list:2.0.0`; until publication, build
+  and install the exact 2.0.0 release-candidate source locally instead of using
+  the former `2.0.0-SNAPSHOT` artifact.
 - Add a focused Columnar Projection Store iteration benchmark comparing its
   reusable cursor, indexed stable views, and OO-style `forEach` traversal for
   narrow-field work and full-row checksums, including allocation profiling

@@ -20,6 +20,7 @@ import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.annotations.TearDown;
+import org.openjdk.jmh.annotations.Threads;
 import org.openjdk.jmh.annotations.Warmup;
 
 import io.github.jutil.splicelist.SpliceList;
@@ -30,6 +31,7 @@ import io.github.jutil.splicelist.SpliceList;
 @Warmup(iterations = 2)
 @Measurement(iterations = 3)
 @Fork(1)
+@Threads(1)
 public class ParallelListFillAndCombineBenchmark {
 
     @Benchmark
@@ -104,7 +106,7 @@ public class ParallelListFillAndCombineBenchmark {
         }
     }
 
-    /** Recreates prepared ArrayList partitions before every merge-only invocation. */
+    /** Recreates prepared ArrayList partitions before each merge-only iteration. */
     @State(Scope.Thread)
     public static class ArrayListMergeOnlyState {
 
@@ -133,14 +135,14 @@ public class ParallelListFillAndCombineBenchmark {
             Arrays.fill(elements, marker);
         }
 
-        @Setup(Level.Invocation)
-        public void setupInvocation() {
+        @Setup(Level.Iteration)
+        public void setupIteration() {
             arrayListPartials = ParallelListFillAndCombineWorkload
                     .prepareArrayListPartials(elements, parallelism);
         }
     }
 
-    /** Recreates prepared SpliceList partitions before every merge-only invocation. */
+    /** Recreates prepared SpliceList partitions before each merge-only iteration. */
     @State(Scope.Thread)
     public static class SpliceListMergeOnlyState {
 
@@ -169,8 +171,8 @@ public class ParallelListFillAndCombineBenchmark {
             Arrays.fill(elements, marker);
         }
 
-        @Setup(Level.Invocation)
-        public void setupInvocation() {
+        @Setup(Level.Iteration)
+        public void setupIteration() {
             spliceListPartials = ParallelListFillAndCombineWorkload
                     .prepareSpliceListPartials(elements, parallelism);
         }

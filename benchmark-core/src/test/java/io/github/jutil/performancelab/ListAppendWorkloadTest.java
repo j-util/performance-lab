@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -33,16 +34,8 @@ class ListAppendWorkloadTest {
         Object marker = new Object();
 
         for (int capacityHint : CAPACITY_HINTS) {
-            List<Object> arrayList = ListAppendWorkload.arrayListCapacityHintAdd(
-                    257,
-                    capacityHint,
-                    marker);
-            List<Object> spliceList = ListAppendWorkload.spliceListSegmentSizeAdd(
-                    257,
-                    capacityHint,
-                    marker);
-
-            assertEquals(arrayList, spliceList, "capacityHint=" + capacityHint);
+            assertMatchedOrdinaryAddPaths(capacityHint, capacityHint, marker);
+            assertMatchedOrdinaryAddPaths(capacityHint + 1, capacityHint, marker);
         }
     }
 
@@ -102,5 +95,34 @@ class ListAppendWorkloadTest {
                     marker));
         }
         return results;
+    }
+
+    private static void assertMatchedOrdinaryAddPaths(
+            int elementCount,
+            int capacityHint,
+            Object marker
+    ) {
+        List<Object> arrayList = ListAppendWorkload.arrayListCapacityHintAdd(
+                elementCount,
+                capacityHint,
+                marker);
+        List<Object> spliceList = ListAppendWorkload.spliceListSegmentSizeAdd(
+                elementCount,
+                capacityHint,
+                marker);
+        String context = "elementCount=" + elementCount + ", capacityHint=" + capacityHint;
+
+        assertEquals(elementCount, arrayList.size(), context);
+        assertEquals(elementCount, spliceList.size(), context);
+        assertEquals(arrayList, spliceList, context);
+
+        Iterator<Object> arrayIterator = arrayList.iterator();
+        Iterator<Object> spliceIterator = spliceList.iterator();
+        while (arrayIterator.hasNext()) {
+            Object arrayElement = arrayIterator.next();
+            Object spliceElement = spliceIterator.next();
+            assertSame(marker, arrayElement, context);
+            assertSame(arrayElement, spliceElement, context);
+        }
     }
 }

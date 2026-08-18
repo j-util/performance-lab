@@ -29,6 +29,10 @@ The Maven Wrapper downloads the project's Maven version automatically.
 Ordinary verification tests belong under `benchmark-core/src/test/java` and use
 JUnit 5.
 
+Performance-lab is pinned to `io.github.j-util:splice-list:2.0.0`. Until that
+version is published, the exact 2.0.0 release-candidate source must be built and
+installed locally before building this project.
+
 ## Generate benchmark data
 
 Dataset generation is a standalone step and is never performed as part of a
@@ -337,31 +341,35 @@ For the two fill-and-combine methods, the measured operation includes task
 creation and submission, worker-local list construction, ordinary `List.add`
 filling, joining every task, final destination construction, and
 `ArrayList.addAll` copying or `SpliceList.spliceTail` relinking. Total execution
-time is the primary result for this suite. The merge-only methods prepare fresh
-partial lists in JMH invocation setup, outside measurement, because
-`spliceTail` consumes its sources. Their diagnostic timings isolate final
-copying from final relinking without fill, task-submission, executor, or join
-costs.
+time is the primary result for this suite. Because `spliceTail` consumes its
+sources, the merge-only methods prepare fresh partial lists in JMH iteration
+setup. Fixture preparation is excluded from the primary timing. Their
+diagnostic timings isolate final copying from final relinking without fill,
+task-submission, executor, or join costs.
 
 JMH trial setup creates the fixed executor for the total-work methods and source
 reference arrays containing stable references to pre-created markers. Trial
 teardown closes the executor. Executor lifecycle, marker and source-array
-creation, merge-only partial-list preparation, file I/O, CSV parsing, logging,
+creation, merge-only fixture preparation, file I/O, CSV parsing, logging,
 `Item` allocation, validation, result traversal, and subsequent consumption are
-excluded. Every method returns the completed collection so it escapes the
-measured invocation.
+excluded from the primary timing. Every method returns the completed collection
+so it escapes the measured invocation. GC-profiler allocation counters can
+include fixture preparation even though setup is outside the primary timing;
+therefore merge-only `gc.alloc.rate.norm` must not be presented as merge-only
+allocation or retained memory.
 
-The project uses the released `io.github.j-util:splice-list:2.0.0`. Default JMH
-parameters are `elementCount=10000` and `parallelism=8`; command-line overrides
-can exercise other positive worker counts and non-negative element counts.
+Default JMH parameters are `elementCount=10000` and `parallelism=8`;
+command-line overrides can exercise other positive worker counts and
+non-negative element counts. The benchmark explicitly uses one JMH benchmark
+thread; `parallelism` controls only its worker executor.
 
-Run a 10,000-element smoke comparison with normalized GC allocation metrics and
-save the complete JMH result as JSON:
+Run a 10,000-element smoke comparison of the total fill-and-combine pair with
+normalized GC allocation metrics and save the complete JMH result as JSON:
 
 ```shell
 mkdir -p target
 java -jar benchmark-jmh/target/benchmarks.jar \
-  ParallelListFillAndCombineBenchmark \
+  'ParallelListFillAndCombineBenchmark\.(arrayListAddAll|spliceListSpliceTail)' \
   -p elementCount=10000 \
   -p parallelism=8 \
   -wi 1 \
@@ -369,16 +377,30 @@ java -jar benchmark-jmh/target/benchmarks.jar \
   -f 1 \
   -prof gc \
   -rf json \
-  -rff target/parallel-list-fill-and-combine-smoke.json
+  -rff target/parallel-list-fill-and-combine-total-smoke.json
 ```
 
-Run the extended 6-by-3 matrix with longer measurement settings, the GC
-profiler, and saved JSON output:
+Run a short merge-only timing smoke with at least two measured iterations.
+Deliberately omit the GC profiler because its counters can include iteration
+fixture preparation:
+
+```shell
+java -jar benchmark-jmh/target/benchmarks.jar \
+  'ParallelListFillAndCombineBenchmark\.(arrayListAddAllMergeOnly|spliceListSpliceTailMergeOnly)' \
+  -p elementCount=10000 \
+  -p parallelism=8 \
+  -wi 1 \
+  -i 2 \
+  -f 1
+```
+
+Run the extended 6-by-3 total fill-and-combine pair with longer measurement
+settings, the GC profiler, and saved JSON output:
 
 ```shell
 mkdir -p target
 java -jar benchmark-jmh/target/benchmarks.jar \
-  ParallelListFillAndCombineBenchmark \
+  'ParallelListFillAndCombineBenchmark\.(arrayListAddAll|spliceListSpliceTail)' \
   -p elementCount=10000,100000,1000000,10000000,20000000,30000000 \
   -p parallelism=2,4,8 \
   -wi 5 \
@@ -386,7 +408,22 @@ java -jar benchmark-jmh/target/benchmarks.jar \
   -f 3 \
   -prof gc \
   -rf json \
-  -rff target/parallel-list-fill-and-combine-extended.json
+  -rff target/parallel-list-fill-and-combine-total-extended.json
+```
+
+Run merge-only timing as a separate 6-by-3 matrix without the GC profiler:
+
+```shell
+mkdir -p target
+java -jar benchmark-jmh/target/benchmarks.jar \
+  'ParallelListFillAndCombineBenchmark\.(arrayListAddAllMergeOnly|spliceListSpliceTailMergeOnly)' \
+  -p elementCount=10000,100000,1000000,10000000,20000000,30000000 \
+  -p parallelism=2,4,8 \
+  -wi 5 \
+  -i 10 \
+  -f 3 \
+  -rf json \
+  -rff target/parallel-list-fill-and-combine-merge-only-timing-extended.json
 ```
 
 ### `ReadyCollectionIterationBenchmark`
@@ -446,9 +483,14 @@ The primary comparison is a matched pair at every shared `capacityHint` value:
 
 The parameter is an ArrayList initial-capacity hint in the first method and a
 SpliceList segment size in the second. Its shared values are 256, 1024, 4096,
-10,000, 20,000, and 30,000. The released SpliceList production default remains
-1024 and is included in that matrix; the benchmark does not modify it. The
-10,000, 20,000, and 30,000 values are explicitly tuned configurations.
+10,000, 20,000, and 30,000. The SpliceList production default remains 1024 and
+is included in that matrix; the benchmark does not modify it. The 10,000,
+20,000, and 30,000 values are candidate configurations.
+
+This comparison models the same initial capacity estimate when the final size
+is unknown. When the final size is known, an exactly pre-sized `ArrayList` is
+the appropriate baseline, and no `SpliceList` advantage is claimed for that
+case.
 
 Three clearly named results are context only, not members of the primary
 comparison:
@@ -456,9 +498,10 @@ comparison:
 - `contextArrayListDefaultGrowing`: `new ArrayList<>()` plus ordinary add;
 - `contextArrayListExactFinalCapacity`: `new ArrayList<>(elementCount)` plus
   ordinary add; and
-- `contextSpliceListOptimizedAddLast`: the same constructor argument and append
-  count as the matched SpliceList method, but using the optimized endpoint
-  `addLast` API.
+- `contextSpliceListExplicitAddLast`: an explicit endpoint/equivalence
+  regression baseline with the same constructor argument and append count as
+  the matched SpliceList method, but using `addLast`. It is not an optimized
+  alternative to ordinary `add`.
 
 The normal default is `elementCount=10000`. For an append-only completed
 `SpliceList`, allocated element slots are
@@ -471,30 +514,31 @@ matrix case. This capacity accounting is descriptive and is not a performance
 recommendation. Normalized allocation per operation is the primary append-suite
 result; execution time is secondary.
 
-Run the normal 10,000-element smoke suite with all six shared constructor
-arguments, normalized allocation from `-prof gc`, and JSON output:
+Run the matched append pair only at the normal 10,000-element size and the
+production-default 1024 capacity value, with normalized allocation from
+`-prof gc` and JSON output:
 
 ```shell
 mkdir -p target
 java -jar benchmark-jmh/target/benchmarks.jar \
-  ListAppendBenchmark \
+  'ListAppendBenchmark\.(matchedArrayListOrdinaryAdd|matchedSpliceListOrdinaryAdd)' \
   -p elementCount=10000 \
-  -p capacityHint=256,1024,4096,10000,20000,30000 \
+  -p capacityHint=1024 \
   -wi 1 \
   -i 1 \
   -f 1 \
   -prof gc \
   -rf json \
-  -rff target/list-append-smoke.json
+  -rff target/list-append-matched-smoke.json
 ```
 
-Run the extended 6-by-6 append matrix with longer settings, the GC profiler,
-and saved JSON output:
+Run the extended 6-by-6 matched append pair with longer settings, the GC
+profiler, and saved JSON output:
 
 ```shell
 mkdir -p target
 java -jar benchmark-jmh/target/benchmarks.jar \
-  ListAppendBenchmark \
+  'ListAppendBenchmark\.(matchedArrayListOrdinaryAdd|matchedSpliceListOrdinaryAdd)' \
   -p elementCount=10000,100000,1000000,10000000,20000000,30000000 \
   -p capacityHint=256,1024,4096,10000,20000,30000 \
   -wi 5 \
@@ -502,7 +546,39 @@ java -jar benchmark-jmh/target/benchmarks.jar \
   -f 3 \
   -prof gc \
   -rf json \
-  -rff target/list-append-extended.json
+  -rff target/list-append-matched-extended.json
+```
+
+Run the two ArrayList contextual baselines separately. These methods do not use
+`capacityHint`:
+
+```shell
+mkdir -p target
+java -jar benchmark-jmh/target/benchmarks.jar \
+  'ListAppendBenchmark\.(contextArrayListDefaultGrowing|contextArrayListExactFinalCapacity)' \
+  -p elementCount=10000,100000,1000000,10000000,20000000,30000000 \
+  -wi 5 \
+  -i 10 \
+  -f 3 \
+  -prof gc \
+  -rf json \
+  -rff target/list-append-array-list-context-extended.json
+```
+
+Run the ordinary `add`/explicit `addLast` equivalence regression separately:
+
+```shell
+mkdir -p target
+java -jar benchmark-jmh/target/benchmarks.jar \
+  'ListAppendBenchmark\.(matchedSpliceListOrdinaryAdd|contextSpliceListExplicitAddLast)' \
+  -p elementCount=10000,100000,1000000,10000000,20000000,30000000 \
+  -p capacityHint=256,1024,4096,10000,20000,30000 \
+  -wi 5 \
+  -i 10 \
+  -f 3 \
+  -prof gc \
+  -rf json \
+  -rff target/list-append-add-add-last-regression-extended.json
 ```
 
 The profiler's `gc.alloc.rate.norm` secondary result reports normalized bytes
@@ -518,7 +594,9 @@ ArrayList context result across capacity-hint rows or use either ArrayList
 context baseline for the primary comparative claim. Review normalized
 allocation, unused capacity, and then timing before recommending any candidate
 segment size. No ArrayList-versus-SpliceList performance claim is established
-until the matched-capacity results have been run and reviewed.
+until the matched-capacity results have been run and reviewed. The round-number
+matrix is insufficient by itself to select a production default; off-boundary
+sizes and other operations would also be required.
 
 ### `CsvFullRowProcessingBenchmark`
 
