@@ -30,8 +30,8 @@ Ordinary verification tests belong under `benchmark-core/src/test/java` and use
 JUnit 5.
 
 Performance-lab is pinned to `io.github.j-util:splice-list:2.0.0`. Until that
-version is published, the exact 2.0.0 release-candidate source must be built and
-installed locally before building this project.
+version is published, the [exact 2.0.0 release-candidate source](https://github.com/j-util/splice-list/tree/07242b88f39d4bdf65a53573b2394485df44547d)
+must be built and installed locally before building this project.
 
 ## Generate benchmark data
 
@@ -369,7 +369,7 @@ normalized GC allocation metrics and save the complete JMH result as JSON:
 ```shell
 mkdir -p target
 java -jar benchmark-jmh/target/benchmarks.jar \
-  'ParallelListFillAndCombineBenchmark\.(arrayListAddAll|spliceListSpliceTail)' \
+  'ParallelListFillAndCombineBenchmark\.(arrayListAddAll|spliceListSpliceTail)$' \
   -p elementCount=10000 \
   -p parallelism=8 \
   -wi 1 \
@@ -386,7 +386,7 @@ fixture preparation:
 
 ```shell
 java -jar benchmark-jmh/target/benchmarks.jar \
-  'ParallelListFillAndCombineBenchmark\.(arrayListAddAllMergeOnly|spliceListSpliceTailMergeOnly)' \
+  'ParallelListFillAndCombineBenchmark\.(arrayListAddAllMergeOnly|spliceListSpliceTailMergeOnly)$' \
   -p elementCount=10000 \
   -p parallelism=8 \
   -wi 1 \
@@ -400,7 +400,7 @@ settings, the GC profiler, and saved JSON output:
 ```shell
 mkdir -p target
 java -jar benchmark-jmh/target/benchmarks.jar \
-  'ParallelListFillAndCombineBenchmark\.(arrayListAddAll|spliceListSpliceTail)' \
+  'ParallelListFillAndCombineBenchmark\.(arrayListAddAll|spliceListSpliceTail)$' \
   -p elementCount=10000,100000,1000000,10000000,20000000,30000000 \
   -p parallelism=2,4,8 \
   -wi 5 \
@@ -416,7 +416,7 @@ Run merge-only timing as a separate 6-by-3 matrix without the GC profiler:
 ```shell
 mkdir -p target
 java -jar benchmark-jmh/target/benchmarks.jar \
-  'ParallelListFillAndCombineBenchmark\.(arrayListAddAllMergeOnly|spliceListSpliceTailMergeOnly)' \
+  'ParallelListFillAndCombineBenchmark\.(arrayListAddAllMergeOnly|spliceListSpliceTailMergeOnly)$' \
   -p elementCount=10000,100000,1000000,10000000,20000000,30000000 \
   -p parallelism=2,4,8 \
   -wi 5 \
@@ -488,9 +488,9 @@ is included in that matrix; the benchmark does not modify it. The 10,000,
 20,000, and 30,000 values are candidate configurations.
 
 This comparison models the same initial capacity estimate when the final size
-is unknown. When the final size is known, an exactly pre-sized `ArrayList` is
-the appropriate baseline, and no `SpliceList` advantage is claimed for that
-case.
+is unknown. For this append-only workload, when the final size is known, an
+exactly pre-sized `ArrayList` is the appropriate baseline, and no `SpliceList`
+advantage is claimed for that case.
 
 Three clearly named results are context only, not members of the primary
 comparison:
@@ -521,7 +521,7 @@ production-default 1024 capacity value, with normalized allocation from
 ```shell
 mkdir -p target
 java -jar benchmark-jmh/target/benchmarks.jar \
-  'ListAppendBenchmark\.(matchedArrayListOrdinaryAdd|matchedSpliceListOrdinaryAdd)' \
+  'ListAppendBenchmark\.(matchedArrayListOrdinaryAdd|matchedSpliceListOrdinaryAdd)$' \
   -p elementCount=10000 \
   -p capacityHint=1024 \
   -wi 1 \
@@ -538,7 +538,7 @@ profiler, and saved JSON output:
 ```shell
 mkdir -p target
 java -jar benchmark-jmh/target/benchmarks.jar \
-  'ListAppendBenchmark\.(matchedArrayListOrdinaryAdd|matchedSpliceListOrdinaryAdd)' \
+  'ListAppendBenchmark\.(matchedArrayListOrdinaryAdd|matchedSpliceListOrdinaryAdd)$' \
   -p elementCount=10000,100000,1000000,10000000,20000000,30000000 \
   -p capacityHint=256,1024,4096,10000,20000,30000 \
   -wi 5 \
@@ -555,7 +555,7 @@ Run the two ArrayList contextual baselines separately. These methods do not use
 ```shell
 mkdir -p target
 java -jar benchmark-jmh/target/benchmarks.jar \
-  'ListAppendBenchmark\.(contextArrayListDefaultGrowing|contextArrayListExactFinalCapacity)' \
+  'ListAppendBenchmark\.(contextArrayListDefaultGrowing|contextArrayListExactFinalCapacity)$' \
   -p elementCount=10000,100000,1000000,10000000,20000000,30000000 \
   -wi 5 \
   -i 10 \
@@ -570,7 +570,7 @@ Run the ordinary `add`/explicit `addLast` equivalence regression separately:
 ```shell
 mkdir -p target
 java -jar benchmark-jmh/target/benchmarks.jar \
-  'ListAppendBenchmark\.(matchedSpliceListOrdinaryAdd|contextSpliceListExplicitAddLast)' \
+  'ListAppendBenchmark\.(matchedSpliceListOrdinaryAdd|contextSpliceListExplicitAddLast)$' \
   -p elementCount=10000,100000,1000000,10000000,20000000,30000000 \
   -p capacityHint=256,1024,4096,10000,20000,30000 \
   -wi 5 \
