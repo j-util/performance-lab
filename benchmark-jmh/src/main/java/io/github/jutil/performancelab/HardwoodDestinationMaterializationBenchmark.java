@@ -39,23 +39,38 @@ public class HardwoodDestinationMaterializationBenchmark {
     public int batchSize;
 
     private HardwoodDestinationMaterializationCases.SourceArrays sourceArrays;
-    private ExecutorService columnCopyExecutor;
+    private ExecutorService fixedColumnCopyExecutor;
+    private ExecutorService virtualThreadPerTaskExecutor;
 
     @Setup(Level.Trial)
     public void setup() {
         sourceArrays = HardwoodDestinationMaterializationCases.createSourceArrays(rowCount);
-        columnCopyExecutor = Executors.newFixedThreadPool(PROJECTION_COLUMN_COUNT);
+        fixedColumnCopyExecutor = Executors.newFixedThreadPool(PROJECTION_COLUMN_COUNT);
+        virtualThreadPerTaskExecutor = Executors.newVirtualThreadPerTaskExecutor();
     }
 
     @TearDown(Level.Trial)
     public void tearDown() throws InterruptedException {
-        columnCopyExecutor.shutdown();
-        if (!columnCopyExecutor.awaitTermination(30, TimeUnit.SECONDS)) {
-            columnCopyExecutor.shutdownNow();
-            if (!columnCopyExecutor.awaitTermination(30, TimeUnit.SECONDS)) {
-                throw new IllegalStateException("Column-copy executor did not terminate");
-            }
+        fixedColumnCopyExecutor.shutdown();
+        virtualThreadPerTaskExecutor.shutdown();
+        boolean fixedExecutorTerminated = awaitTermination(fixedColumnCopyExecutor);
+        boolean virtualThreadExecutorTerminated = awaitTermination(virtualThreadPerTaskExecutor);
+        if (!fixedExecutorTerminated || !virtualThreadExecutorTerminated) {
+            throw new IllegalStateException(
+                    "Column-copy executors did not terminate: fixed-pool="
+                            + fixedExecutorTerminated
+                            + ", virtual-thread-per-task="
+                            + virtualThreadExecutorTerminated);
         }
+    }
+
+    private static boolean awaitTermination(ExecutorService executor)
+            throws InterruptedException {
+        if (executor.awaitTermination(30, TimeUnit.SECONDS)) {
+            return true;
+        }
+        executor.shutdownNow();
+        return executor.awaitTermination(30, TimeUnit.SECONDS);
     }
 
     @Benchmark
@@ -65,15 +80,28 @@ public class HardwoodDestinationMaterializationBenchmark {
     }
 
     @Benchmark
-    public HardwoodMarketDataProjectionStore columnarExecutorPerBatchBarrierAppender() {
+    public HardwoodMarketDataProjectionStore columnarFixedPoolPerBatchBarrierAppender() {
         return HardwoodDestinationMaterializationCases.executorPerBatchBarrierColumnAppender(
-                sourceArrays, batchSize, columnCopyExecutor);
+                sourceArrays, batchSize, fixedColumnCopyExecutor);
     }
 
     @Benchmark
-    public HardwoodMarketDataProjectionStore columnarExecutorPipelinedAppender() {
+    public HardwoodMarketDataProjectionStore columnarFixedPoolPipelinedAppender() {
         return HardwoodDestinationMaterializationCases.executorPipelinedColumnAppender(
-                sourceArrays, batchSize, columnCopyExecutor);
+                sourceArrays, batchSize, fixedColumnCopyExecutor);
+    }
+
+    @Benchmark
+    public HardwoodMarketDataProjectionStore
+            columnarVirtualThreadPerTaskPerBatchBarrierAppender() {
+        return HardwoodDestinationMaterializationCases.executorPerBatchBarrierColumnAppender(
+                sourceArrays, batchSize, virtualThreadPerTaskExecutor);
+    }
+
+    @Benchmark
+    public HardwoodMarketDataProjectionStore columnarVirtualThreadPerTaskPipelinedAppender() {
+        return HardwoodDestinationMaterializationCases.executorPipelinedColumnAppender(
+                sourceArrays, batchSize, virtualThreadPerTaskExecutor);
     }
 
     @Benchmark

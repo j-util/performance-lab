@@ -217,33 +217,48 @@ from the operating system's page cache.
 
 This separate destination-only benchmark removes Parquet access and Hardwood
 decoding from the measured operation. Trial setup creates the same eight
-deterministic source arrays once and retains them for all four paths. Each
+deterministic source arrays once and retains them for all six paths. Each
 measured invocation includes fresh exact-capacity destination construction,
 copying or immutable row construction, and columnar sealing:
 
 - `columnarSequentialRangedBatches` appends each common `[from, to)` range with
   the generated typed batch API on the benchmark thread.
-- `columnarExecutorPerBatchBarrierAppender` submits the eight distinct ranged
-  column appends for each range to one trial-scoped, caller-owned eight-thread
-  executor and waits at a barrier before continuing to the next range.
-- `columnarExecutorPipelinedAppender` appends every range to one serial
-  `CompletableFuture` chain per column on the same executor. Each column keeps
-  single-writer range order, while different columns may progress concurrently;
-  the method joins the eight final chain tails once before sealing.
+- `columnarFixedPoolPerBatchBarrierAppender` and
+  `columnarVirtualThreadPerTaskPerBatchBarrierAppender` submit the eight distinct
+  ranged column appends for each range and wait at a barrier before continuing
+  to the next range.
+- `columnarFixedPoolPipelinedAppender` and
+  `columnarVirtualThreadPerTaskPipelinedAppender` append every range to one
+  serial `CompletableFuture` chain per column. Each column keeps single-writer
+  range order, while different columns may progress concurrently; each method
+  joins the eight final chain tails once before sealing.
 - `arrayListRows` creates `new ArrayList<>(rowCount)` and one immutable
   `HardwoodMarketDataRow` per source row.
 
-All four paths calculate identical chunk boundaries from `batchSize`; the
+The paired executor-backed methods call the same executor-agnostic cases with
+either a fixed eight-thread executor or a virtual-thread-per-task executor.
+Both caller-owned executors are created in trial setup, outside measured code,
+then shut down and awaited in trial teardown. Task submission stays inside each
+measured operation, so the virtual-thread-per-task executor creates its virtual
+threads within the measured boundary. The paired methods preserve the same
+source arrays, ranges, batch sizes, exact store capacity, joining, and sealing.
+There is deliberately no executor JMH parameter, so the sequential columnar and
+`ArrayList` cases are not duplicated.
+
+All six paths calculate identical chunk boundaries from `batchSize`; the
 default is 8,192 rows, including a smaller final chunk when needed. The default
 `rowCount` values are 1,000,000 and 10,000,000. The returned destination prevents
 dead-code elimination, and no correctness scan is part of measured code. The
 existing `HardwoodMaterializationBenchmark` remains the end-to-end comparison.
 
-Run only the four destination-only methods with allocation profiling:
+Run only the four executor-backed destination-only methods with allocation
+profiling. The virtual-thread scheduler parallelism is fixed at eight to match
+the fixed executor's eight workers:
 
 ```shell
-java -jar benchmark-jmh/target/benchmarks.jar \
-  'HardwoodDestinationMaterializationBenchmark\.(arrayListRows|columnarExecutorPerBatchBarrierAppender|columnarExecutorPipelinedAppender|columnarSequentialRangedBatches)$' \
+java -Djdk.virtualThreadScheduler.parallelism=8 \
+  -jar benchmark-jmh/target/benchmarks.jar \
+  'HardwoodDestinationMaterializationBenchmark\.(columnarFixedPoolPerBatchBarrierAppender|columnarFixedPoolPipelinedAppender|columnarVirtualThreadPerTaskPerBatchBarrierAppender|columnarVirtualThreadPerTaskPipelinedAppender)$' \
   -p rowCount=1000000 \
   -p batchSize=8192 \
   -wi 2 \

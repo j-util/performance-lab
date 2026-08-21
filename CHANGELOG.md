@@ -5,9 +5,10 @@ All notable changes to this repository will be documented in this file.
 ## Unreleased
 
 - Add a separate destination-only Hardwood benchmark over one retained set of
-  eight source arrays, comparing sequential ranged batches, eight-thread
-  per-batch-barrier appends, pipelined per-column future chains, and
-  exact-capacity immutable-row `ArrayList` filling.
+  eight source arrays, comparing sequential ranged batches, fixed eight-thread
+  and virtual-thread-per-task executors for both per-batch barriers and
+  pipelined per-column future chains, and exact-capacity immutable-row
+  `ArrayList` filling.
 - Use explicit, identical Hardwood decoding batch sizes across all materialization
   benchmark paths.
 - Add a separate ready-data iterator benchmark comparing an exactly pre-sized
