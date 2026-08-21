@@ -73,8 +73,10 @@ public final class HardwoodDestinationMaterializationCases {
         return store;
     }
 
-    /** Creates an exact-capacity store and fills its columns through a caller-owned executor. */
-    public static HardwoodMarketDataProjectionStore executorBackedColumnAppender(
+    /**
+     * Creates an exact-capacity store and waits at a barrier after each executor-backed batch.
+     */
+    public static HardwoodMarketDataProjectionStore executorPerBatchBarrierColumnAppender(
             SourceArrays source,
             int batchSize,
             Executor columnCopyExecutor) {
@@ -125,6 +127,77 @@ public final class HardwoodDestinationMaterializationCases {
                     .join();
             fromIndex = toIndex;
         }
+        store.seal();
+        return store;
+    }
+
+    /**
+     * Creates an exact-capacity store using one ordered executor-backed pipeline per column.
+     */
+    public static HardwoodMarketDataProjectionStore executorPipelinedColumnAppender(
+            SourceArrays source,
+            int batchSize,
+            Executor columnCopyExecutor) {
+        Objects.requireNonNull(source, "source");
+        requirePositiveBatchSize(batchSize);
+        Objects.requireNonNull(columnCopyExecutor, "columnCopyExecutor");
+
+        HardwoodMarketDataProjectionStore store =
+                HardwoodMarketDataProjectionStore.create(source.rowCount());
+        HardwoodMarketDataProjectionStore.ColumnAppender appender = store.columnAppender();
+        CompletableFuture<Void> timestampTail = CompletableFuture.completedFuture(null);
+        CompletableFuture<Void> symbolTail = CompletableFuture.completedFuture(null);
+        CompletableFuture<Void> venueTail = CompletableFuture.completedFuture(null);
+        CompletableFuture<Void> sideTail = CompletableFuture.completedFuture(null);
+        CompletableFuture<Void> sequenceNumberTail = CompletableFuture.completedFuture(null);
+        CompletableFuture<Void> bidPriceTail = CompletableFuture.completedFuture(null);
+        CompletableFuture<Void> askPriceTail = CompletableFuture.completedFuture(null);
+        CompletableFuture<Void> lastTradePriceTail = CompletableFuture.completedFuture(null);
+        for (int fromIndex = 0; fromIndex < source.rowCount(); ) {
+            int toIndex = batchEnd(fromIndex, source.rowCount(), batchSize);
+            int batchFromIndex = fromIndex;
+            int batchToIndex = toIndex;
+            timestampTail = timestampTail.thenRunAsync(
+                    () -> appender.timestamp(
+                            source.timestamps(), batchFromIndex, batchToIndex),
+                    columnCopyExecutor);
+            symbolTail = symbolTail.thenRunAsync(
+                    () -> appender.symbol(source.symbols(), batchFromIndex, batchToIndex),
+                    columnCopyExecutor);
+            venueTail = venueTail.thenRunAsync(
+                    () -> appender.venue(source.venues(), batchFromIndex, batchToIndex),
+                    columnCopyExecutor);
+            sideTail = sideTail.thenRunAsync(
+                    () -> appender.side(source.sides(), batchFromIndex, batchToIndex),
+                    columnCopyExecutor);
+            sequenceNumberTail = sequenceNumberTail.thenRunAsync(
+                    () -> appender.sequenceNumber(
+                            source.sequenceNumbers(), batchFromIndex, batchToIndex),
+                    columnCopyExecutor);
+            bidPriceTail = bidPriceTail.thenRunAsync(
+                    () -> appender.bidPrice(
+                            source.bidPrices(), batchFromIndex, batchToIndex),
+                    columnCopyExecutor);
+            askPriceTail = askPriceTail.thenRunAsync(
+                    () -> appender.askPrice(
+                            source.askPrices(), batchFromIndex, batchToIndex),
+                    columnCopyExecutor);
+            lastTradePriceTail = lastTradePriceTail.thenRunAsync(
+                    () -> appender.lastTradePrice(
+                            source.lastTradePrices(), batchFromIndex, batchToIndex),
+                    columnCopyExecutor);
+            fromIndex = toIndex;
+        }
+        CompletableFuture.allOf(
+                        timestampTail,
+                        symbolTail,
+                        venueTail,
+                        sideTail,
+                        sequenceNumberTail,
+                        bidPriceTail,
+                        askPriceTail,
+                        lastTradePriceTail)
+                .join();
         store.seal();
         return store;
     }

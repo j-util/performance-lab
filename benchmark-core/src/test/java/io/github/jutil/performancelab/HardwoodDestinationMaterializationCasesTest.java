@@ -19,7 +19,7 @@ class HardwoodDestinationMaterializationCasesTest {
     private static final int BATCH_SIZE = 7;
 
     @Test
-    void allPathsMaterializeRepresentativeRowsFromTheSameSourceArrays() throws Exception {
+    void allPathsPreserveOrderingAndMaterializeTheSameSourceArrays() throws Exception {
         HardwoodDestinationMaterializationCases.SourceArrays source =
                 HardwoodDestinationMaterializationCases.createSourceArrays(ROW_COUNT);
         ExecutorService executor = Executors.newFixedThreadPool(PROJECTION_COLUMN_COUNT);
@@ -27,23 +27,28 @@ class HardwoodDestinationMaterializationCasesTest {
             HardwoodMarketDataProjectionStore sequentialStore =
                     HardwoodDestinationMaterializationCases.sequentialRangedBatches(
                             source, BATCH_SIZE);
-            HardwoodMarketDataProjectionStore executorStore =
-                    HardwoodDestinationMaterializationCases.executorBackedColumnAppender(
+            HardwoodMarketDataProjectionStore perBatchBarrierStore =
+                    HardwoodDestinationMaterializationCases.executorPerBatchBarrierColumnAppender(
+                            source, BATCH_SIZE, executor);
+            HardwoodMarketDataProjectionStore pipelinedStore =
+                    HardwoodDestinationMaterializationCases.executorPipelinedColumnAppender(
                             source, BATCH_SIZE, executor);
             ArrayList<HardwoodMarketDataRow> rows =
                     HardwoodDestinationMaterializationCases.arrayListRows(
                             source, BATCH_SIZE);
 
             assertEquals(ROW_COUNT, sequentialStore.size());
-            assertEquals(ROW_COUNT, executorStore.size());
+            assertEquals(ROW_COUNT, perBatchBarrierStore.size());
+            assertEquals(ROW_COUNT, pipelinedStore.size());
             assertEquals(ROW_COUNT, rows.size());
             assertEquals(ROW_COUNT, storeCapacity(sequentialStore));
-            assertEquals(ROW_COUNT, storeCapacity(executorStore));
+            assertEquals(ROW_COUNT, storeCapacity(perBatchBarrierStore));
+            assertEquals(ROW_COUNT, storeCapacity(pipelinedStore));
 
-            assertRepresentativeRows(sequentialStore, executorStore, rows, 0, ROW_COUNT / 2,
-                    ROW_COUNT - 1);
+            assertRowsInSourceOrder(sequentialStore, perBatchBarrierStore, pipelinedStore, rows);
             assertSealed(sequentialStore);
-            assertSealed(executorStore);
+            assertSealed(perBatchBarrierStore);
+            assertSealed(pipelinedStore);
             assertEquals("caller still owns executor",
                     executor.submit(() -> "caller still owns executor").get());
         } finally {
@@ -52,15 +57,16 @@ class HardwoodDestinationMaterializationCasesTest {
         }
     }
 
-    private static void assertRepresentativeRows(
+    private static void assertRowsInSourceOrder(
             HardwoodMarketDataProjectionStore sequentialStore,
-            HardwoodMarketDataProjectionStore executorStore,
-            ArrayList<HardwoodMarketDataRow> rows,
-            int... rowIndexes) {
-        for (int rowIndex : rowIndexes) {
+            HardwoodMarketDataProjectionStore perBatchBarrierStore,
+            HardwoodMarketDataProjectionStore pipelinedStore,
+            ArrayList<HardwoodMarketDataRow> rows) {
+        for (int rowIndex = 0; rowIndex < ROW_COUNT; rowIndex++) {
             HardwoodMarketDataRow expected = HardwoodParquetDatasetGenerator.rowAt(rowIndex);
             assertProjectionEquals(expected, sequentialStore.viewAt(rowIndex));
-            assertProjectionEquals(expected, executorStore.viewAt(rowIndex));
+            assertProjectionEquals(expected, perBatchBarrierStore.viewAt(rowIndex));
+            assertProjectionEquals(expected, pipelinedStore.viewAt(rowIndex));
             assertEquals(expected, rows.get(rowIndex));
         }
     }

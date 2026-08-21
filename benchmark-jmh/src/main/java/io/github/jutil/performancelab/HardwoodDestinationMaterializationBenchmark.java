@@ -65,8 +65,14 @@ public class HardwoodDestinationMaterializationBenchmark {
     }
 
     @Benchmark
-    public HardwoodMarketDataProjectionStore columnarExecutorBackedAppender() {
-        return HardwoodDestinationMaterializationCases.executorBackedColumnAppender(
+    public HardwoodMarketDataProjectionStore columnarExecutorPerBatchBarrierAppender() {
+        return HardwoodDestinationMaterializationCases.executorPerBatchBarrierColumnAppender(
+                sourceArrays, batchSize, columnCopyExecutor);
+    }
+
+    @Benchmark
+    public HardwoodMarketDataProjectionStore columnarExecutorPipelinedAppender() {
+        return HardwoodDestinationMaterializationCases.executorPipelinedColumnAppender(
                 sourceArrays, batchSize, columnCopyExecutor);
     }
 
