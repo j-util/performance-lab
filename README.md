@@ -213,6 +213,41 @@ The default `rowCount` parameters are 1,000,000 and 10,000,000, and the default
 invocation within a trial, measurements after the first read generally benefit
 from the operating system's page cache.
 
+### `HardwoodDestinationMaterializationBenchmark`
+
+This separate destination-only benchmark removes Parquet access and Hardwood
+decoding from the measured operation. Trial setup creates the same eight
+deterministic source arrays once and retains them for all three paths. Each
+measured invocation includes fresh exact-capacity destination construction,
+copying or immutable row construction, and columnar sealing:
+
+- `columnarSequentialRangedBatches` appends each common `[from, to)` range with
+  the generated typed batch API on the benchmark thread.
+- `columnarExecutorBackedAppender` submits the eight distinct ranged column
+  appends for each range to one trial-scoped, caller-owned eight-thread executor
+  and waits for the whole range before continuing.
+- `arrayListRows` creates `new ArrayList<>(rowCount)` and one immutable
+  `HardwoodMarketDataRow` per source row.
+
+All three paths calculate identical chunk boundaries from `batchSize`; the
+default is 8,192 rows, including a smaller final chunk when needed. The default
+`rowCount` values are 1,000,000 and 10,000,000. The returned destination prevents
+dead-code elimination, and no correctness scan is part of measured code. The
+existing `HardwoodMaterializationBenchmark` remains the end-to-end comparison.
+
+Run only the three destination-only methods with allocation profiling:
+
+```shell
+java -jar benchmark-jmh/target/benchmarks.jar \
+  'HardwoodDestinationMaterializationBenchmark\.(arrayListRows|columnarExecutorBackedAppender|columnarSequentialRangedBatches)$' \
+  -p rowCount=1000000 \
+  -p batchSize=8192 \
+  -wi 2 \
+  -i 3 \
+  -f 1 \
+  -prof gc
+```
+
 ### `OneBrcStyleProcessorBenchmark`
 
 This is a fair 1BRC-style processor benchmark, not an optimized or official
