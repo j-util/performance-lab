@@ -1,6 +1,7 @@
 package io.github.jutil.performancelab;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -31,6 +32,12 @@ class HardwoodDestinationMaterializationCasesTest {
             HardwoodMarketDataProjectionStore sequentialStore =
                     HardwoodDestinationMaterializationCases.sequentialRangedBatches(
                             source, BATCH_SIZE);
+            HardwoodMarketDataProjectionStore singleThreadedStore =
+                    HardwoodDestinationMaterializationCases.singleThreadedColumnAppender(
+                            source, BATCH_SIZE);
+            assertNotSame(singleThreadedStore,
+                    HardwoodDestinationMaterializationCases.singleThreadedColumnAppender(
+                            source, BATCH_SIZE));
             HardwoodMarketDataProjectionStore fixedPerBatchBarrierStore =
                     HardwoodDestinationMaterializationCases.executorPerBatchBarrierColumnAppender(
                             source, BATCH_SIZE, fixedExecutor);
@@ -49,6 +56,7 @@ class HardwoodDestinationMaterializationCasesTest {
 
             List<HardwoodMarketDataProjectionStore> stores = List.of(
                     sequentialStore,
+                    singleThreadedStore,
                     fixedPerBatchBarrierStore,
                     fixedPipelinedStore,
                     virtualThreadPerTaskPerBatchBarrierStore,
@@ -75,6 +83,26 @@ class HardwoodDestinationMaterializationCasesTest {
             assertTrue(fixedExecutorTerminated);
             assertTrue(virtualThreadExecutorTerminated);
         }
+    }
+
+    @Test
+    void singleThreadedAppenderValidatesInputsAndHandlesOneWholeRange() {
+        HardwoodDestinationMaterializationCases.SourceArrays source =
+                HardwoodDestinationMaterializationCases.createSourceArrays(ROW_COUNT);
+        assertThrows(NullPointerException.class,
+                () -> HardwoodDestinationMaterializationCases.singleThreadedColumnAppender(
+                        null, BATCH_SIZE));
+        assertThrows(IllegalArgumentException.class,
+                () -> HardwoodDestinationMaterializationCases.singleThreadedColumnAppender(
+                        source, 0));
+        HardwoodMarketDataProjectionStore store =
+                HardwoodDestinationMaterializationCases.singleThreadedColumnAppender(
+                        source, Integer.MAX_VALUE);
+        assertEquals(ROW_COUNT, store.size());
+        for (int index = 0; index < ROW_COUNT; index++) {
+            assertProjectionEquals(HardwoodParquetDatasetGenerator.rowAt(index), store.viewAt(index));
+        }
+        assertSealed(store);
     }
 
     private static void assertRowsInSourceOrder(

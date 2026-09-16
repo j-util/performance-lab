@@ -4,6 +4,9 @@ All notable changes to this repository will be documented in this file.
 
 ## Unreleased
 
+- Add the single-threaded `ColumnAppender` destination path and a reproducible
+  CPS 1.3 comparison with time, allocation, multiple forks and 100K/10M inputs.
+
 - Add a separate destination-only Hardwood benchmark over one retained set of
   eight source arrays, comparing sequential ranged batches, fixed eight-thread
   and virtual-thread-per-task executors for both per-batch barriers and

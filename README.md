@@ -217,12 +217,14 @@ from the operating system's page cache.
 
 This separate destination-only benchmark removes Parquet access and Hardwood
 decoding from the measured operation. Trial setup creates the same eight
-deterministic source arrays once and retains them for all six paths. Each
+deterministic source arrays once and retains them for all seven paths. Each
 measured invocation includes fresh exact-capacity destination construction,
 copying or immutable row construction, and columnar sealing:
 
 - `columnarSequentialRangedBatches` appends each common `[from, to)` range with
   the generated typed batch API on the benchmark thread.
+- `columnarSingleThreadedAppender` copies the same ranges through the generated
+  `ColumnAppender` synchronously on the benchmark thread.
 - `columnarFixedPoolPerBatchBarrierAppender` and
   `columnarVirtualThreadPerTaskPerBatchBarrierAppender` submit the eight distinct
   ranged column appends for each range and wait at a barrier before continuing
@@ -245,11 +247,34 @@ source arrays, ranges, batch sizes, exact store capacity, joining, and sealing.
 There is deliberately no executor JMH parameter, so the sequential columnar and
 `ArrayList` cases are not duplicated.
 
-All six paths calculate identical chunk boundaries from `batchSize`; the
+All seven paths calculate identical chunk boundaries from `batchSize`; the
 default is 8,192 rows, including a smaller final chunk when needed. The default
-`rowCount` values are 1,000,000 and 10,000,000. The returned destination prevents
+`rowCount` values are 100,000, 1,000,000 and 10,000,000. The returned destination prevents
 dead-code elimination, and no correctness scan is part of measured code. The
 existing `HardwoodMaterializationBenchmark` remains the end-to-end comparison.
+
+The destination-only defaults use average time, five one-second warmup
+iterations, eight one-second measurements and three forks. For the CPS 1.3
+release evaluation, compare the typed batch baseline, synchronous appender,
+fixed-pool pipelined appender and exact-capacity `ArrayList` at both 100K and
+10M rows. Include the default 8,192-row chunks and the end-to-end loader's
+1,000,000-row chunks; do not choose a chunk size after seeing its results:
+
+```shell
+java -jar benchmark-jmh/target/benchmarks.jar \
+  '^io\.github\.jutil\.performancelab\.HardwoodDestinationMaterializationBenchmark\.(columnarSequentialRangedBatches|columnarSingleThreadedAppender|columnarFixedPoolPipelinedAppender|arrayListRows)$' \
+  -p rowCount=100000,10000000 -p batchSize=8192,1000000 \
+  -bm avgt -tu ms -wi 5 -w 1s -i 8 -r 1s -f 3 -t 1 \
+  -jvmArgs '-Xms2g -Xmx4g -XX:+UseG1GC' -prof gc \
+  -rf json -rff target/cps-1.3-destination.json
+```
+
+Repeat the large-row matrix independently before drawing a release conclusion.
+Report the JMH confidence intervals, per-fork variation, normalized allocation,
+JDK/OS/CPU and repository SHAs alongside results. Allocation includes executor
+worker threads. This measures repeated construction with GC costs; it does not
+estimate retained heap or Parquet throughput. The existing correctness test
+checks all eight fields, ordering, sealing, capacity and executor ownership.
 
 Run only the four executor-backed destination-only methods with allocation
 profiling. The virtual-thread scheduler parallelism is fixed at eight to match

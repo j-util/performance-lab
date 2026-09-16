@@ -73,6 +73,32 @@ public final class HardwoodDestinationMaterializationCases {
         return store;
     }
 
+    /** Creates an exact-capacity store using synchronous ranged per-column appends. */
+    public static HardwoodMarketDataProjectionStore singleThreadedColumnAppender(
+            SourceArrays source,
+            int batchSize) {
+        Objects.requireNonNull(source, "source");
+        requirePositiveBatchSize(batchSize);
+
+        HardwoodMarketDataProjectionStore store =
+                HardwoodMarketDataProjectionStore.create(source.rowCount());
+        HardwoodMarketDataProjectionStore.ColumnAppender appender = store.columnAppender();
+        for (int fromIndex = 0; fromIndex < source.rowCount(); ) {
+            int toIndex = batchEnd(fromIndex, source.rowCount(), batchSize);
+            appender.timestamp(source.timestamps(), fromIndex, toIndex);
+            appender.symbol(source.symbols(), fromIndex, toIndex);
+            appender.venue(source.venues(), fromIndex, toIndex);
+            appender.side(source.sides(), fromIndex, toIndex);
+            appender.sequenceNumber(source.sequenceNumbers(), fromIndex, toIndex);
+            appender.bidPrice(source.bidPrices(), fromIndex, toIndex);
+            appender.askPrice(source.askPrices(), fromIndex, toIndex);
+            appender.lastTradePrice(source.lastTradePrices(), fromIndex, toIndex);
+            fromIndex = toIndex;
+        }
+        store.seal();
+        return store;
+    }
+
     /**
      * Creates an exact-capacity store and waits at a barrier after each executor-backed batch.
      */

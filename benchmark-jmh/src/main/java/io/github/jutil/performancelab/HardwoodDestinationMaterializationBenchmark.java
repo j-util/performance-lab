@@ -21,18 +21,18 @@ import org.openjdk.jmh.annotations.Threads;
 import org.openjdk.jmh.annotations.Warmup;
 
 /** Destination allocation and filling over retained Hardwood-compatible column arrays. */
-@BenchmarkMode(Mode.SingleShotTime)
+@BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
-@Warmup(iterations = 2)
-@Measurement(iterations = 3)
-@Fork(1)
+@Warmup(iterations = 5, time = 1)
+@Measurement(iterations = 8, time = 1)
+@Fork(3)
 @Threads(1)
 @State(Scope.Benchmark)
 public class HardwoodDestinationMaterializationBenchmark {
 
     private static final int PROJECTION_COLUMN_COUNT = 8;
 
-    @Param({"1000000", "10000000"})
+    @Param({"100000", "1000000", "10000000"})
     public int rowCount;
 
     @Param({"8192"})
@@ -76,6 +76,12 @@ public class HardwoodDestinationMaterializationBenchmark {
     @Benchmark
     public HardwoodMarketDataProjectionStore columnarSequentialRangedBatches() {
         return HardwoodDestinationMaterializationCases.sequentialRangedBatches(
+                sourceArrays, batchSize);
+    }
+
+    @Benchmark
+    public HardwoodMarketDataProjectionStore columnarSingleThreadedAppender() {
+        return HardwoodDestinationMaterializationCases.singleThreadedColumnAppender(
                 sourceArrays, batchSize);
     }
 
