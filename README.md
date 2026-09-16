@@ -195,23 +195,26 @@ java -jar benchmark-jmh/target/benchmarks.jar \
   -prof gc
 ```
 
-Run a representative 1,000,000-row measurement with JMH GC allocation metrics:
+Run the actual consumer comparison at 100K and 10M rows with the existing
+1,000,000-row loader batch size:
 
 ```shell
+mkdir -p target/cps13-gc
 java -jar benchmark-jmh/target/benchmarks.jar \
-  HardwoodMaterializationBenchmark \
-  -p rowCount=1000000 \
-  -p batchSize=1000000 \
-  -wi 2 \
-  -i 3 \
-  -f 1 \
-  -prof gc
+  '^io\.github\.jutil\.performancelab\.HardwoodMaterializationBenchmark\.(hardwoodToColumnarBatch|hardwoodToExecutorBackedColumnarBatch|hardwoodToArrayList)$' \
+  -p rowCount=100000,10000000 -p batchSize=1000000 \
+  -bm ss -tu ms -wi 5 -i 10 -f 3 -t 1 -gc true \
+  -jvmArgs '-Xms4g -Xmx4g -XX:+UseG1GC -Xlog:gc*=info:file=target/cps13-gc/hardwood-%p-%t.txt:uptime,pid,tags:filecount=0' \
+  -prof gc -rf json -rff target/cps13-hardwood.json
 ```
 
-The default `rowCount` parameters are 1,000,000 and 10,000,000, and the default
-`batchSize` is 1,000,000. Because the same generated files are read for every
-invocation within a trial, measurements after the first read generally benefit
-from the operating system's page cache.
+Both materialization suites default to single-shot time, five single-shot warmup
+iterations, ten single-shot measurements, three forks and one benchmark thread.
+The end-to-end default row counts remain 1,000,000 and 10,000,000. Source-file
+creation is trial setup; opening, decoding and destination construction remain
+measured. Repeated reads generally benefit from the operating system's page
+cache. Forced cleanup is outside timing; any collection triggered during a
+measured operation remains part of its score and is reported.
 
 ### `HardwoodDestinationMaterializationBenchmark`
 
@@ -228,12 +231,15 @@ copying or immutable row construction, and columnar sealing:
 - `columnarFixedPoolPerBatchBarrierAppender` and
   `columnarVirtualThreadPerTaskPerBatchBarrierAppender` submit the eight distinct
   ranged column appends for each range and wait at a barrier before continuing
-  to the next range.
+  to the next range. The fixed-pool barrier has the current Hardwood loader
+  scheduling boundary (the isolated case uses CompletableFuture, whereas the
+  generated loader uses FutureTask and waits for every task).
 - `columnarFixedPoolPipelinedAppender` and
   `columnarVirtualThreadPerTaskPipelinedAppender` append every range to one
   serial `CompletableFuture` chain per column. Each column keeps single-writer
   range order, while different columns may progress concurrently; each method
-  joins the eight final chain tails once before sealing.
+  joins the eight final chain tails once before sealing. This is experimental
+  best-case API usage over retained arrays, not the current Hardwood loader.
 - `arrayListRows` creates `new ArrayList<>(rowCount)` and one immutable
   `HardwoodMarketDataRow` per source row.
 
@@ -253,32 +259,54 @@ default is 8,192 rows, including a smaller final chunk when needed. The default
 dead-code elimination, and no correctness scan is part of measured code. The
 existing `HardwoodMaterializationBenchmark` remains the end-to-end comparison.
 
-The destination-only defaults use average time, five one-second warmup
-iterations, eight one-second measurements and three forks. For the CPS 1.3
-release evaluation, compare the typed batch baseline, synchronous appender,
-fixed-pool pipelined appender and exact-capacity `ArrayList` at both 100K and
-10M rows. Include the default 8,192-row chunks and the end-to-end loader's
-1,000,000-row chunks; do not choose a chunk size after seeing its results:
+The CPS 1.3 destination comparison includes exactly five selected methods:
+typed ranged batches, synchronous appender, fixed-pool per-batch barrier,
+experimental fixed-pool pipeline, and exact-capacity `ArrayList`. Both 100K and
+10M rows use chunks of 8,192 and 1,000,000. Source arrays and executors are trial
+setup; fresh destinations, copying, row construction, submission, joins and
+sealing are measured on every invocation.
 
 ```shell
-java -jar benchmark-jmh/target/benchmarks.jar \
-  '^io\.github\.jutil\.performancelab\.HardwoodDestinationMaterializationBenchmark\.(columnarSequentialRangedBatches|columnarSingleThreadedAppender|columnarFixedPoolPipelinedAppender|arrayListRows)$' \
+mkdir -p target/cps13-gc
+SELECTOR='^io\.github\.jutil\.performancelab\.HardwoodDestinationMaterializationBenchmark\.(columnarSequentialRangedBatches|columnarSingleThreadedAppender|columnarFixedPoolPerBatchBarrierAppender|columnarFixedPoolPipelinedAppender|arrayListRows)$'
+java -jar benchmark-jmh/target/benchmarks.jar -l "$SELECTOR"
+java -jar benchmark-jmh/target/benchmarks.jar "$SELECTOR" \
   -p rowCount=100000,10000000 -p batchSize=8192,1000000 \
-  -bm avgt -tu ms -wi 5 -w 1s -i 8 -r 1s -f 3 -t 1 \
-  -jvmArgs '-Xms2g -Xmx4g -XX:+UseG1GC' -prof gc \
-  -rf json -rff target/cps-1.3-destination.json
+  -bm ss -tu ms -wi 5 -i 10 -f 3 -t 1 -gc true \
+  -jvmArgs '-Xms4g -Xmx4g -XX:+UseG1GC -Xlog:gc*=info:file=target/cps13-gc/destination-%p-%t.txt:uptime,pid,tags:filecount=0' \
+  -prof gc -rf json -rff target/cps13-destination.json
 ```
 
-The [2026-09-16 CPS 1.3 evaluation](results/cps-1.3.0-2026-09-16/README.md)
-records both runs, compatibility checks and a **BLOCKED** performance verdict
-because the large-workload timings did not stabilize.
+Repeat the complete 10M matrix independently with the same settings, changing
+only `rowCount=10000000` and the output paths. Do not use one-second average-time
+loops for this large-allocation workload. `-gc true` asks JMH to clean before
+each single-shot iteration outside the measured operation. Process/time-based
+GC filenames preserve each fork without rotation. Check the GC profiler and
+logs for collections during measurement; retain all samples and outliers.
+Normalized allocation includes executor workers and is allocation volume,
+not retained heap. This boundary measures isolated materialization after
+cleanup, not sustained throughput under repeated allocation pressure.
 
-Repeat the large-row matrix independently before drawing a release conclusion.
-Report the JMH confidence intervals, per-fork variation, normalized allocation,
-JDK/OS/CPU and repository SHAs alongside results. Allocation includes executor
-worker threads. This measures repeated construction with GC costs; it does not
-estimate retained heap or Parquet throughput. The existing correctness test
-checks all eight fields, ordering, sealing, capacity and executor ownership.
+The [original 2026-09-16 report](results/cps-1.3.0-2026-09-16/README.md)
+is historical evidence; its broad **BLOCKED** verdict is superseded because
+repeated `AverageTime` allocation allowed GC placement to dominate the score.
+The follow-up evidence is recorded separately after measuring an exact source
+commit. `scripts/cps13/run-evidence.sh` runs the complete prescribed validation
+and benchmark sequence; `scripts/cps13/ValidateDestinations.java` checks all
+rows and eight fields, ordering, exact capacity and sealing for all 20 selected
+input/path combinations outside timing, including the per-batch barrier.
+
+Typed batches remain the natural path for already prepared aligned arrays.
+`ColumnAppender` supports independently produced columns and caller-managed
+concurrency; it need not beat typed batches in the retained-array fixture.
+Destination-only results describe copying and executor tradeoffs. The actual
+consumer comparison is `HardwoodMaterializationBenchmark`, including its
+per-batch executor path. Neither suite establishes universal superiority over
+typed batches or `ArrayList`. A release blocker requires corrected, stable
+evidence of a substantial repeatable regression in the intended consumer path;
+absence of a destination-only speedup is not a blocker. Otherwise the verdict
+is **FUNCTIONALLY READY; PERFORMANCE TRADEOFF CHARACTERIZED**, with measured
+limitations and inherited functional evidence stated explicitly.
 
 Run only the four executor-backed destination-only methods with allocation
 profiling. The virtual-thread scheduler parallelism is fixed at eight to match

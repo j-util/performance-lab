@@ -1,5 +1,12 @@
 # CPS 1.3.0-SNAPSHOT release-readiness evaluation — 2026-09-16
 
+> **Superseded release verdict:** repeated `AverageTime` allocation allowed GC
+> placement to dominate the score. The original broad **BLOCKED** interpretation
+> and longer-warmup recommendation are superseded by the corrected single-shot
+> methodology and a separate follow-up evaluation. All original results and
+> the report below remain historical evidence; lack of a typed-batch speedup
+> does not establish a release blocker.
+
 **Verdict: BLOCKED on the performance gate.** Correctness and compatibility checks passed.
 
 Scope: issue j-util/columnar-projection-store#7 and merged PR #4. The published

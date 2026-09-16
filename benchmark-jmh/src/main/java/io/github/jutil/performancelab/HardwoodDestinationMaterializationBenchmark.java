@@ -21,10 +21,10 @@ import org.openjdk.jmh.annotations.Threads;
 import org.openjdk.jmh.annotations.Warmup;
 
 /** Destination allocation and filling over retained Hardwood-compatible column arrays. */
-@BenchmarkMode(Mode.AverageTime)
+@BenchmarkMode(Mode.SingleShotTime)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
-@Warmup(iterations = 5, time = 1)
-@Measurement(iterations = 8, time = 1)
+@Warmup(iterations = 5)
+@Measurement(iterations = 10)
 @Fork(3)
 @Threads(1)
 @State(Scope.Benchmark)

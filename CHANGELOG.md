@@ -4,6 +4,10 @@ All notable changes to this repository will be documented in this file.
 
 ## Unreleased
 
+- Restore single-shot materialization measurement with five warmups, ten
+  measurements and three forks; document fixed-heap cleanup, GC evidence,
+  full-value validation and actual Hardwood versus experimental pipelining.
+
 - Add the single-threaded `ColumnAppender` destination path and a reproducible
   CPS 1.3 comparison with time, allocation, multiple forks and 100K/10M inputs.
 
