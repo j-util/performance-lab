@@ -1,0 +1,29 @@
+{
+  "columnar-projection-store": {
+    "sha": "5f0761b99d14be932e4890795d4007c7aeb2013c",
+    "status": "",
+    "changed_tracked_files": [],
+    "checked_files": 31
+  },
+  "columnar-projection-store-hardwood": {
+    "sha": "8563cc5184ecdc4c933e55884303639b6252ce09",
+    "status": "",
+    "changed_tracked_files": [],
+    "checked_files": 22
+  },
+  "performance-lab": {
+    "measured_source_sha": "41afe3444622e9a46d3f0bf2d9f5e9d2e6fadcee",
+    "benchmark_and_scripts_unchanged": true,
+    "historical_raw_files_unchanged": [
+      "results/cps-1.3.0-2026-09-16/ValidateDestinations.java",
+      "results/cps-1.3.0-2026-09-16/artifact-sha256.txt",
+      "results/cps-1.3.0-2026-09-16/consumer-api.txt",
+      "results/cps-1.3.0-2026-09-16/destination-primary.json",
+      "results/cps-1.3.0-2026-09-16/destination-primary.txt",
+      "results/cps-1.3.0-2026-09-16/destination-repeat.json",
+      "results/cps-1.3.0-2026-09-16/destination-repeat.txt",
+      "results/cps-1.3.0-2026-09-16/destination-validation.txt"
+    ],
+    "original_report_body_preserved": true
+  }
+}

@@ -1,0 +1,7 @@
+PASS git diff --check
+PASS git diff --cached --check
+Evidence-local whitespace attributes preserve raw Maven/JMH formatting and CSV CRLF; source and report checks remain active.
+PASS staged changes limited to new evidence and report links
+PASS staged evidence byte-identical to working files and raw benchmark outputs
+PASS SHA256SUMS verification
+PASS unchanged CPS and Hardwood, original raw evidence and report body

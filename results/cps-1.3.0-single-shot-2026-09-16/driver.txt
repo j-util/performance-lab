@@ -1,0 +1,13 @@
++ git diff --exit-code HEAD -- benchmark-core benchmark-jmh scripts/cps13
++ ./mvnw -B -ntp clean verify
++ DEST='^io\.github\.jutil\.performancelab\.HardwoodDestinationMaterializationBenchmark\.(columnarSequentialRangedBatches|columnarSingleThreadedAppender|columnarFixedPoolPerBatchBarrierAppender|columnarFixedPoolPipelinedAppender|arrayListRows)$'
++ END='^io\.github\.jutil\.performancelab\.HardwoodMaterializationBenchmark\.(hardwoodToColumnarBatch|hardwoodToExecutorBackedColumnarBatch|hardwoodToArrayList)$'
++ java -jar benchmark-jmh/target/benchmarks.jar -l '^io\.github\.jutil\.performancelab\.HardwoodDestinationMaterializationBenchmark\.(columnarSequentialRangedBatches|columnarSingleThreadedAppender|columnarFixedPoolPerBatchBarrierAppender|columnarFixedPoolPipelinedAppender|arrayListRows)$'
++ python3 - /private/tmp/cps13-single-shot-2026-09-16/destination-list.txt
+PASS exact five-method shaded JMH selector
++ javac -proc:none -cp benchmark-jmh/target/benchmarks.jar -d /private/tmp/cps13-single-shot-2026-09-16/validator scripts/cps13/ValidateDestinations.java
++ java -Xms4g -Xmx4g -XX:+UseG1GC --add-opens=java.base/java.util=ALL-UNNAMED -cp /private/tmp/cps13-single-shot-2026-09-16/validator:benchmark-jmh/target/benchmarks.jar ValidateDestinations
++ python3 - /private/tmp/cps13-single-shot-2026-09-16/artifact-sha256.txt
++ java '-Xlog:gc*=info:file=/private/tmp/cps13-single-shot-2026-09-16/gc/probe-%p-%t.txt:uptime,pid,tags:filecount=0' -version
++ java -jar benchmark-jmh/target/benchmarks.jar '^io\.github\.jutil\.performancelab\.HardwoodDestinationMaterializationBenchmark\.(columnarSequentialRangedBatches|columnarSingleThreadedAppender|columnarFixedPoolPerBatchBarrierAppender|columnarFixedPoolPipelinedAppender|arrayListRows)$' -p rowCount=100000,10000000 -p batchSize=8192,1000000 -bm ss -tu ms -wi 5 -i 10 -f 3 -t 1 -gc true -jvmArgs '-Xms4g -Xmx4g -XX:+UseG1GC -Xlog:gc*=info:file=/private/tmp/cps13-single-shot-2026-09-16/gc/destination-primary-%p-%t.txt:uptime,pid,tags:filecount=0' -prof gc -rf json -rff /private/tmp/cps13-single-shot-2026-09-16/destination-primary.json
++ java -jar benchmark-jmh/target/benchmarks.jar '^io\.github\.jutil\.performancelab\.HardwoodDestinationMaterializationBenchmark\.(columnarSequentialRangedBatches|columnarSingleThreadedAppender|columnarFixedPoolPerBatchBarrierAppender|columnarFixedPoolPipelinedAppender|arrayListRows)$' -p rowCount=10000000 -p batchSize=8192,1000000 -bm ss -tu ms -wi 5 -i 10 -f 3 -t 1 -gc true -jvmArgs '-Xms4g -Xmx4g -XX:+UseG1GC -Xlog:gc*=info:file=/private/tmp/cps13-single-shot-2026-09-16/gc/destination-repeat-%p-%t.txt:uptime,pid,tags:filecount=0' -prof gc -rf json -rff /private/tmp/cps13-single-shot-2026-09-16/destination-repeat.json

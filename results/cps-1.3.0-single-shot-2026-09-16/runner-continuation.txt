@@ -1,0 +1,3 @@
+2026-09-16 19:11:09.756057+00:00
+The original tool session became unavailable while the repeat was still running. Read-only process inspection confirmed that the requested repeat continued. Both destination JSON files are complete (20 and 10 cases; 30 measured samples per case), and both console logs contain Run complete. The original driver process then ended before creating hardwood.txt. Only the remaining end-to-end command, analysis and diff check were started by finish-evidence.sh. No destination run was restarted, discarded or trimmed.
+Unchanged shaded JAR SHA-256: 8f9ae26abd43516cc30f09a9cd15531f824d9610eadb5c92c89c57f303affd03

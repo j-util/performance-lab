@@ -1,0 +1,14 @@
+# Preserve exact Maven/JMH/source-excerpt output; do not trim raw evidence.
+# These rules affect whitespace checking only, not file contents or diffs.
+clean-verify.txt whitespace=-blank-at-eol
+precommit-verify.txt whitespace=-blank-at-eol
+destination-list.txt whitespace=-blank-at-eol
+destination-primary.txt whitespace=-blank-at-eol
+destination-repeat.txt whitespace=-blank-at-eol
+hardwood.txt whitespace=-blank-at-eol
+jmh-gc-boundary-source.txt whitespace=-blank-at-eol
+destination-primary.json whitespace=-blank-at-eof
+destination-repeat.json whitespace=-blank-at-eof
+hardwood.json whitespace=-blank-at-eof
+# Python csv emits standard CRLF record separators; retain them unchanged.
+*.csv whitespace=cr-at-eol

@@ -1,0 +1,196 @@
+/Users/karenbarseghyan/.m2/repository/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37-sources.jar!/org/openjdk/jmh/runner/BaseRunner.java lines 250-286
+250: 
+251:         // warmup
+252:         IterationParams wp = benchParams.getWarmup();
+253:         for (int i = 1; i <= wp.getCount(); i++) {
+254:             // will run system gc if we should
+255:             if (runSystemGC()) {
+256:                 out.verbosePrintln("System.gc() executed");
+257:             }
+258: 
+259:             out.iteration(benchParams, wp, i);
+260:             boolean isFirstIteration = (i == 1);
+261:             boolean isLastIteration = (benchParams.getMeasurement().getCount() == 0);
+262:             IterationResult ir = handler.runIteration(benchParams, wp, isFirstIteration, isLastIteration);
+263:             out.iterationResult(benchParams, wp, i, ir);
+264: 
+265:             allWarmup += ir.getMetadata().getAllOps();
+266:         }
+267: 
+268:         long measurementTime = System.currentTimeMillis();
+269: 
+270:         // measurement
+271:         IterationParams mp = benchParams.getMeasurement();
+272:         for (int i = 1; i <= mp.getCount(); i++) {
+273:             // will run system gc if we should
+274:             if (runSystemGC()) {
+275:                 out.verbosePrintln("System.gc() executed");
+276:             }
+277: 
+278:             // run benchmark iteration
+279:             out.iteration(benchParams, mp, i);
+280: 
+281:             boolean isFirstIteration = (benchParams.getWarmup().getCount() == 0) && (i == 1);
+282:             boolean isLastIteration = (i == mp.getCount());
+283:             IterationResult ir = handler.runIteration(benchParams, mp, isFirstIteration, isLastIteration);
+284:             out.iterationResult(benchParams, mp, i, ir);
+285: 
+286:             allMeasurement += ir.getMetadata().getAllOps();
+
+/Users/karenbarseghyan/.m2/repository/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37-sources.jar!/org/openjdk/jmh/runner/BaseRunner.java lines 309-376
+309:     public boolean runSystemGC() {
+310:         if (options.shouldDoGC().orElse(Defaults.DO_GC)) {
+311:             List<GarbageCollectorMXBean> enabledBeans = new ArrayList<>();
+312: 
+313:             long beforeGcCount = 0;
+314:             for (GarbageCollectorMXBean bean : ManagementFactory.getGarbageCollectorMXBeans()) {
+315:                 long count = bean.getCollectionCount();
+316:                 if (count != -1) {
+317:                     enabledBeans.add(bean);
+318:                 }
+319:             }
+320: 
+321:             for (GarbageCollectorMXBean bean : enabledBeans) {
+322:                 beforeGcCount += bean.getCollectionCount();
+323:             }
+324: 
+325:             // Run the GC twice, and force finalization before each GCs.
+326:             System.runFinalization();
+327:             System.gc();
+328:             System.runFinalization();
+329:             System.gc();
+330: 
+331:             // Now make sure GC actually happened. We have to wait for two things:
+332:             //   a) That at least two collections happened, indicating GC work.
+333:             //   b) That counter updates have not happened for a while, indicating GC work had ceased.
+334:             //
+335:             // Note there is an opportunity window for a concurrent GC to happen before the first
+336:             // System.gc() call, which would get counted towards our GCs. This race is unresolvable
+337:             // unless we have GC-specific information about the collection cycles, and verify those
+338:             // were indeed GCs triggered by us.
+339: 
+340:             final int MAX_WAIT_MSEC = 20 * 1000;
+341: 
+342:             if (enabledBeans.isEmpty()) {
+343:                 out.println("WARNING: MXBeans can not report GC info. System.gc() invoked, pessimistically waiting " + MAX_WAIT_MSEC + " msecs");
+344:                 try {
+345:                     TimeUnit.MILLISECONDS.sleep(MAX_WAIT_MSEC);
+346:                 } catch (InterruptedException e) {
+347:                     Thread.currentThread().interrupt();
+348:                 }
+349:                 return true;
+350:             }
+351: 
+352:             boolean gcHappened = false;
+353: 
+354:             long start = System.nanoTime();
+355:             while (TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start) < MAX_WAIT_MSEC) {
+356:                 try {
+357:                     TimeUnit.MILLISECONDS.sleep(200);
+358:                 } catch (InterruptedException e) {
+359:                     Thread.currentThread().interrupt();
+360:                 }
+361: 
+362:                 long afterGcCount = 0;
+363:                 for (GarbageCollectorMXBean bean : enabledBeans) {
+364:                     afterGcCount += bean.getCollectionCount();
+365:                 }
+366: 
+367:                 if (!gcHappened) {
+368:                     if (afterGcCount - beforeGcCount >= 2) {
+369:                         gcHappened = true;
+370:                     }
+371:                 } else {
+372:                     if (afterGcCount == beforeGcCount) {
+373:                         // Stable!
+374:                         return true;
+375:                     }
+376:                     beforeGcCount = afterGcCount;
+
+/Users/karenbarseghyan/.m2/repository/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37-sources.jar!/org/openjdk/jmh/profile/GCProfiler.java lines 99-184
+99: 
+100:     @Override
+101:     public void beforeIteration(BenchmarkParams benchmarkParams, IterationParams iterationParams) {
+102:         if (churnEnabled) {
+103:             VMSupport.startChurnProfile();
+104:         }
+105: 
+106:         long gcTime = 0;
+107:         long gcCount = 0;
+108:         for (GarbageCollectorMXBean bean : ManagementFactory.getGarbageCollectorMXBeans()) {
+109:             gcCount += bean.getCollectionCount();
+110:             gcTime += bean.getCollectionTime();
+111:         }
+112:         this.beforeGCCount = gcCount;
+113:         this.beforeGCTime = gcTime;
+114: 
+115:         if (allocEnabled) {
+116:             this.beforeAllocated = VMSupport.getSnapshot();
+117:         }
+118:         this.beforeTime = System.nanoTime();
+119:     }
+120: 
+121:     @Override
+122:     public Collection<? extends Result> afterIteration(BenchmarkParams benchmarkParams, IterationParams iterationParams, IterationResult iResult) {
+123:         long afterTime = System.nanoTime();
+124: 
+125:         if (churnEnabled) {
+126:             VMSupport.finishChurnProfile(churnWait);
+127:         }
+128: 
+129:         List<ScalarResult> results = new ArrayList<>();
+130: 
+131:         long gcTime = 0;
+132:         long gcCount = 0;
+133:         for (GarbageCollectorMXBean bean : ManagementFactory.getGarbageCollectorMXBeans()) {
+134:             gcCount += bean.getCollectionCount();
+135:             gcTime += bean.getCollectionTime();
+136:         }
+137: 
+138:         results.add(new ScalarResult(
+139:                 "gc.count",
+140:                 gcCount - beforeGCCount,
+141:                 "counts",
+142:                 AggregationPolicy.SUM));
+143: 
+144:         if (gcCount != beforeGCCount || gcTime != beforeGCTime) {
+145:             results.add(new ScalarResult(
+146:                     "gc.time",
+147:                     gcTime - beforeGCTime,
+148:                     "ms",
+149:                     AggregationPolicy.SUM));
+150:         }
+151: 
+152:         if (allocEnabled) {
+153:             if (beforeAllocated != null) {
+154:                 HotspotAllocationSnapshot newSnapshot = VMSupport.getSnapshot();
+155:                 long allocated = newSnapshot.difference(beforeAllocated);
+156:                 // When no allocations measured, we still need to report results to avoid user confusion
+157:                 results.add(new ScalarResult("gc.alloc.rate",
+158:                         (afterTime != beforeTime) ?
+159:                                 1.0 * allocated / 1024 / 1024 * TimeUnit.SECONDS.toNanos(1) / (afterTime - beforeTime) :
+160:                                 Double.NaN,
+161:                         "MB/sec", AggregationPolicy.AVG));
+162:                 if (allocated != 0) {
+163:                     long allOps = iResult.getMetadata().getAllOps();
+164:                     results.add(new ScalarResult("gc.alloc.rate.norm",
+165:                             (allOps != 0) ?
+166:                                     1.0 * allocated / allOps :
+167:                                     Double.NaN,
+168:                             "B/op", AggregationPolicy.AVG));
+169:                 }
+170:             } else {
+171:                 // When allocation profiling fails, make sure it is distinguishable in report
+172:                 results.add(new ScalarResult("gc.alloc.rate",
+173:                         Double.NaN,
+174:                         "MB/sec", AggregationPolicy.AVG));
+175:             }
+176:         }
+177: 
+178:         if (churnEnabled) {
+179:             Multiset<String> churn = VMSupport.getChurn();
+180:             for (String space : churn.keys()) {
+181:                 double churnRate = (afterTime != beforeTime) ?
+182:                         1.0 * churn.count(space) * TimeUnit.SECONDS.toNanos(1) / (afterTime - beforeTime) / 1024 / 1024 :
+183:                         Double.NaN;
+184: 

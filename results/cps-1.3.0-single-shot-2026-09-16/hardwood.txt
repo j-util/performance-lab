@@ -1,0 +1,1733 @@
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/Users/karenbarseghyan/Projects/j-util/performance-lab/benchmark-jmh/target/benchmarks.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# JMH version: 1.37
+# VM version: JDK 25.0.2, OpenJDK 64-Bit Server VM, 25.0.2+10-LTS
+# VM invoker: /Users/karenbarseghyan/.sdkman/candidates/java/25.0.2-tem/bin/java
+# VM options: -Xms4g -Xmx4g -XX:+UseG1GC -Xlog:gc*=info:file=/private/tmp/cps13-single-shot-2026-09-16/gc/hardwood-%p-%t.txt:uptime,pid,tags:filecount=0
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, single-shot each
+# Measurement: 10 iterations, single-shot each
+# Timeout: 10 min per iteration
+# Threads: 1 thread
+# Benchmark mode: Single shot invocation time
+# Benchmark: io.github.jutil.performancelab.HardwoodMaterializationBenchmark.hardwoodToArrayList
+# Parameters: (batchSize = 1000000, rowCount = 100000)
+
+# Run progress: 0.00% complete, ETA 00:00:00
+# Fork: 1 of 3
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/Users/karenbarseghyan/Projects/j-util/performance-lab/benchmark-jmh/target/benchmarks.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: SLF4J(W): No SLF4J providers were found.
+SLF4J(W): Defaulting to no-operation (NOP) logger implementation
+SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.
+SLF4J(W): Class path contains SLF4J bindings targeting slf4j-api versions 1.7.x or earlier.
+SLF4J(W): Ignoring binding found at [jar:file:/Users/karenbarseghyan/Projects/j-util/performance-lab/benchmark-jmh/target/benchmarks.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J(W): See https://www.slf4j.org/codes.html#ignoredBindings for an explanation.
+160.481 ms/op
+# Warmup Iteration   2: 31.658 ms/op
+# Warmup Iteration   3: 14.906 ms/op
+# Warmup Iteration   4: 21.738 ms/op
+# Warmup Iteration   5: 22.202 ms/op
+Iteration   1: 21.578 ms/op
+                 gc.alloc.rate:      21110.366 MB/sec
+                 gc.alloc.rate.norm: 484598368.000 B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   2: 22.514 ms/op
+                 gc.alloc.rate:      20165.158 MB/sec
+                 gc.alloc.rate.norm: 484788088.000 B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   3: 21.855 ms/op
+                 gc.alloc.rate:      20828.230 MB/sec
+                 gc.alloc.rate.norm: 484471768.000 B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   4: 18.613 ms/op
+                 gc.alloc.rate:      24456.892 MB/sec
+                 gc.alloc.rate.norm: 484621472.000 B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   5: 21.516 ms/op
+                 gc.alloc.rate:      21076.199 MB/sec
+                 gc.alloc.rate.norm: 484881288.000 B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   6: 19.364 ms/op
+                 gc.alloc.rate:      23495.355 MB/sec
+                 gc.alloc.rate.norm: 484583688.000 B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   7: 20.586 ms/op
+                 gc.alloc.rate:      22006.151 MB/sec
+                 gc.alloc.rate.norm: 484633336.000 B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   8: 20.492 ms/op
+                 gc.alloc.rate:      22211.887 MB/sec
+                 gc.alloc.rate.norm: 484746672.000 B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   9: 19.517 ms/op
+                 gc.alloc.rate:      23327.188 MB/sec
+                 gc.alloc.rate.norm: 484633536.000 B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration  10: 19.888 ms/op
+                 gc.alloc.rate:      21633.448 MB/sec
+                 gc.alloc.rate.norm: 484724096.000 B/op
+                 gc.count:           ≈ 0 counts
+
+
+# Run progress: 5.56% complete, ETA 00:02:55
+# Fork: 2 of 3
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/Users/karenbarseghyan/Projects/j-util/performance-lab/benchmark-jmh/target/benchmarks.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: SLF4J(W): No SLF4J providers were found.
+SLF4J(W): Defaulting to no-operation (NOP) logger implementation
+SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.
+SLF4J(W): Class path contains SLF4J bindings targeting slf4j-api versions 1.7.x or earlier.
+SLF4J(W): Ignoring binding found at [jar:file:/Users/karenbarseghyan/Projects/j-util/performance-lab/benchmark-jmh/target/benchmarks.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J(W): See https://www.slf4j.org/codes.html#ignoredBindings for an explanation.
+90.136 ms/op
+# Warmup Iteration   2: 24.538 ms/op
+# Warmup Iteration   3: 24.748 ms/op
+# Warmup Iteration   4: 19.350 ms/op
+# Warmup Iteration   5: 14.666 ms/op
+Iteration   1: 21.759 ms/op
+                 gc.alloc.rate:      20959.081 MB/sec
+                 gc.alloc.rate.norm: 484745360.000 B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   2: 21.818 ms/op
+                 gc.alloc.rate:      20862.492 MB/sec
+                 gc.alloc.rate.norm: 484586920.000 B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   3: 23.493 ms/op
+                 gc.alloc.rate:      19427.433 MB/sec
+                 gc.alloc.rate.norm: 484591216.000 B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   4: 21.989 ms/op
+                 gc.alloc.rate:      20521.554 MB/sec
+                 gc.alloc.rate.norm: 484626840.000 B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   5: 9.712 ms/op
+                 gc.alloc.rate:      46761.372 MB/sec
+                 gc.alloc.rate.norm: 484634584.000 B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   6: 21.980 ms/op
+                 gc.alloc.rate:      20538.015 MB/sec
+                 gc.alloc.rate.norm: 484785864.000 B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   7: 22.055 ms/op
+                 gc.alloc.rate:      20621.367 MB/sec
+                 gc.alloc.rate.norm: 484745080.000 B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   8: 13.090 ms/op
+                 gc.alloc.rate:      34625.739 MB/sec
+                 gc.alloc.rate.norm: 484830592.000 B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   9: 10.125 ms/op
+                 gc.alloc.rate:      44719.491 MB/sec
+                 gc.alloc.rate.norm: 484591432.000 B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration  10: 21.637 ms/op
+                 gc.alloc.rate:      19993.333 MB/sec
+                 gc.alloc.rate.norm: 484627408.000 B/op
+                 gc.count:           ≈ 0 counts
+
+
+# Run progress: 11.11% complete, ETA 00:02:44
+# Fork: 3 of 3
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/Users/karenbarseghyan/Projects/j-util/performance-lab/benchmark-jmh/target/benchmarks.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: SLF4J(W): No SLF4J providers were found.
+SLF4J(W): Defaulting to no-operation (NOP) logger implementation
+SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.
+SLF4J(W): Class path contains SLF4J bindings targeting slf4j-api versions 1.7.x or earlier.
+SLF4J(W): Ignoring binding found at [jar:file:/Users/karenbarseghyan/Projects/j-util/performance-lab/benchmark-jmh/target/benchmarks.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J(W): See https://www.slf4j.org/codes.html#ignoredBindings for an explanation.
+111.072 ms/op
+# Warmup Iteration   2: 34.796 ms/op
+# Warmup Iteration   3: 24.652 ms/op
+# Warmup Iteration   4: 19.161 ms/op
+# Warmup Iteration   5: 19.387 ms/op
+Iteration   1: 8.960 ms/op
+                 gc.alloc.rate:      50955.863 MB/sec
+                 gc.alloc.rate.norm: 484595560.000 B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   2: 21.833 ms/op
+                 gc.alloc.rate:      20889.153 MB/sec
+                 gc.alloc.rate.norm: 484705152.000 B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   3: 17.975 ms/op
+                 gc.alloc.rate:      25311.408 MB/sec
+                 gc.alloc.rate.norm: 484789000.000 B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   4: 10.264 ms/op
+                 gc.alloc.rate:      44432.037 MB/sec
+                 gc.alloc.rate.norm: 484928104.000 B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   5: 20.180 ms/op
+                 gc.alloc.rate:      22706.741 MB/sec
+                 gc.alloc.rate.norm: 484780272.000 B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   6: 14.575 ms/op
+                 gc.alloc.rate:      31364.270 MB/sec
+                 gc.alloc.rate.norm: 484907640.000 B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   7: 17.171 ms/op
+                 gc.alloc.rate:      26517.358 MB/sec
+                 gc.alloc.rate.norm: 484624936.000 B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   8: 15.586 ms/op
+                 gc.alloc.rate:      29336.553 MB/sec
+                 gc.alloc.rate.norm: 484750328.000 B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   9: 8.372 ms/op
+                 gc.alloc.rate:      54314.141 MB/sec
+                 gc.alloc.rate.norm: 484796296.000 B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration  10: 16.704 ms/op
+                 gc.alloc.rate:      26261.223 MB/sec
+                 gc.alloc.rate.norm: 484884416.000 B/op
+                 gc.count:           ≈ 0 counts
+
+
+
+Result "io.github.jutil.performancelab.HardwoodMaterializationBenchmark.hardwoodToArrayList":
+  N = 30
+  mean =     18.173 ±(99.9%) 3.112 ms/op
+
+  Histogram, ms/op:
+    [ 0.000,  2.500) = 0 
+    [ 2.500,  5.000) = 0 
+    [ 5.000,  7.500) = 0 
+    [ 7.500, 10.000) = 3 
+    [10.000, 12.500) = 2 
+    [12.500, 15.000) = 2 
+    [15.000, 17.500) = 3 
+    [17.500, 20.000) = 5 
+    [20.000, 22.500) = 13 
+    [22.500, 25.000) = 2 
+    [25.000, 27.500) = 0 
+
+  Percentiles, ms/op:
+      p(0.0000) =      8.372 ms/op
+     p(50.0000) =     20.034 ms/op
+     p(90.0000) =     22.048 ms/op
+     p(95.0000) =     22.954 ms/op
+     p(99.0000) =     23.493 ms/op
+     p(99.9000) =     23.493 ms/op
+     p(99.9900) =     23.493 ms/op
+     p(99.9990) =     23.493 ms/op
+     p(99.9999) =     23.493 ms/op
+    p(100.0000) =     23.493 ms/op
+
+Secondary result "io.github.jutil.performancelab.HardwoodMaterializationBenchmark.hardwoodToArrayList:gc.alloc.rate":
+  27380.983 ±(99.9%) 6834.334 MB/sec [Average]
+  (min, avg, max) = (19427.433, 27380.983, 54314.141), stdev = 10229.310
+  CI (99.9%): [20546.650, 34215.317] (assumes normal distribution)
+
+Secondary result "io.github.jutil.performancelab.HardwoodMaterializationBenchmark.hardwoodToArrayList:gc.alloc.rate.norm":
+  484706977.067 ±(99.9%) 76942.508 B/op [Average]
+  (min, avg, max) = (484471768.000, 484706977.067, 484928104.000), stdev = 115163.932
+  CI (99.9%): [484630034.559, 484783919.574] (assumes normal distribution)
+
+Secondary result "io.github.jutil.performancelab.HardwoodMaterializationBenchmark.hardwoodToArrayList:gc.count":
+  ≈ 0 counts
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, OpenJDK 64-Bit Server VM, 25.0.2+10-LTS
+# VM invoker: /Users/karenbarseghyan/.sdkman/candidates/java/25.0.2-tem/bin/java
+# VM options: -Xms4g -Xmx4g -XX:+UseG1GC -Xlog:gc*=info:file=/private/tmp/cps13-single-shot-2026-09-16/gc/hardwood-%p-%t.txt:uptime,pid,tags:filecount=0
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, single-shot each
+# Measurement: 10 iterations, single-shot each
+# Timeout: 10 min per iteration
+# Threads: 1 thread
+# Benchmark mode: Single shot invocation time
+# Benchmark: io.github.jutil.performancelab.HardwoodMaterializationBenchmark.hardwoodToArrayList
+# Parameters: (batchSize = 1000000, rowCount = 10000000)
+
+# Run progress: 16.67% complete, ETA 00:02:33
+# Fork: 1 of 3
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/Users/karenbarseghyan/Projects/j-util/performance-lab/benchmark-jmh/target/benchmarks.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: SLF4J(W): No SLF4J providers were found.
+SLF4J(W): Defaulting to no-operation (NOP) logger implementation
+SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.
+SLF4J(W): Class path contains SLF4J bindings targeting slf4j-api versions 1.7.x or earlier.
+SLF4J(W): Ignoring binding found at [jar:file:/Users/karenbarseghyan/Projects/j-util/performance-lab/benchmark-jmh/target/benchmarks.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J(W): See https://www.slf4j.org/codes.html#ignoredBindings for an explanation.
+1275.412 ms/op
+# Warmup Iteration   2: 1414.073 ms/op
+# Warmup Iteration   3: 728.759 ms/op
+# Warmup Iteration   4: 789.797 ms/op
+# Warmup Iteration   5: 854.018 ms/op
+Iteration   1: 711.226 ms/op
+                 gc.alloc.rate:      7105.202 MB/sec
+                 gc.alloc.rate.norm: 5301238528.000 B/op
+                 gc.count:           2.000 counts
+                 gc.time:            310.000 ms
+
+Iteration   2: 864.962 ms/op
+                 gc.alloc.rate:      5841.980 MB/sec
+                 gc.alloc.rate.norm: 5301191824.000 B/op
+                 gc.count:           2.000 counts
+                 gc.time:            387.000 ms
+
+Iteration   3: 748.769 ms/op
+                 gc.alloc.rate:      6749.993 MB/sec
+                 gc.alloc.rate.norm: 5301183448.000 B/op
+                 gc.count:           2.000 counts
+                 gc.time:            343.000 ms
+
+Iteration   4: 942.121 ms/op
+                 gc.alloc.rate:      5364.499 MB/sec
+                 gc.alloc.rate.norm: 5301197640.000 B/op
+                 gc.count:           2.000 counts
+                 gc.time:            405.000 ms
+
+Iteration   5: 846.965 ms/op
+                 gc.alloc.rate:      5966.226 MB/sec
+                 gc.alloc.rate.norm: 5301220384.000 B/op
+                 gc.count:           2.000 counts
+                 gc.time:            385.000 ms
+
+Iteration   6: 726.852 ms/op
+                 gc.alloc.rate:      6953.767 MB/sec
+                 gc.alloc.rate.norm: 5301338032.000 B/op
+                 gc.count:           2.000 counts
+                 gc.time:            338.000 ms
+
+Iteration   7: 773.399 ms/op
+                 gc.alloc.rate:      6534.637 MB/sec
+                 gc.alloc.rate.norm: 5301182824.000 B/op
+                 gc.count:           2.000 counts
+                 gc.time:            379.000 ms
+
+Iteration   8: 849.913 ms/op
+                 gc.alloc.rate:      5946.783 MB/sec
+                 gc.alloc.rate.norm: 5301358104.000 B/op
+                 gc.count:           2.000 counts
+                 gc.time:            381.000 ms
+
+Iteration   9: 1017.221 ms/op
+                 gc.alloc.rate:      4968.350 MB/sec
+                 gc.alloc.rate.norm: 5301125592.000 B/op
+                 gc.count:           2.000 counts
+                 gc.time:            550.000 ms
+
+Iteration  10: 956.972 ms/op
+                 gc.alloc.rate:      5276.679 MB/sec
+                 gc.alloc.rate.norm: 5301430472.000 B/op
+                 gc.count:           2.000 counts
+                 gc.time:            350.000 ms
+
+
+# Run progress: 22.22% complete, ETA 00:03:27
+# Fork: 2 of 3
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/Users/karenbarseghyan/Projects/j-util/performance-lab/benchmark-jmh/target/benchmarks.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: SLF4J(W): No SLF4J providers were found.
+SLF4J(W): Defaulting to no-operation (NOP) logger implementation
+SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.
+SLF4J(W): Class path contains SLF4J bindings targeting slf4j-api versions 1.7.x or earlier.
+SLF4J(W): Ignoring binding found at [jar:file:/Users/karenbarseghyan/Projects/j-util/performance-lab/benchmark-jmh/target/benchmarks.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J(W): See https://www.slf4j.org/codes.html#ignoredBindings for an explanation.
+1156.848 ms/op
+# Warmup Iteration   2: 1112.487 ms/op
+# Warmup Iteration   3: 711.046 ms/op
+# Warmup Iteration   4: 690.693 ms/op
+# Warmup Iteration   5: 668.264 ms/op
+Iteration   1: 698.477 ms/op
+                 gc.alloc.rate:      7235.242 MB/sec
+                 gc.alloc.rate.norm: 5301262896.000 B/op
+                 gc.count:           3.000 counts
+                 gc.time:            305.000 ms
+
+Iteration   2: 699.604 ms/op
+                 gc.alloc.rate:      7223.367 MB/sec
+                 gc.alloc.rate.norm: 5301180648.000 B/op
+                 gc.count:           2.000 counts
+                 gc.time:            342.000 ms
+
+Iteration   3: 693.959 ms/op
+                 gc.alloc.rate:      7282.716 MB/sec
+                 gc.alloc.rate.norm: 5301178296.000 B/op
+                 gc.count:           2.000 counts
+                 gc.time:            325.000 ms
+
+Iteration   4: 1018.206 ms/op
+                 gc.alloc.rate:      4963.734 MB/sec
+                 gc.alloc.rate.norm: 5301201984.000 B/op
+                 gc.count:           2.000 counts
+                 gc.time:            411.000 ms
+
+Iteration   5: 788.814 ms/op
+                 gc.alloc.rate:      6407.230 MB/sec
+                 gc.alloc.rate.norm: 5301185248.000 B/op
+                 gc.count:           3.000 counts
+                 gc.time:            344.000 ms
+
+Iteration   6: 792.736 ms/op
+                 gc.alloc.rate:      6375.583 MB/sec
+                 gc.alloc.rate.norm: 5301328176.000 B/op
+                 gc.count:           2.000 counts
+                 gc.time:            386.000 ms
+
+Iteration   7: 773.481 ms/op
+                 gc.alloc.rate:      6532.741 MB/sec
+                 gc.alloc.rate.norm: 5301195680.000 B/op
+                 gc.count:           2.000 counts
+                 gc.time:            357.000 ms
+
+Iteration   8: 774.733 ms/op
+                 gc.alloc.rate:      6523.631 MB/sec
+                 gc.alloc.rate.norm: 5301317744.000 B/op
+                 gc.count:           2.000 counts
+                 gc.time:            378.000 ms
+
+Iteration   9: 721.240 ms/op
+                 gc.alloc.rate:      7007.269 MB/sec
+                 gc.alloc.rate.norm: 5301529232.000 B/op
+                 gc.count:           2.000 counts
+                 gc.time:            361.000 ms
+
+Iteration  10: 652.842 ms/op
+                 gc.alloc.rate:      7734.543 MB/sec
+                 gc.alloc.rate.norm: 5301106792.000 B/op
+                 gc.count:           2.000 counts
+                 gc.time:            309.000 ms
+
+
+# Run progress: 27.78% complete, ETA 00:03:42
+# Fork: 3 of 3
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/Users/karenbarseghyan/Projects/j-util/performance-lab/benchmark-jmh/target/benchmarks.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: SLF4J(W): No SLF4J providers were found.
+SLF4J(W): Defaulting to no-operation (NOP) logger implementation
+SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.
+SLF4J(W): Class path contains SLF4J bindings targeting slf4j-api versions 1.7.x or earlier.
+SLF4J(W): Ignoring binding found at [jar:file:/Users/karenbarseghyan/Projects/j-util/performance-lab/benchmark-jmh/target/benchmarks.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J(W): See https://www.slf4j.org/codes.html#ignoredBindings for an explanation.
+1012.247 ms/op
+# Warmup Iteration   2: 897.132 ms/op
+# Warmup Iteration   3: 719.521 ms/op
+# Warmup Iteration   4: 690.132 ms/op
+# Warmup Iteration   5: 674.428 ms/op
+Iteration   1: 710.584 ms/op
+                 gc.alloc.rate:      7111.987 MB/sec
+                 gc.alloc.rate.norm: 5301035952.000 B/op
+                 gc.count:           4.000 counts
+                 gc.time:            326.000 ms
+
+Iteration   2: 588.134 ms/op
+                 gc.alloc.rate:      8591.052 MB/sec
+                 gc.alloc.rate.norm: 5301023224.000 B/op
+                 gc.count:           3.000 counts
+                 gc.time:            246.000 ms
+
+Iteration   3: 891.211 ms/op
+                 gc.alloc.rate:      5670.325 MB/sec
+                 gc.alloc.rate.norm: 5301092840.000 B/op
+                 gc.count:           4.000 counts
+                 gc.time:            354.000 ms
+
+Iteration   4: 648.807 ms/op
+                 gc.alloc.rate:      7787.567 MB/sec
+                 gc.alloc.rate.norm: 5301043544.000 B/op
+                 gc.count:           4.000 counts
+                 gc.time:            277.000 ms
+
+Iteration   5: 635.430 ms/op
+                 gc.alloc.rate:      7952.930 MB/sec
+                 gc.alloc.rate.norm: 5301039152.000 B/op
+                 gc.count:           4.000 counts
+                 gc.time:            279.000 ms
+
+Iteration   6: 634.661 ms/op
+                 gc.alloc.rate:      7963.730 MB/sec
+                 gc.alloc.rate.norm: 5301011784.000 B/op
+                 gc.count:           4.000 counts
+                 gc.time:            292.000 ms
+
+Iteration   7: 667.134 ms/op
+                 gc.alloc.rate:      7575.191 MB/sec
+                 gc.alloc.rate.norm: 5301030984.000 B/op
+                 gc.count:           4.000 counts
+                 gc.time:            292.000 ms
+
+Iteration   8: 696.191 ms/op
+                 gc.alloc.rate:      7258.631 MB/sec
+                 gc.alloc.rate.norm: 5301038472.000 B/op
+                 gc.count:           4.000 counts
+                 gc.time:            297.000 ms
+
+Iteration   9: 678.359 ms/op
+                 gc.alloc.rate:      7449.505 MB/sec
+                 gc.alloc.rate.norm: 5300828216.000 B/op
+                 gc.count:           4.000 counts
+                 gc.time:            299.000 ms
+
+Iteration  10: 624.613 ms/op
+                 gc.alloc.rate:      8083.020 MB/sec
+                 gc.alloc.rate.norm: 5300828032.000 B/op
+                 gc.count:           4.000 counts
+                 gc.time:            266.000 ms
+
+
+
+Result "io.github.jutil.performancelab.HardwoodMaterializationBenchmark.hardwoodToArrayList":
+  N = 30
+  mean =    760.920 ±(99.9%) 77.754 ms/op
+
+  Histogram, ms/op:
+    [ 500.000,  550.000) = 0 
+    [ 550.000,  600.000) = 1 
+    [ 600.000,  650.000) = 4 
+    [ 650.000,  700.000) = 7 
+    [ 700.000,  750.000) = 5 
+    [ 750.000,  800.000) = 5 
+    [ 800.000,  850.000) = 2 
+    [ 850.000,  900.000) = 2 
+    [ 900.000,  950.000) = 1 
+    [ 950.000, 1000.000) = 1 
+    [1000.000, 1050.000) = 2 
+
+  Percentiles, ms/op:
+      p(0.0000) =    588.134 ms/op
+     p(50.0000) =    724.046 ms/op
+     p(90.0000) =    955.487 ms/op
+     p(95.0000) =   1017.664 ms/op
+     p(99.0000) =   1018.206 ms/op
+     p(99.9000) =   1018.206 ms/op
+     p(99.9900) =   1018.206 ms/op
+     p(99.9990) =   1018.206 ms/op
+     p(99.9999) =   1018.206 ms/op
+    p(100.0000) =   1018.206 ms/op
+
+Secondary result "io.github.jutil.performancelab.HardwoodMaterializationBenchmark.hardwoodToArrayList:gc.alloc.rate":
+  6781.270 ±(99.9%) 641.645 MB/sec [Average]
+  (min, avg, max) = (4963.734, 6781.270, 8591.052), stdev = 960.384
+  CI (99.9%): [6139.625, 7422.915] (assumes normal distribution)
+
+Secondary result "io.github.jutil.performancelab.HardwoodMaterializationBenchmark.hardwoodToArrayList:gc.alloc.rate.norm":
+  5301164191.467 ±(99.9%) 104233.813 B/op [Average]
+  (min, avg, max) = (5300828032.000, 5301164191.467, 5301529232.000), stdev = 156012.276
+  CI (99.9%): [5301059957.654, 5301268425.280] (assumes normal distribution)
+
+Secondary result "io.github.jutil.performancelab.HardwoodMaterializationBenchmark.hardwoodToArrayList:gc.count":
+  81.000 ±(99.9%) 0.001 counts [Sum]
+  (min, avg, max) = (2.000, 2.700, 4.000), stdev = 0.915
+  CI (99.9%): [81.000, 81.000] (assumes normal distribution)
+
+Secondary result "io.github.jutil.performancelab.HardwoodMaterializationBenchmark.hardwoodToArrayList:gc.time":
+  10274.000 ±(99.9%) 0.001 ms [Sum]
+  (min, avg, max) = (246.000, 342.467, 550.000), stdev = 58.394
+  CI (99.9%): [10274.000, 10274.000] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, OpenJDK 64-Bit Server VM, 25.0.2+10-LTS
+# VM invoker: /Users/karenbarseghyan/.sdkman/candidates/java/25.0.2-tem/bin/java
+# VM options: -Xms4g -Xmx4g -XX:+UseG1GC -Xlog:gc*=info:file=/private/tmp/cps13-single-shot-2026-09-16/gc/hardwood-%p-%t.txt:uptime,pid,tags:filecount=0
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, single-shot each
+# Measurement: 10 iterations, single-shot each
+# Timeout: 10 min per iteration
+# Threads: 1 thread
+# Benchmark mode: Single shot invocation time
+# Benchmark: io.github.jutil.performancelab.HardwoodMaterializationBenchmark.hardwoodToColumnarBatch
+# Parameters: (batchSize = 1000000, rowCount = 100000)
+
+# Run progress: 33.33% complete, ETA 00:03:41
+# Fork: 1 of 3
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/Users/karenbarseghyan/Projects/j-util/performance-lab/benchmark-jmh/target/benchmarks.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: SLF4J(W): No SLF4J providers were found.
+SLF4J(W): Defaulting to no-operation (NOP) logger implementation
+SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.
+SLF4J(W): Class path contains SLF4J bindings targeting slf4j-api versions 1.7.x or earlier.
+SLF4J(W): Ignoring binding found at [jar:file:/Users/karenbarseghyan/Projects/j-util/performance-lab/benchmark-jmh/target/benchmarks.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J(W): See https://www.slf4j.org/codes.html#ignoredBindings for an explanation.
+100.641 ms/op
+# Warmup Iteration   2: 32.259 ms/op
+# Warmup Iteration   3: 20.104 ms/op
+# Warmup Iteration   4: 19.959 ms/op
+# Warmup Iteration   5: 21.820 ms/op
+Iteration   1: 21.714 ms/op
+                 gc.alloc.rate:      20853.753 MB/sec
+                 gc.alloc.rate.norm: 482982648.000 B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   2: 13.855 ms/op
+                 gc.alloc.rate:      32694.313 MB/sec
+                 gc.alloc.rate.norm: 483375728.000 B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   3: 22.676 ms/op
+                 gc.alloc.rate:      19947.854 MB/sec
+                 gc.alloc.rate.norm: 483036080.000 B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   4: 21.257 ms/op
+                 gc.alloc.rate:      21309.125 MB/sec
+                 gc.alloc.rate.norm: 482948344.000 B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   5: 21.077 ms/op
+                 gc.alloc.rate:      21536.060 MB/sec
+                 gc.alloc.rate.norm: 483279696.000 B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   6: 17.866 ms/op
+                 gc.alloc.rate:      25305.808 MB/sec
+                 gc.alloc.rate.norm: 482983472.000 B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   7: 21.313 ms/op
+                 gc.alloc.rate:      21128.585 MB/sec
+                 gc.alloc.rate.norm: 483180512.000 B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   8: 22.798 ms/op
+                 gc.alloc.rate:      19880.813 MB/sec
+                 gc.alloc.rate.norm: 482984864.000 B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   9: 21.464 ms/op
+                 gc.alloc.rate:      21170.330 MB/sec
+                 gc.alloc.rate.norm: 483035376.000 B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration  10: 20.565 ms/op
+                 gc.alloc.rate:      20785.702 MB/sec
+                 gc.alloc.rate.norm: 482987608.000 B/op
+                 gc.count:           ≈ 0 counts
+
+
+# Run progress: 38.89% complete, ETA 00:03:10
+# Fork: 2 of 3
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/Users/karenbarseghyan/Projects/j-util/performance-lab/benchmark-jmh/target/benchmarks.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: SLF4J(W): No SLF4J providers were found.
+SLF4J(W): Defaulting to no-operation (NOP) logger implementation
+SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.
+SLF4J(W): Class path contains SLF4J bindings targeting slf4j-api versions 1.7.x or earlier.
+SLF4J(W): Ignoring binding found at [jar:file:/Users/karenbarseghyan/Projects/j-util/performance-lab/benchmark-jmh/target/benchmarks.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J(W): See https://www.slf4j.org/codes.html#ignoredBindings for an explanation.
+95.125 ms/op
+# Warmup Iteration   2: 35.466 ms/op
+# Warmup Iteration   3: 19.919 ms/op
+# Warmup Iteration   4: 13.170 ms/op
+# Warmup Iteration   5: 21.354 ms/op
+Iteration   1: 21.991 ms/op
+                 gc.alloc.rate:      20625.008 MB/sec
+                 gc.alloc.rate.norm: 483035648.000 B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   2: 11.218 ms/op
+                 gc.alloc.rate:      40382.273 MB/sec
+                 gc.alloc.rate.norm: 482954888.000 B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   3: 20.133 ms/op
+                 gc.alloc.rate:      22376.527 MB/sec
+                 gc.alloc.rate.norm: 482987128.000 B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   4: 19.588 ms/op
+                 gc.alloc.rate:      23102.320 MB/sec
+                 gc.alloc.rate.norm: 483142256.000 B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   5: 9.847 ms/op
+                 gc.alloc.rate:      46240.855 MB/sec
+                 gc.alloc.rate.norm: 483456288.000 B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   6: 19.495 ms/op
+                 gc.alloc.rate:      23255.864 MB/sec
+                 gc.alloc.rate.norm: 483144632.000 B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   7: 20.308 ms/op
+                 gc.alloc.rate:      22252.431 MB/sec
+                 gc.alloc.rate.norm: 482823712.000 B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   8: 10.903 ms/op
+                 gc.alloc.rate:      41552.779 MB/sec
+                 gc.alloc.rate.norm: 483370344.000 B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   9: 20.640 ms/op
+                 gc.alloc.rate:      21870.526 MB/sec
+                 gc.alloc.rate.norm: 482990952.000 B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration  10: 22.301 ms/op
+                 gc.alloc.rate:      19280.832 MB/sec
+                 gc.alloc.rate.norm: 483021920.000 B/op
+                 gc.count:           ≈ 0 counts
+
+
+# Run progress: 44.44% complete, ETA 00:02:44
+# Fork: 3 of 3
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/Users/karenbarseghyan/Projects/j-util/performance-lab/benchmark-jmh/target/benchmarks.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: SLF4J(W): No SLF4J providers were found.
+SLF4J(W): Defaulting to no-operation (NOP) logger implementation
+SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.
+SLF4J(W): Class path contains SLF4J bindings targeting slf4j-api versions 1.7.x or earlier.
+SLF4J(W): Ignoring binding found at [jar:file:/Users/karenbarseghyan/Projects/j-util/performance-lab/benchmark-jmh/target/benchmarks.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J(W): See https://www.slf4j.org/codes.html#ignoredBindings for an explanation.
+98.763 ms/op
+# Warmup Iteration   2: 25.370 ms/op
+# Warmup Iteration   3: 20.809 ms/op
+# Warmup Iteration   4: 26.468 ms/op
+# Warmup Iteration   5: 10.825 ms/op
+Iteration   1: 22.672 ms/op
+                 gc.alloc.rate:      19996.658 MB/sec
+                 gc.alloc.rate.norm: 482862816.000 B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   2: 22.095 ms/op
+                 gc.alloc.rate:      20466.819 MB/sec
+                 gc.alloc.rate.norm: 482985512.000 B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   3: 14.469 ms/op
+                 gc.alloc.rate:      31319.708 MB/sec
+                 gc.alloc.rate.norm: 483026816.000 B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   4: 24.937 ms/op
+                 gc.alloc.rate:      17818.297 MB/sec
+                 gc.alloc.rate.norm: 482863568.000 B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   5: 14.020 ms/op
+                 gc.alloc.rate:      32160.981 MB/sec
+                 gc.alloc.rate.norm: 483067064.000 B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   6: 21.051 ms/op
+                 gc.alloc.rate:      21562.320 MB/sec
+                 gc.alloc.rate.norm: 482987184.000 B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   7: 20.687 ms/op
+                 gc.alloc.rate:      21923.065 MB/sec
+                 gc.alloc.rate.norm: 483144528.000 B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   8: 13.333 ms/op
+                 gc.alloc.rate:      33783.755 MB/sec
+                 gc.alloc.rate.norm: 483169632.000 B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   9: 20.453 ms/op
+                 gc.alloc.rate:      22174.958 MB/sec
+                 gc.alloc.rate.norm: 483022280.000 B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration  10: 18.929 ms/op
+                 gc.alloc.rate:      22729.394 MB/sec
+                 gc.alloc.rate.norm: 483147704.000 B/op
+                 gc.count:           ≈ 0 counts
+
+
+
+Result "io.github.jutil.performancelab.HardwoodMaterializationBenchmark.hardwoodToColumnarBatch":
+  N = 30
+  mean =     19.122 ±(99.9%) 2.681 ms/op
+
+  Histogram, ms/op:
+    [ 0.000,  2.500) = 0 
+    [ 2.500,  5.000) = 0 
+    [ 5.000,  7.500) = 0 
+    [ 7.500, 10.000) = 1 
+    [10.000, 12.500) = 2 
+    [12.500, 15.000) = 4 
+    [15.000, 17.500) = 0 
+    [17.500, 20.000) = 4 
+    [20.000, 22.500) = 15 
+    [22.500, 25.000) = 4 
+    [25.000, 27.500) = 0 
+
+  Percentiles, ms/op:
+      p(0.0000) =      9.847 ms/op
+     p(50.0000) =     20.603 ms/op
+     p(90.0000) =     22.676 ms/op
+     p(95.0000) =     23.761 ms/op
+     p(99.0000) =     24.937 ms/op
+     p(99.9000) =     24.937 ms/op
+     p(99.9900) =     24.937 ms/op
+     p(99.9990) =     24.937 ms/op
+     p(99.9999) =     24.937 ms/op
+    p(100.0000) =     24.937 ms/op
+
+Secondary result "io.github.jutil.performancelab.HardwoodMaterializationBenchmark.hardwoodToColumnarBatch:gc.alloc.rate":
+  24982.924 ±(99.9%) 4877.682 MB/sec [Average]
+  (min, avg, max) = (17818.297, 24982.924, 46240.855), stdev = 7300.685
+  CI (99.9%): [20105.242, 29860.605] (assumes normal distribution)
+
+Secondary result "io.github.jutil.performancelab.HardwoodMaterializationBenchmark.hardwoodToColumnarBatch:gc.alloc.rate.norm":
+  483066640.000 ±(99.9%) 100910.138 B/op [Average]
+  (min, avg, max) = (482823712.000, 483066640.000, 483456288.000), stdev = 151037.555
+  CI (99.9%): [482965729.862, 483167550.138] (assumes normal distribution)
+
+Secondary result "io.github.jutil.performancelab.HardwoodMaterializationBenchmark.hardwoodToColumnarBatch:gc.count":
+  ≈ 0 counts
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, OpenJDK 64-Bit Server VM, 25.0.2+10-LTS
+# VM invoker: /Users/karenbarseghyan/.sdkman/candidates/java/25.0.2-tem/bin/java
+# VM options: -Xms4g -Xmx4g -XX:+UseG1GC -Xlog:gc*=info:file=/private/tmp/cps13-single-shot-2026-09-16/gc/hardwood-%p-%t.txt:uptime,pid,tags:filecount=0
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, single-shot each
+# Measurement: 10 iterations, single-shot each
+# Timeout: 10 min per iteration
+# Threads: 1 thread
+# Benchmark mode: Single shot invocation time
+# Benchmark: io.github.jutil.performancelab.HardwoodMaterializationBenchmark.hardwoodToColumnarBatch
+# Parameters: (batchSize = 1000000, rowCount = 10000000)
+
+# Run progress: 50.00% complete, ETA 00:02:21
+# Fork: 1 of 3
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/Users/karenbarseghyan/Projects/j-util/performance-lab/benchmark-jmh/target/benchmarks.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: SLF4J(W): No SLF4J providers were found.
+SLF4J(W): Defaulting to no-operation (NOP) logger implementation
+SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.
+SLF4J(W): Class path contains SLF4J bindings targeting slf4j-api versions 1.7.x or earlier.
+SLF4J(W): Ignoring binding found at [jar:file:/Users/karenbarseghyan/Projects/j-util/performance-lab/benchmark-jmh/target/benchmarks.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J(W): See https://www.slf4j.org/codes.html#ignoredBindings for an explanation.
+1316.714 ms/op
+# Warmup Iteration   2: 584.912 ms/op
+# Warmup Iteration   3: 536.132 ms/op
+# Warmup Iteration   4: 541.360 ms/op
+# Warmup Iteration   5: 535.588 ms/op
+Iteration   1: 571.658 ms/op
+                 gc.alloc.rate:      8572.913 MB/sec
+                 gc.alloc.rate.norm: 5141233552.000 B/op
+                 gc.count:           2.000 counts
+                 gc.time:            195.000 ms
+
+Iteration   2: 509.065 ms/op
+                 gc.alloc.rate:      9628.557 MB/sec
+                 gc.alloc.rate.norm: 5141326056.000 B/op
+                 gc.count:           2.000 counts
+                 gc.time:            183.000 ms
+
+Iteration   3: 471.534 ms/op
+                 gc.alloc.rate:      10392.807 MB/sec
+                 gc.alloc.rate.norm: 5141050136.000 B/op
+                 gc.count:           2.000 counts
+                 gc.time:            175.000 ms
+
+Iteration   4: 503.531 ms/op
+                 gc.alloc.rate:      9731.994 MB/sec
+                 gc.alloc.rate.norm: 5141203928.000 B/op
+                 gc.count:           3.000 counts
+                 gc.time:            166.000 ms
+
+Iteration   5: 791.329 ms/op
+                 gc.alloc.rate:      6193.623 MB/sec
+                 gc.alloc.rate.norm: 5141189256.000 B/op
+                 gc.count:           2.000 counts
+                 gc.time:            419.000 ms
+
+Iteration   6: 573.344 ms/op
+                 gc.alloc.rate:      8548.672 MB/sec
+                 gc.alloc.rate.norm: 5141209520.000 B/op
+                 gc.count:           2.000 counts
+                 gc.time:            198.000 ms
+
+Iteration   7: 519.871 ms/op
+                 gc.alloc.rate:      9427.579 MB/sec
+                 gc.alloc.rate.norm: 5141213504.000 B/op
+                 gc.count:           2.000 counts
+                 gc.time:            195.000 ms
+
+Iteration   8: 540.311 ms/op
+                 gc.alloc.rate:      9071.974 MB/sec
+                 gc.alloc.rate.norm: 5141485992.000 B/op
+                 gc.count:           2.000 counts
+                 gc.time:            185.000 ms
+
+Iteration   9: 616.021 ms/op
+                 gc.alloc.rate:      7956.950 MB/sec
+                 gc.alloc.rate.norm: 5141139392.000 B/op
+                 gc.count:           2.000 counts
+                 gc.time:            177.000 ms
+
+Iteration  10: 578.202 ms/op
+                 gc.alloc.rate:      8466.162 MB/sec
+                 gc.alloc.rate.norm: 5141127352.000 B/op
+                 gc.count:           2.000 counts
+                 gc.time:            209.000 ms
+
+
+# Run progress: 55.56% complete, ETA 00:02:12
+# Fork: 2 of 3
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/Users/karenbarseghyan/Projects/j-util/performance-lab/benchmark-jmh/target/benchmarks.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: SLF4J(W): No SLF4J providers were found.
+SLF4J(W): Defaulting to no-operation (NOP) logger implementation
+SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.
+SLF4J(W): Class path contains SLF4J bindings targeting slf4j-api versions 1.7.x or earlier.
+SLF4J(W): Ignoring binding found at [jar:file:/Users/karenbarseghyan/Projects/j-util/performance-lab/benchmark-jmh/target/benchmarks.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J(W): See https://www.slf4j.org/codes.html#ignoredBindings for an explanation.
+675.939 ms/op
+# Warmup Iteration   2: 570.087 ms/op
+# Warmup Iteration   3: 572.901 ms/op
+# Warmup Iteration   4: 475.373 ms/op
+# Warmup Iteration   5: 686.774 ms/op
+Iteration   1: 677.302 ms/op
+                 gc.alloc.rate:      7235.694 MB/sec
+                 gc.alloc.rate.norm: 5141284064.000 B/op
+                 gc.count:           3.000 counts
+                 gc.time:            291.000 ms
+
+Iteration   2: 585.604 ms/op
+                 gc.alloc.rate:      8368.195 MB/sec
+                 gc.alloc.rate.norm: 5141195328.000 B/op
+                 gc.count:           3.000 counts
+                 gc.time:            243.000 ms
+
+Iteration   3: 505.720 ms/op
+                 gc.alloc.rate:      9691.568 MB/sec
+                 gc.alloc.rate.norm: 5141212280.000 B/op
+                 gc.count:           2.000 counts
+                 gc.time:            168.000 ms
+
+Iteration   4: 484.250 ms/op
+                 gc.alloc.rate:      10117.899 MB/sec
+                 gc.alloc.rate.norm: 5141179776.000 B/op
+                 gc.count:           2.000 counts
+                 gc.time:            166.000 ms
+
+Iteration   5: 481.792 ms/op
+                 gc.alloc.rate:      10173.226 MB/sec
+                 gc.alloc.rate.norm: 5141219256.000 B/op
+                 gc.count:           5.000 counts
+                 gc.time:            161.000 ms
+
+Iteration   6: 494.077 ms/op
+                 gc.alloc.rate:      9917.919 MB/sec
+                 gc.alloc.rate.norm: 5141195376.000 B/op
+                 gc.count:           4.000 counts
+                 gc.time:            168.000 ms
+
+Iteration   7: 461.571 ms/op
+                 gc.alloc.rate:      10615.504 MB/sec
+                 gc.alloc.rate.norm: 5141203520.000 B/op
+                 gc.count:           4.000 counts
+                 gc.time:            174.000 ms
+
+Iteration   8: 479.988 ms/op
+                 gc.alloc.rate:      10208.352 MB/sec
+                 gc.alloc.rate.norm: 5141203168.000 B/op
+                 gc.count:           4.000 counts
+                 gc.time:            164.000 ms
+
+Iteration   9: 501.858 ms/op
+                 gc.alloc.rate:      9764.391 MB/sec
+                 gc.alloc.rate.norm: 5141134920.000 B/op
+                 gc.count:           4.000 counts
+                 gc.time:            168.000 ms
+
+Iteration  10: 479.317 ms/op
+                 gc.alloc.rate:      10205.360 MB/sec
+                 gc.alloc.rate.norm: 5141132552.000 B/op
+                 gc.count:           4.000 counts
+                 gc.time:            169.000 ms
+
+
+# Run progress: 61.11% complete, ETA 00:01:59
+# Fork: 3 of 3
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/Users/karenbarseghyan/Projects/j-util/performance-lab/benchmark-jmh/target/benchmarks.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: SLF4J(W): No SLF4J providers were found.
+SLF4J(W): Defaulting to no-operation (NOP) logger implementation
+SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.
+SLF4J(W): Class path contains SLF4J bindings targeting slf4j-api versions 1.7.x or earlier.
+SLF4J(W): Ignoring binding found at [jar:file:/Users/karenbarseghyan/Projects/j-util/performance-lab/benchmark-jmh/target/benchmarks.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J(W): See https://www.slf4j.org/codes.html#ignoredBindings for an explanation.
+624.014 ms/op
+# Warmup Iteration   2: 520.340 ms/op
+# Warmup Iteration   3: 479.592 ms/op
+# Warmup Iteration   4: 478.649 ms/op
+# Warmup Iteration   5: 470.163 ms/op
+Iteration   1: 467.666 ms/op
+                 gc.alloc.rate:      10477.175 MB/sec
+                 gc.alloc.rate.norm: 5141279680.000 B/op
+                 gc.count:           4.000 counts
+                 gc.time:            167.000 ms
+
+Iteration   2: 513.834 ms/op
+                 gc.alloc.rate:      9534.649 MB/sec
+                 gc.alloc.rate.norm: 5141199768.000 B/op
+                 gc.count:           4.000 counts
+                 gc.time:            203.000 ms
+
+Iteration   3: 477.853 ms/op
+                 gc.alloc.rate:      10255.664 MB/sec
+                 gc.alloc.rate.norm: 5141192992.000 B/op
+                 gc.count:           2.000 counts
+                 gc.time:            180.000 ms
+
+Iteration   4: 511.590 ms/op
+                 gc.alloc.rate:      9579.133 MB/sec
+                 gc.alloc.rate.norm: 5141206168.000 B/op
+                 gc.count:           2.000 counts
+                 gc.time:            181.000 ms
+
+Iteration   5: 481.784 ms/op
+                 gc.alloc.rate:      10169.859 MB/sec
+                 gc.alloc.rate.norm: 5141198576.000 B/op
+                 gc.count:           4.000 counts
+                 gc.time:            164.000 ms
+
+Iteration   6: 475.099 ms/op
+                 gc.alloc.rate:      10313.664 MB/sec
+                 gc.alloc.rate.norm: 5141191104.000 B/op
+                 gc.count:           4.000 counts
+                 gc.time:            173.000 ms
+
+Iteration   7: 511.935 ms/op
+                 gc.alloc.rate:      9572.497 MB/sec
+                 gc.alloc.rate.norm: 5141225648.000 B/op
+                 gc.count:           5.000 counts
+                 gc.time:            174.000 ms
+
+Iteration   8: 527.964 ms/op
+                 gc.alloc.rate:      9281.535 MB/sec
+                 gc.alloc.rate.norm: 5141218136.000 B/op
+                 gc.count:           4.000 counts
+                 gc.time:            188.000 ms
+
+Iteration   9: 515.320 ms/op
+                 gc.alloc.rate:      9508.739 MB/sec
+                 gc.alloc.rate.norm: 5141154648.000 B/op
+                 gc.count:           4.000 counts
+                 gc.time:            170.000 ms
+
+Iteration  10: 601.132 ms/op
+                 gc.alloc.rate:      8143.412 MB/sec
+                 gc.alloc.rate.norm: 5141129048.000 B/op
+                 gc.count:           2.000 counts
+                 gc.time:            186.000 ms
+
+
+
+Result "io.github.jutil.performancelab.HardwoodMaterializationBenchmark.hardwoodToColumnarBatch":
+  N = 30
+  mean =    530.351 ±(99.9%) 47.433 ms/op
+
+  Histogram, ms/op:
+    [400.000, 425.000) = 0 
+    [425.000, 450.000) = 0 
+    [450.000, 475.000) = 3 
+    [475.000, 500.000) = 8 
+    [500.000, 525.000) = 9 
+    [525.000, 550.000) = 2 
+    [550.000, 575.000) = 2 
+    [575.000, 600.000) = 2 
+    [600.000, 625.000) = 2 
+    [625.000, 650.000) = 0 
+    [650.000, 675.000) = 0 
+    [675.000, 700.000) = 1 
+    [700.000, 725.000) = 0 
+    [725.000, 750.000) = 0 
+    [750.000, 775.000) = 0 
+
+  Percentiles, ms/op:
+      p(0.0000) =    461.571 ms/op
+     p(50.0000) =    510.328 ms/op
+     p(90.0000) =    614.532 ms/op
+     p(95.0000) =    728.614 ms/op
+     p(99.0000) =    791.329 ms/op
+     p(99.9000) =    791.329 ms/op
+     p(99.9900) =    791.329 ms/op
+     p(99.9990) =    791.329 ms/op
+     p(99.9999) =    791.329 ms/op
+    p(100.0000) =    791.329 ms/op
+
+Secondary result "io.github.jutil.performancelab.HardwoodMaterializationBenchmark.hardwoodToColumnarBatch:gc.alloc.rate":
+  9370.856 ±(99.9%) 690.851 MB/sec [Average]
+  (min, avg, max) = (6193.623, 9370.856, 10615.504), stdev = 1034.033
+  CI (99.9%): [8680.005, 10061.707] (assumes normal distribution)
+
+Secondary result "io.github.jutil.performancelab.HardwoodMaterializationBenchmark.hardwoodToColumnarBatch:gc.alloc.rate.norm":
+  5141204489.867 ±(99.9%) 49851.973 B/op [Average]
+  (min, avg, max) = (5141050136.000, 5141204489.867, 5141485992.000), stdev = 74616.093
+  CI (99.9%): [5141154637.893, 5141254341.840] (assumes normal distribution)
+
+Secondary result "io.github.jutil.performancelab.HardwoodMaterializationBenchmark.hardwoodToColumnarBatch:gc.count":
+  91.000 ±(99.9%) 0.001 counts [Sum]
+  (min, avg, max) = (2.000, 3.033, 5.000), stdev = 1.066
+  CI (99.9%): [91.000, 91.000] (assumes normal distribution)
+
+Secondary result "io.github.jutil.performancelab.HardwoodMaterializationBenchmark.hardwoodToColumnarBatch:gc.time":
+  5760.000 ±(99.9%) 0.001 ms [Sum]
+  (min, avg, max) = (161.000, 192.000, 419.000), stdev = 50.382
+  CI (99.9%): [5760.000, 5760.000] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, OpenJDK 64-Bit Server VM, 25.0.2+10-LTS
+# VM invoker: /Users/karenbarseghyan/.sdkman/candidates/java/25.0.2-tem/bin/java
+# VM options: -Xms4g -Xmx4g -XX:+UseG1GC -Xlog:gc*=info:file=/private/tmp/cps13-single-shot-2026-09-16/gc/hardwood-%p-%t.txt:uptime,pid,tags:filecount=0
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, single-shot each
+# Measurement: 10 iterations, single-shot each
+# Timeout: 10 min per iteration
+# Threads: 1 thread
+# Benchmark mode: Single shot invocation time
+# Benchmark: io.github.jutil.performancelab.HardwoodMaterializationBenchmark.hardwoodToExecutorBackedColumnarBatch
+# Parameters: (batchSize = 1000000, rowCount = 100000)
+
+# Run progress: 66.67% complete, ETA 00:01:44
+# Fork: 1 of 3
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/Users/karenbarseghyan/Projects/j-util/performance-lab/benchmark-jmh/target/benchmarks.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: SLF4J(W): No SLF4J providers were found.
+SLF4J(W): Defaulting to no-operation (NOP) logger implementation
+SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.
+SLF4J(W): Class path contains SLF4J bindings targeting slf4j-api versions 1.7.x or earlier.
+SLF4J(W): Ignoring binding found at [jar:file:/Users/karenbarseghyan/Projects/j-util/performance-lab/benchmark-jmh/target/benchmarks.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J(W): See https://www.slf4j.org/codes.html#ignoredBindings for an explanation.
+100.346 ms/op
+# Warmup Iteration   2: 36.867 ms/op
+# Warmup Iteration   3: 13.036 ms/op
+# Warmup Iteration   4: 21.572 ms/op
+# Warmup Iteration   5: 22.994 ms/op
+Iteration   1: 14.472 ms/op
+                 gc.alloc.rate:      31197.148 MB/sec
+                 gc.alloc.rate.norm: 482945376.000 B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   2: 11.601 ms/op
+                 gc.alloc.rate:      39174.748 MB/sec
+                 gc.alloc.rate.norm: 483455408.000 B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   3: 8.246 ms/op
+                 gc.alloc.rate:      55122.169 MB/sec
+                 gc.alloc.rate.norm: 483040016.000 B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   4: 20.984 ms/op
+                 gc.alloc.rate:      21591.652 MB/sec
+                 gc.alloc.rate.norm: 483419704.000 B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   5: 21.050 ms/op
+                 gc.alloc.rate:      21526.914 MB/sec
+                 gc.alloc.rate.norm: 483153448.000 B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   6: 20.604 ms/op
+                 gc.alloc.rate:      21962.086 MB/sec
+                 gc.alloc.rate.norm: 483144736.000 B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   7: 19.159 ms/op
+                 gc.alloc.rate:      23562.704 MB/sec
+                 gc.alloc.rate.norm: 482991392.000 B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   8: 19.461 ms/op
+                 gc.alloc.rate:      23204.041 MB/sec
+                 gc.alloc.rate.norm: 483021960.000 B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   9: 20.550 ms/op
+                 gc.alloc.rate:      22065.932 MB/sec
+                 gc.alloc.rate.norm: 483190664.000 B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration  10: 23.368 ms/op
+                 gc.alloc.rate:      18782.316 MB/sec
+                 gc.alloc.rate.norm: 482996568.000 B/op
+                 gc.count:           ≈ 0 counts
+
+
+# Run progress: 72.22% complete, ETA 00:01:24
+# Fork: 2 of 3
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/Users/karenbarseghyan/Projects/j-util/performance-lab/benchmark-jmh/target/benchmarks.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: SLF4J(W): No SLF4J providers were found.
+SLF4J(W): Defaulting to no-operation (NOP) logger implementation
+SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.
+SLF4J(W): Class path contains SLF4J bindings targeting slf4j-api versions 1.7.x or earlier.
+SLF4J(W): Ignoring binding found at [jar:file:/Users/karenbarseghyan/Projects/j-util/performance-lab/benchmark-jmh/target/benchmarks.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J(W): See https://www.slf4j.org/codes.html#ignoredBindings for an explanation.
+95.341 ms/op
+# Warmup Iteration   2: 38.361 ms/op
+# Warmup Iteration   3: 23.022 ms/op
+# Warmup Iteration   4: 19.834 ms/op
+# Warmup Iteration   5: 19.414 ms/op
+Iteration   1: 19.684 ms/op
+                 gc.alloc.rate:      22976.212 MB/sec
+                 gc.alloc.rate.norm: 483188248.000 B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   2: 21.312 ms/op
+                 gc.alloc.rate:      21270.338 MB/sec
+                 gc.alloc.rate.norm: 483144488.000 B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   3: 21.250 ms/op
+                 gc.alloc.rate:      21293.777 MB/sec
+                 gc.alloc.rate.norm: 483292664.000 B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   4: 19.186 ms/op
+                 gc.alloc.rate:      23542.237 MB/sec
+                 gc.alloc.rate.norm: 483032672.000 B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   5: 20.774 ms/op
+                 gc.alloc.rate:      21803.665 MB/sec
+                 gc.alloc.rate.norm: 483464384.000 B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   6: 20.605 ms/op
+                 gc.alloc.rate:      22028.558 MB/sec
+                 gc.alloc.rate.norm: 483009416.000 B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   7: 19.550 ms/op
+                 gc.alloc.rate:      23140.491 MB/sec
+                 gc.alloc.rate.norm: 483290432.000 B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   8: 19.471 ms/op
+                 gc.alloc.rate:      23236.889 MB/sec
+                 gc.alloc.rate.norm: 482987976.000 B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   9: 18.905 ms/op
+                 gc.alloc.rate:      23918.108 MB/sec
+                 gc.alloc.rate.norm: 482985576.000 B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration  10: 18.237 ms/op
+                 gc.alloc.rate:      23506.476 MB/sec
+                 gc.alloc.rate.norm: 483156496.000 B/op
+                 gc.count:           ≈ 0 counts
+
+
+# Run progress: 77.78% complete, ETA 00:01:05
+# Fork: 3 of 3
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/Users/karenbarseghyan/Projects/j-util/performance-lab/benchmark-jmh/target/benchmarks.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: SLF4J(W): No SLF4J providers were found.
+SLF4J(W): Defaulting to no-operation (NOP) logger implementation
+SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.
+SLF4J(W): Class path contains SLF4J bindings targeting slf4j-api versions 1.7.x or earlier.
+SLF4J(W): Ignoring binding found at [jar:file:/Users/karenbarseghyan/Projects/j-util/performance-lab/benchmark-jmh/target/benchmarks.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J(W): See https://www.slf4j.org/codes.html#ignoredBindings for an explanation.
+100.724 ms/op
+# Warmup Iteration   2: 35.883 ms/op
+# Warmup Iteration   3: 17.433 ms/op
+# Warmup Iteration   4: 21.060 ms/op
+# Warmup Iteration   5: 19.052 ms/op
+Iteration   1: 11.810 ms/op
+                 gc.alloc.rate:      38275.298 MB/sec
+                 gc.alloc.rate.norm: 483183328.000 B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   2: 22.323 ms/op
+                 gc.alloc.rate:      20308.083 MB/sec
+                 gc.alloc.rate.norm: 482989192.000 B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   3: 19.387 ms/op
+                 gc.alloc.rate:      23382.384 MB/sec
+                 gc.alloc.rate.norm: 482985192.000 B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   4: 13.534 ms/op
+                 gc.alloc.rate:      33427.662 MB/sec
+                 gc.alloc.rate.norm: 483054184.000 B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   5: 22.544 ms/op
+                 gc.alloc.rate:      20152.296 MB/sec
+                 gc.alloc.rate.norm: 483187232.000 B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   6: 22.203 ms/op
+                 gc.alloc.rate:      20469.146 MB/sec
+                 gc.alloc.rate.norm: 482994816.000 B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   7: 22.363 ms/op
+                 gc.alloc.rate:      20330.836 MB/sec
+                 gc.alloc.rate.norm: 483306480.000 B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   8: 20.783 ms/op
+                 gc.alloc.rate:      21856.912 MB/sec
+                 gc.alloc.rate.norm: 483026448.000 B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   9: 18.317 ms/op
+                 gc.alloc.rate:      24677.123 MB/sec
+                 gc.alloc.rate.norm: 483286280.000 B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration  10: 8.586 ms/op
+                 gc.alloc.rate:      49074.275 MB/sec
+                 gc.alloc.rate.norm: 482992224.000 B/op
+                 gc.count:           ≈ 0 counts
+
+
+
+Result "io.github.jutil.performancelab.HardwoodMaterializationBenchmark.hardwoodToExecutorBackedColumnarBatch":
+  N = 30
+  mean =     18.677 ±(99.9%) 2.709 ms/op
+
+  Histogram, ms/op:
+    [ 0.000,  2.500) = 0 
+    [ 2.500,  5.000) = 0 
+    [ 5.000,  7.500) = 0 
+    [ 7.500, 10.000) = 2 
+    [10.000, 12.500) = 2 
+    [12.500, 15.000) = 2 
+    [15.000, 17.500) = 0 
+    [17.500, 20.000) = 10 
+    [20.000, 22.500) = 12 
+    [22.500, 25.000) = 2 
+    [25.000, 27.500) = 0 
+
+  Percentiles, ms/op:
+      p(0.0000) =      8.246 ms/op
+     p(50.0000) =     19.617 ms/op
+     p(90.0000) =     22.359 ms/op
+     p(95.0000) =     22.915 ms/op
+     p(99.0000) =     23.368 ms/op
+     p(99.9000) =     23.368 ms/op
+     p(99.9900) =     23.368 ms/op
+     p(99.9990) =     23.368 ms/op
+     p(99.9999) =     23.368 ms/op
+    p(100.0000) =     23.368 ms/op
+
+Secondary result "io.github.jutil.performancelab.HardwoodMaterializationBenchmark.hardwoodToExecutorBackedColumnarBatch:gc.alloc.rate":
+  25895.349 ±(99.9%) 5816.865 MB/sec [Average]
+  (min, avg, max) = (18782.316, 25895.349, 55122.169), stdev = 8706.410
+  CI (99.9%): [20078.484, 31712.214] (assumes normal distribution)
+
+Secondary result "io.github.jutil.performancelab.HardwoodMaterializationBenchmark.hardwoodToExecutorBackedColumnarBatch:gc.alloc.rate.norm":
+  483130566.667 ±(99.9%) 101907.389 B/op [Average]
+  (min, avg, max) = (482945376.000, 483130566.667, 483464384.000), stdev = 152530.194
+  CI (99.9%): [483028659.278, 483232474.056] (assumes normal distribution)
+
+Secondary result "io.github.jutil.performancelab.HardwoodMaterializationBenchmark.hardwoodToExecutorBackedColumnarBatch:gc.count":
+  ≈ 0 counts
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, OpenJDK 64-Bit Server VM, 25.0.2+10-LTS
+# VM invoker: /Users/karenbarseghyan/.sdkman/candidates/java/25.0.2-tem/bin/java
+# VM options: -Xms4g -Xmx4g -XX:+UseG1GC -Xlog:gc*=info:file=/private/tmp/cps13-single-shot-2026-09-16/gc/hardwood-%p-%t.txt:uptime,pid,tags:filecount=0
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, single-shot each
+# Measurement: 10 iterations, single-shot each
+# Timeout: 10 min per iteration
+# Threads: 1 thread
+# Benchmark mode: Single shot invocation time
+# Benchmark: io.github.jutil.performancelab.HardwoodMaterializationBenchmark.hardwoodToExecutorBackedColumnarBatch
+# Parameters: (batchSize = 1000000, rowCount = 10000000)
+
+# Run progress: 83.33% complete, ETA 00:00:47
+# Fork: 1 of 3
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/Users/karenbarseghyan/Projects/j-util/performance-lab/benchmark-jmh/target/benchmarks.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: SLF4J(W): No SLF4J providers were found.
+SLF4J(W): Defaulting to no-operation (NOP) logger implementation
+SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.
+SLF4J(W): Class path contains SLF4J bindings targeting slf4j-api versions 1.7.x or earlier.
+SLF4J(W): Ignoring binding found at [jar:file:/Users/karenbarseghyan/Projects/j-util/performance-lab/benchmark-jmh/target/benchmarks.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J(W): See https://www.slf4j.org/codes.html#ignoredBindings for an explanation.
+1306.187 ms/op
+# Warmup Iteration   2: 664.278 ms/op
+# Warmup Iteration   3: 519.210 ms/op
+# Warmup Iteration   4: 483.991 ms/op
+# Warmup Iteration   5: 527.663 ms/op
+Iteration   1: 514.563 ms/op
+                 gc.alloc.rate:      9524.332 MB/sec
+                 gc.alloc.rate.norm: 5141229592.000 B/op
+                 gc.count:           2.000 counts
+                 gc.time:            178.000 ms
+
+Iteration   2: 480.478 ms/op
+                 gc.alloc.rate:      10198.206 MB/sec
+                 gc.alloc.rate.norm: 5141330432.000 B/op
+                 gc.count:           2.000 counts
+                 gc.time:            161.000 ms
+
+Iteration   3: 482.129 ms/op
+                 gc.alloc.rate:      10163.804 MB/sec
+                 gc.alloc.rate.norm: 5141198440.000 B/op
+                 gc.count:           2.000 counts
+                 gc.time:            173.000 ms
+
+Iteration   4: 538.927 ms/op
+                 gc.alloc.rate:      9092.914 MB/sec
+                 gc.alloc.rate.norm: 5141183784.000 B/op
+                 gc.count:           2.000 counts
+                 gc.time:            194.000 ms
+
+Iteration   5: 797.835 ms/op
+                 gc.alloc.rate:      6139.916 MB/sec
+                 gc.alloc.rate.norm: 5141228072.000 B/op
+                 gc.count:           3.000 counts
+                 gc.time:            332.000 ms
+
+Iteration   6: 486.734 ms/op
+                 gc.alloc.rate:      10066.659 MB/sec
+                 gc.alloc.rate.norm: 5141215536.000 B/op
+                 gc.count:           3.000 counts
+                 gc.time:            160.000 ms
+
+Iteration   7: 525.469 ms/op
+                 gc.alloc.rate:      9325.655 MB/sec
+                 gc.alloc.rate.norm: 5141212512.000 B/op
+                 gc.count:           2.000 counts
+                 gc.time:            185.000 ms
+
+Iteration   8: 506.530 ms/op
+                 gc.alloc.rate:      9675.311 MB/sec
+                 gc.alloc.rate.norm: 5141362088.000 B/op
+                 gc.count:           3.000 counts
+                 gc.time:            152.000 ms
+
+Iteration   9: 474.045 ms/op
+                 gc.alloc.rate:      10336.664 MB/sec
+                 gc.alloc.rate.norm: 5141161624.000 B/op
+                 gc.count:           5.000 counts
+                 gc.time:            163.000 ms
+
+Iteration  10: 494.292 ms/op
+                 gc.alloc.rate:      9896.323 MB/sec
+                 gc.alloc.rate.norm: 5140999144.000 B/op
+                 gc.count:           2.000 counts
+                 gc.time:            195.000 ms
+
+
+# Run progress: 88.89% complete, ETA 00:00:32
+# Fork: 2 of 3
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/Users/karenbarseghyan/Projects/j-util/performance-lab/benchmark-jmh/target/benchmarks.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: SLF4J(W): No SLF4J providers were found.
+SLF4J(W): Defaulting to no-operation (NOP) logger implementation
+SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.
+SLF4J(W): Class path contains SLF4J bindings targeting slf4j-api versions 1.7.x or earlier.
+SLF4J(W): Ignoring binding found at [jar:file:/Users/karenbarseghyan/Projects/j-util/performance-lab/benchmark-jmh/target/benchmarks.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J(W): See https://www.slf4j.org/codes.html#ignoredBindings for an explanation.
+702.678 ms/op
+# Warmup Iteration   2: 465.377 ms/op
+# Warmup Iteration   3: 494.483 ms/op
+# Warmup Iteration   4: 481.046 ms/op
+# Warmup Iteration   5: 468.579 ms/op
+Iteration   1: 556.346 ms/op
+                 gc.alloc.rate:      8808.166 MB/sec
+                 gc.alloc.rate.norm: 5141279104.000 B/op
+                 gc.count:           3.000 counts
+                 gc.time:            169.000 ms
+
+Iteration   2: 492.455 ms/op
+                 gc.alloc.rate:      9947.519 MB/sec
+                 gc.alloc.rate.norm: 5141193464.000 B/op
+                 gc.count:           2.000 counts
+                 gc.time:            176.000 ms
+
+Iteration   3: 481.684 ms/op
+                 gc.alloc.rate:      10171.883 MB/sec
+                 gc.alloc.rate.norm: 5141219960.000 B/op
+                 gc.count:           4.000 counts
+                 gc.time:            158.000 ms
+
+Iteration   4: 487.756 ms/op
+                 gc.alloc.rate:      10046.319 MB/sec
+                 gc.alloc.rate.norm: 5141197488.000 B/op
+                 gc.count:           2.000 counts
+                 gc.time:            184.000 ms
+
+Iteration   5: 496.029 ms/op
+                 gc.alloc.rate:      9879.445 MB/sec
+                 gc.alloc.rate.norm: 5141330528.000 B/op
+                 gc.count:           2.000 counts
+                 gc.time:            188.000 ms
+
+Iteration   6: 448.481 ms/op
+                 gc.alloc.rate:      10929.768 MB/sec
+                 gc.alloc.rate.norm: 5141207040.000 B/op
+                 gc.count:           3.000 counts
+                 gc.time:            151.000 ms
+
+Iteration   7: 502.851 ms/op
+                 gc.alloc.rate:      9746.619 MB/sec
+                 gc.alloc.rate.norm: 5141222544.000 B/op
+                 gc.count:           3.000 counts
+                 gc.time:            176.000 ms
+
+Iteration   8: 487.638 ms/op
+                 gc.alloc.rate:      10048.431 MB/sec
+                 gc.alloc.rate.norm: 5141090480.000 B/op
+                 gc.count:           4.000 counts
+                 gc.time:            162.000 ms
+
+Iteration   9: 495.942 ms/op
+                 gc.alloc.rate:      9882.362 MB/sec
+                 gc.alloc.rate.norm: 5141133040.000 B/op
+                 gc.count:           2.000 counts
+                 gc.time:            172.000 ms
+
+Iteration  10: 728.566 ms/op
+                 gc.alloc.rate:      6720.530 MB/sec
+                 gc.alloc.rate.norm: 5141164432.000 B/op
+                 gc.count:           2.000 counts
+                 gc.time:            200.000 ms
+
+
+# Run progress: 94.44% complete, ETA 00:00:16
+# Fork: 3 of 3
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/Users/karenbarseghyan/Projects/j-util/performance-lab/benchmark-jmh/target/benchmarks.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: SLF4J(W): No SLF4J providers were found.
+SLF4J(W): Defaulting to no-operation (NOP) logger implementation
+SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.
+SLF4J(W): Class path contains SLF4J bindings targeting slf4j-api versions 1.7.x or earlier.
+SLF4J(W): Ignoring binding found at [jar:file:/Users/karenbarseghyan/Projects/j-util/performance-lab/benchmark-jmh/target/benchmarks.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J(W): See https://www.slf4j.org/codes.html#ignoredBindings for an explanation.
+708.531 ms/op
+# Warmup Iteration   2: 644.708 ms/op
+# Warmup Iteration   3: 517.264 ms/op
+# Warmup Iteration   4: 481.697 ms/op
+# Warmup Iteration   5: 517.099 ms/op
+Iteration   1: 494.673 ms/op
+                 gc.alloc.rate:      9905.158 MB/sec
+                 gc.alloc.rate.norm: 5141274784.000 B/op
+                 gc.count:           3.000 counts
+                 gc.time:            164.000 ms
+
+Iteration   2: 545.848 ms/op
+                 gc.alloc.rate:      8975.392 MB/sec
+                 gc.alloc.rate.norm: 5141230016.000 B/op
+                 gc.count:           3.000 counts
+                 gc.time:            164.000 ms
+
+Iteration   3: 478.104 ms/op
+                 gc.alloc.rate:      10249.487 MB/sec
+                 gc.alloc.rate.norm: 5141211096.000 B/op
+                 gc.count:           3.000 counts
+                 gc.time:            153.000 ms
+
+Iteration   4: 476.155 ms/op
+                 gc.alloc.rate:      10293.917 MB/sec
+                 gc.alloc.rate.norm: 5141189576.000 B/op
+                 gc.count:           2.000 counts
+                 gc.time:            183.000 ms
+
+Iteration   5: 504.584 ms/op
+                 gc.alloc.rate:      9712.598 MB/sec
+                 gc.alloc.rate.norm: 5141208272.000 B/op
+                 gc.count:           3.000 counts
+                 gc.time:            171.000 ms
+
+Iteration   6: 597.210 ms/op
+                 gc.alloc.rate:      8206.673 MB/sec
+                 gc.alloc.rate.norm: 5141229464.000 B/op
+                 gc.count:           4.000 counts
+                 gc.time:            198.000 ms
+
+Iteration   7: 537.849 ms/op
+                 gc.alloc.rate:      9112.116 MB/sec
+                 gc.alloc.rate.norm: 5141213760.000 B/op
+                 gc.count:           2.000 counts
+                 gc.time:            209.000 ms
+
+Iteration   8: 582.954 ms/op
+                 gc.alloc.rate:      8406.813 MB/sec
+                 gc.alloc.rate.norm: 5141246408.000 B/op
+                 gc.count:           4.000 counts
+                 gc.time:            200.000 ms
+
+Iteration   9: 553.942 ms/op
+                 gc.alloc.rate:      8847.049 MB/sec
+                 gc.alloc.rate.norm: 5141139464.000 B/op
+                 gc.count:           3.000 counts
+                 gc.time:            209.000 ms
+
+Iteration  10: 477.452 ms/op
+                 gc.alloc.rate:      10243.346 MB/sec
+                 gc.alloc.rate.norm: 5141139000.000 B/op
+                 gc.count:           2.000 counts
+                 gc.time:            181.000 ms
+
+
+
+Result "io.github.jutil.performancelab.HardwoodMaterializationBenchmark.hardwoodToExecutorBackedColumnarBatch":
+  N = 30
+  mean =    524.251 ±(99.9%) 49.355 ms/op
+
+  Histogram, ms/op:
+    [400.000, 425.000) = 0 
+    [425.000, 450.000) = 1 
+    [450.000, 475.000) = 1 
+    [475.000, 500.000) = 14 
+    [500.000, 525.000) = 4 
+    [525.000, 550.000) = 4 
+    [550.000, 575.000) = 2 
+    [575.000, 600.000) = 2 
+    [600.000, 625.000) = 0 
+    [625.000, 650.000) = 0 
+    [650.000, 675.000) = 0 
+    [675.000, 700.000) = 0 
+    [700.000, 725.000) = 0 
+    [725.000, 750.000) = 1 
+    [750.000, 775.000) = 0 
+
+  Percentiles, ms/op:
+      p(0.0000) =    448.481 ms/op
+     p(50.0000) =    495.986 ms/op
+     p(90.0000) =    595.785 ms/op
+     p(95.0000) =    759.737 ms/op
+     p(99.0000) =    797.835 ms/op
+     p(99.9000) =    797.835 ms/op
+     p(99.9900) =    797.835 ms/op
+     p(99.9990) =    797.835 ms/op
+     p(99.9999) =    797.835 ms/op
+    p(100.0000) =    797.835 ms/op
+
+Secondary result "io.github.jutil.performancelab.HardwoodMaterializationBenchmark.hardwoodToExecutorBackedColumnarBatch:gc.alloc.rate":
+  9485.113 ±(99.9%) 692.339 MB/sec [Average]
+  (min, avg, max) = (6139.916, 9485.113, 10929.768), stdev = 1036.261
+  CI (99.9%): [8792.773, 10177.452] (assumes normal distribution)
+
+Secondary result "io.github.jutil.performancelab.HardwoodMaterializationBenchmark.hardwoodToExecutorBackedColumnarBatch:gc.alloc.rate.norm":
+  5141208038.133 ±(99.9%) 47230.289 B/op [Average]
+  (min, avg, max) = (5140999144.000, 5141208038.133, 5141362088.000), stdev = 70692.079
+  CI (99.9%): [5141160807.844, 5141255268.423] (assumes normal distribution)
+
+Secondary result "io.github.jutil.performancelab.HardwoodMaterializationBenchmark.hardwoodToExecutorBackedColumnarBatch:gc.count":
+  82.000 ±(99.9%) 0.001 counts [Sum]
+  (min, avg, max) = (2.000, 2.733, 5.000), stdev = 0.828
+  CI (99.9%): [82.000, 82.000] (assumes normal distribution)
+
+Secondary result "io.github.jutil.performancelab.HardwoodMaterializationBenchmark.hardwoodToExecutorBackedColumnarBatch:gc.time":
+  5461.000 ±(99.9%) 0.001 ms [Sum]
+  (min, avg, max) = (151.000, 182.033, 332.000), stdev = 32.904
+  CI (99.9%): [5461.000, 5461.000] (assumes normal distribution)
+
+
+# Run complete. Total time: 00:05:07
+
+REMEMBER: The numbers below are just data. To gain reusable insights, you need to follow up on
+why the numbers are the way they are. Use profilers (see -prof, -lprof), design factorial
+experiments, perform baseline and negative tests that provide experimental control, make sure
+the benchmarking environment is safe on JVM/OS/HW level, ask for reviews from the domain experts.
+Do not assume the numbers tell you what you want them to tell.
+
+NOTE: Current JVM experimentally supports Compiler Blackholes, and they are in use. Please exercise
+extra caution when trusting the results, look into the generated code to check the benchmark still
+works, and factor in a small probability of new VM bugs. Additionally, while comparisons between
+different JVMs are already problematic, the performance difference caused by different Blackhole
+modes can be very significant. Please make sure you use the consistent Blackhole mode for comparisons.
+
+Benchmark                                                                                  (batchSize)  (rowCount)  Mode  Cnt           Score        Error   Units
+HardwoodMaterializationBenchmark.hardwoodToArrayList                                           1000000      100000    ss   30          18.173 ±      3.112   ms/op
+HardwoodMaterializationBenchmark.hardwoodToArrayList:gc.alloc.rate                             1000000      100000    ss   30       27380.983 ±   6834.334  MB/sec
+HardwoodMaterializationBenchmark.hardwoodToArrayList:gc.alloc.rate.norm                        1000000      100000    ss   30   484706977.067 ±  76942.508    B/op
+HardwoodMaterializationBenchmark.hardwoodToArrayList:gc.count                                  1000000      100000    ss   30             ≈ 0               counts
+HardwoodMaterializationBenchmark.hardwoodToArrayList                                           1000000    10000000    ss   30         760.920 ±     77.754   ms/op
+HardwoodMaterializationBenchmark.hardwoodToArrayList:gc.alloc.rate                             1000000    10000000    ss   30        6781.270 ±    641.645  MB/sec
+HardwoodMaterializationBenchmark.hardwoodToArrayList:gc.alloc.rate.norm                        1000000    10000000    ss   30  5301164191.467 ± 104233.813    B/op
+HardwoodMaterializationBenchmark.hardwoodToArrayList:gc.count                                  1000000    10000000    ss   30          81.000               counts
+HardwoodMaterializationBenchmark.hardwoodToArrayList:gc.time                                   1000000    10000000    ss   30       10274.000                   ms
+HardwoodMaterializationBenchmark.hardwoodToColumnarBatch                                       1000000      100000    ss   30          19.122 ±      2.681   ms/op
+HardwoodMaterializationBenchmark.hardwoodToColumnarBatch:gc.alloc.rate                         1000000      100000    ss   30       24982.924 ±   4877.682  MB/sec
+HardwoodMaterializationBenchmark.hardwoodToColumnarBatch:gc.alloc.rate.norm                    1000000      100000    ss   30   483066640.000 ± 100910.138    B/op
+HardwoodMaterializationBenchmark.hardwoodToColumnarBatch:gc.count                              1000000      100000    ss   30             ≈ 0               counts
+HardwoodMaterializationBenchmark.hardwoodToColumnarBatch                                       1000000    10000000    ss   30         530.351 ±     47.433   ms/op
+HardwoodMaterializationBenchmark.hardwoodToColumnarBatch:gc.alloc.rate                         1000000    10000000    ss   30        9370.856 ±    690.851  MB/sec
+HardwoodMaterializationBenchmark.hardwoodToColumnarBatch:gc.alloc.rate.norm                    1000000    10000000    ss   30  5141204489.867 ±  49851.973    B/op
+HardwoodMaterializationBenchmark.hardwoodToColumnarBatch:gc.count                              1000000    10000000    ss   30          91.000               counts
+HardwoodMaterializationBenchmark.hardwoodToColumnarBatch:gc.time                               1000000    10000000    ss   30        5760.000                   ms
+HardwoodMaterializationBenchmark.hardwoodToExecutorBackedColumnarBatch                         1000000      100000    ss   30          18.677 ±      2.709   ms/op
+HardwoodMaterializationBenchmark.hardwoodToExecutorBackedColumnarBatch:gc.alloc.rate           1000000      100000    ss   30       25895.349 ±   5816.865  MB/sec
+HardwoodMaterializationBenchmark.hardwoodToExecutorBackedColumnarBatch:gc.alloc.rate.norm      1000000      100000    ss   30   483130566.667 ± 101907.389    B/op
+HardwoodMaterializationBenchmark.hardwoodToExecutorBackedColumnarBatch:gc.count                1000000      100000    ss   30             ≈ 0               counts
+HardwoodMaterializationBenchmark.hardwoodToExecutorBackedColumnarBatch                         1000000    10000000    ss   30         524.251 ±     49.355   ms/op
+HardwoodMaterializationBenchmark.hardwoodToExecutorBackedColumnarBatch:gc.alloc.rate           1000000    10000000    ss   30        9485.113 ±    692.339  MB/sec
+HardwoodMaterializationBenchmark.hardwoodToExecutorBackedColumnarBatch:gc.alloc.rate.norm      1000000    10000000    ss   30  5141208038.133 ±  47230.289    B/op
+HardwoodMaterializationBenchmark.hardwoodToExecutorBackedColumnarBatch:gc.count                1000000    10000000    ss   30          82.000               counts
+HardwoodMaterializationBenchmark.hardwoodToExecutorBackedColumnarBatch:gc.time                 1000000    10000000    ss   30        5461.000                   ms
+
+Benchmark result is saved to /private/tmp/cps13-single-shot-2026-09-16/hardwood.json

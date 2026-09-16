@@ -6,6 +6,8 @@
 > methodology and a separate follow-up evaluation. All original results and
 > the report below remain historical evidence; lack of a typed-batch speedup
 > does not establish a release blocker.
+> See the [corrected single-shot report](../cps-1.3.0-single-shot-2026-09-16/README.md)
+> for the follow-up measurements and precise readiness verdict.
 
 **Verdict: BLOCKED on the performance gate.** Correctness and compatibility checks passed.
 

@@ -1,0 +1,5 @@
+8f9ae26abd43516cc30f09a9cd15531f824d9610eadb5c92c89c57f303affd03  benchmark-jmh/target/benchmarks.jar
+1401232bf9a447fd8f21f8c119c3e031ddf0f3b36d675a5b6f1bdd144bdda892  /Users/karenbarseghyan/.m2/repository/io/github/j-util/columnar-projection-store/1.3.0-SNAPSHOT/columnar-projection-store-1.3.0-SNAPSHOT.jar
+e8445aec4708a6dd277cae14ea1d34f00dc81480f20e534a1a12547145df5703  /Users/karenbarseghyan/.m2/repository/io/github/j-util/columnar-projection-store-processor/1.3.0-SNAPSHOT/columnar-projection-store-processor-1.3.0-SNAPSHOT.jar
+48f1717fb3447405910cd7b135667b6d1c62c5f35bded60b8d944fa3b6786a57  /Users/karenbarseghyan/.m2/repository/io/github/j-util/columnar-projection-store-hardwood/1.1.0-SNAPSHOT/columnar-projection-store-hardwood-1.1.0-SNAPSHOT.jar
+d3c58f8e8229d147cf7932c39bc7bfb0dbf3e581ffd1451c0d75b0550ff9aa14  /Users/karenbarseghyan/.m2/repository/io/github/j-util/columnar-projection-store-hardwood-processor/1.1.0-SNAPSHOT/columnar-projection-store-hardwood-processor-1.1.0-SNAPSHOT.jar

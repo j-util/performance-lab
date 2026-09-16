@@ -290,8 +290,10 @@ cleanup, not sustained throughput under repeated allocation pressure.
 The [original 2026-09-16 report](results/cps-1.3.0-2026-09-16/README.md)
 is historical evidence; its broad **BLOCKED** verdict is superseded because
 repeated `AverageTime` allocation allowed GC placement to dominate the score.
-The follow-up evidence is recorded separately after measuring an exact source
-commit. `scripts/cps13/run-evidence.sh` runs the complete prescribed validation
+The [corrected single-shot report](results/cps-1.3.0-single-shot-2026-09-16/README.md)
+records the exact-commit measurements and limitations with the verdict
+**FUNCTIONALLY READY; PERFORMANCE TRADEOFF CHARACTERIZED**.
+`scripts/cps13/run-evidence.sh` runs the complete prescribed validation
 and benchmark sequence; `scripts/cps13/ValidateDestinations.java` checks all
 rows and eight fields, ordering, exact capacity and sealing for all 20 selected
 input/path combinations outside timing, including the per-batch barrier.

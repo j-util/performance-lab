@@ -1,0 +1,44 @@
++ date -u
+Wed Sep 16 18:53:31 UTC 2026
++ java -version
+openjdk version "25.0.2" 2026-01-20 LTS
+OpenJDK Runtime Environment Temurin-25.0.2+10 (build 25.0.2+10-LTS)
+OpenJDK 64-Bit Server VM Temurin-25.0.2+10 (build 25.0.2+10-LTS, mixed mode, sharing)
++ ./mvnw -version
+Apache Maven 3.9.16 (2bdd9fddda4b155ebf8000e807eb73fd829a51d5)
+Maven home: /Users/karenbarseghyan/.m2/wrapper/dists/apache-maven-3.9.16/56ba1f9f
+Java version: 25.0.2, vendor: Eclipse Adoptium, runtime: /Users/karenbarseghyan/.sdkman/candidates/java/25.0.2-tem
+Default locale: en_AM, platform encoding: UTF-8
+OS name: "mac os x", version: "26.6.2", arch: "aarch64", family: "mac"
++ sw_vers
+ProductName:		macOS
+ProductVersion:		26.6.2
+BuildVersion:		25G83
++ uname -a
+Darwin kbarseghyan-mTY 25.6.0 Darwin Kernel Version 25.6.0: Fri Jul 31 19:11:03 PDT 2026; root:xnu-12377.161.14~5/RELEASE_ARM64_T8132 arm64
++ sysctl hw.memsize hw.logicalcpu hw.physicalcpu machdep.cpu.brand_string
+hw.memsize: 25769803776
+hw.logicalcpu: 10
+hw.physicalcpu: 10
+machdep.cpu.brand_string: Apple M4
++ pmset -g batt
+Now drawing from 'Battery Power'
+ -InternalBattery-0 (id=34668643)	28%; discharging; 4:24 remaining present: true
++ for repo in . ../columnar-projection-store ../columnar-projection-store-hardwood
++ git -C . rev-parse --show-toplevel HEAD
+/Users/karenbarseghyan/Projects/j-util/performance-lab
+41afe3444622e9a46d3f0bf2d9f5e9d2e6fadcee
++ git -C . status --short --branch
+## main...origin/main
++ for repo in . ../columnar-projection-store ../columnar-projection-store-hardwood
++ git -C ../columnar-projection-store rev-parse --show-toplevel HEAD
+/Users/karenbarseghyan/Projects/j-util/columnar-projection-store
+5f0761b99d14be932e4890795d4007c7aeb2013c
++ git -C ../columnar-projection-store status --short --branch
+## main...origin/main
++ for repo in . ../columnar-projection-store ../columnar-projection-store-hardwood
++ git -C ../columnar-projection-store-hardwood rev-parse --show-toplevel HEAD
+/Users/karenbarseghyan/Projects/j-util/columnar-projection-store-hardwood
+8563cc5184ecdc4c933e55884303639b6252ce09
++ git -C ../columnar-projection-store-hardwood status --short --branch
+## main...origin/main

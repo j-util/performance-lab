@@ -1,0 +1,30 @@
+[
+  {
+    "artifact": "columnar-projection-store",
+    "repository_sha": "5f0761b99d14be932e4890795d4007c7aeb2013c",
+    "installed_sha256": "1401232bf9a447fd8f21f8c119c3e031ddf0f3b36d675a5b6f1bdd144bdda892",
+    "existing_built_jar_sha256": "c7cd6f96fc796b7a26e5d47c89276dc3694ec5ab42d67a07fee01225d5f875a1",
+    "different_zip_entries": []
+  },
+  {
+    "artifact": "columnar-projection-store-processor",
+    "repository_sha": "5f0761b99d14be932e4890795d4007c7aeb2013c",
+    "installed_sha256": "e8445aec4708a6dd277cae14ea1d34f00dc81480f20e534a1a12547145df5703",
+    "existing_built_jar_sha256": "e8b44d050276dc14fd9bd2435100c072a401b89dc618c33b88609c0a7d490a45",
+    "different_zip_entries": []
+  },
+  {
+    "artifact": "columnar-projection-store-hardwood",
+    "repository_sha": "8563cc5184ecdc4c933e55884303639b6252ce09",
+    "installed_sha256": "48f1717fb3447405910cd7b135667b6d1c62c5f35bded60b8d944fa3b6786a57",
+    "existing_built_jar_sha256": "48f1717fb3447405910cd7b135667b6d1c62c5f35bded60b8d944fa3b6786a57",
+    "different_zip_entries": []
+  },
+  {
+    "artifact": "columnar-projection-store-hardwood-processor",
+    "repository_sha": "8563cc5184ecdc4c933e55884303639b6252ce09",
+    "installed_sha256": "d3c58f8e8229d147cf7932c39bc7bfb0dbf3e581ffd1451c0d75b0550ff9aa14",
+    "existing_built_jar_sha256": "d3c58f8e8229d147cf7932c39bc7bfb0dbf3e581ffd1451c0d75b0550ff9aa14",
+    "different_zip_entries": []
+  }
+]

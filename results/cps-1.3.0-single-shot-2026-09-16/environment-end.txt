@@ -1,0 +1,3 @@
+Wed Sep 16 19:20:06 UTC 2026
+Now drawing from 'AC Power'
+ -InternalBattery-0 (id=34668643)	21%; discharging; 1:51 remaining present: true

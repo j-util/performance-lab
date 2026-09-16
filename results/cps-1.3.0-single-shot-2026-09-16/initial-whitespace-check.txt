@@ -1,0 +1,14 @@
+51 trailing whitespace. results/cps-1.3.0-single-shot-2026-09-16/clean-verify.txt
+1 trailing whitespace. results/cps-1.3.0-single-shot-2026-09-16/destination-list.txt
+1 new blank line at EOF. results/cps-1.3.0-single-shot-2026-09-16/destination-primary.json
+265 trailing whitespace. results/cps-1.3.0-single-shot-2026-09-16/destination-primary.txt
+1 new blank line at EOF. results/cps-1.3.0-single-shot-2026-09-16/destination-repeat.json
+118 trailing whitespace. results/cps-1.3.0-single-shot-2026-09-16/destination-repeat.txt
+1621 trailing whitespace. results/cps-1.3.0-single-shot-2026-09-16/gc-windows.csv
+1 new blank line at EOF. results/cps-1.3.0-single-shot-2026-09-16/hardwood.json
+74 trailing whitespace. results/cps-1.3.0-single-shot-2026-09-16/hardwood.txt
+30 trailing whitespace. results/cps-1.3.0-single-shot-2026-09-16/jmh-gc-boundary-source.txt
+109 trailing whitespace. results/cps-1.3.0-single-shot-2026-09-16/per-fork.csv
+1081 trailing whitespace. results/cps-1.3.0-single-shot-2026-09-16/per-invocation.csv
+48 trailing whitespace. results/cps-1.3.0-single-shot-2026-09-16/precommit-verify.txt
+37 trailing whitespace. results/cps-1.3.0-single-shot-2026-09-16/summary.csv

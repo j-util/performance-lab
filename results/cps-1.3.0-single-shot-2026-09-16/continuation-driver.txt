@@ -1,0 +1,7 @@
++ git diff --exit-code HEAD -- benchmark-core benchmark-jmh scripts/cps13
++ java -jar benchmark-jmh/target/benchmarks.jar '^io\.github\.jutil\.performancelab\.HardwoodMaterializationBenchmark\.(hardwoodToColumnarBatch|hardwoodToExecutorBackedColumnarBatch|hardwoodToArrayList)$' -p rowCount=100000,10000000 -p batchSize=1000000 -bm ss -tu ms -wi 5 -i 10 -f 3 -t 1 -gc true -jvmArgs '-Xms4g -Xmx4g -XX:+UseG1GC -Xlog:gc*=info:file=/private/tmp/cps13-single-shot-2026-09-16/gc/hardwood-%p-%t.txt:uptime,pid,tags:filecount=0' -prof gc -rf json -rff /private/tmp/cps13-single-shot-2026-09-16/hardwood.json
++ python3 scripts/cps13/summarize.py /private/tmp/cps13-single-shot-2026-09-16
+PASS 36 cases, 108 forks, 1080 untrimmed measured invocations, 1620 GC windows
++ git diff --check
++ set +x
+PASS complete validation and benchmark sequence

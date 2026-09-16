@@ -1,0 +1,714 @@
+[0.004s][79728][gc,init] CardTable entry size: 512
+[0.004s][79728][gc     ] Using G1
+[0.005s][79728][gc,init] Version: 25.0.2+10-LTS (release)
+[0.005s][79728][gc,init] CPUs: 10 total, 10 available
+[0.005s][79728][gc,init] Memory: 24576M
+[0.005s][79728][gc,init] Large Page Support: Disabled
+[0.005s][79728][gc,init] NUMA Support: Disabled
+[0.005s][79728][gc,init] Compressed Oops: Enabled (Zero based)
+[0.005s][79728][gc,init] Heap Region Size: 2M
+[0.005s][79728][gc,init] Heap Min Capacity: 4G
+[0.005s][79728][gc,init] Heap Initial Capacity: 4G
+[0.005s][79728][gc,init] Heap Max Capacity: 4G
+[0.005s][79728][gc,init] Pre-touch: Disabled
+[0.005s][79728][gc,init] Parallel Workers: 9
+[0.005s][79728][gc,init] Concurrent Workers: 2
+[0.005s][79728][gc,init] Concurrent Refinement Workers: 9
+[0.005s][79728][gc,init] Periodic GC: Disabled
+[0.007s][79728][gc,metaspace] CDS archive(s) mapped at: [0x00003ffe00000000-0x00003ffe00d94000-0x00003ffe00d94000), size 14237696, SharedBaseAddress: 0x00003ffe00000000, ArchiveRelocationMode: 1.
+[0.007s][79728][gc,metaspace] Compressed class space mapped at: 0x00003ffe01000000-0x00003ffe41000000, reserved size: 1073741824
+[0.007s][79728][gc,metaspace] UseCompressedClassPointers 1, UseCompactObjectHeaders 0
+[0.007s][79728][gc,metaspace] Narrow klass pointer bits 32, Max shift 3
+[0.007s][79728][gc,metaspace] Narrow klass base: 0x00003ffe00000000, Narrow klass shift: 0
+[0.007s][79728][gc,metaspace] Encoding Range: [0x00003ffe00000000 - 0x00003fff00000000), (4294967296 bytes)
+[0.007s][79728][gc,metaspace] Klass Range:    [0x00003ffe00004000 - 0x00003ffe41000000), (1090502656 bytes)
+[0.007s][79728][gc,metaspace] Klass ID Range:  [16384 - 1090519033) (1090502649)
+[0.007s][79728][gc,metaspace] Protection zone: [0x00003ffe00000000 - 0x00003ffe00004000), (16384 bytes)
+[0.096s][79728][gc,start    ] GC(0) Pause Full (System.gc())
+[0.096s][79728][gc,task     ] GC(0) Using 9 workers of 9 for full compaction
+[0.096s][79728][gc,phases,start] GC(0) Phase 1: Mark live objects
+[0.097s][79728][gc,phases      ] GC(0) Phase 1: Mark live objects 0.748ms
+[0.097s][79728][gc,phases,start] GC(0) Phase 2: Prepare compaction
+[0.097s][79728][gc,phases      ] GC(0) Phase 2: Prepare compaction 0.228ms
+[0.097s][79728][gc,phases,start] GC(0) Phase 3: Adjust pointers
+[0.097s][79728][gc,phases      ] GC(0) Phase 3: Adjust pointers 0.327ms
+[0.097s][79728][gc,phases,start] GC(0) Phase 4: Compact heap
+[0.098s][79728][gc,phases      ] GC(0) Phase 4: Compact heap 0.338ms
+[0.098s][79728][gc,phases,start] GC(0) Phase 5: Reset Metadata
+[0.098s][79728][gc,phases      ] GC(0) Phase 5: Reset Metadata 0.187ms
+[0.102s][79728][gc,heap        ] GC(0) Eden regions: 5->0(102)
+[0.102s][79728][gc,heap        ] GC(0) Survivor regions: 0->0(0)
+[0.102s][79728][gc,heap        ] GC(0) Old regions: 1->6
+[0.102s][79728][gc,heap        ] GC(0) Humongous regions: 4->4
+[0.102s][79728][gc,metaspace   ] GC(0) Metaspace: 3044K(3264K)->3044K(3264K) NonClass: 2709K(2816K)->2709K(2816K) Class: 334K(448K)->334K(448K)
+[0.102s][79728][gc             ] GC(0) Pause Full (System.gc()) 18M->11M(4096M) 6.557ms
+[0.102s][79728][gc,cpu         ] GC(0) User=0.01s Sys=0.03s Real=0.01s
+[0.102s][79728][gc,start       ] GC(1) Pause Full (System.gc())
+[0.102s][79728][gc,task        ] GC(1) Using 9 workers of 9 for full compaction
+[0.102s][79728][gc,phases,start] GC(1) Phase 1: Mark live objects
+[0.103s][79728][gc,phases      ] GC(1) Phase 1: Mark live objects 0.581ms
+[0.103s][79728][gc,phases,start] GC(1) Phase 2: Prepare compaction
+[0.103s][79728][gc,phases      ] GC(1) Phase 2: Prepare compaction 0.161ms
+[0.103s][79728][gc,phases,start] GC(1) Phase 3: Adjust pointers
+[0.103s][79728][gc,phases      ] GC(1) Phase 3: Adjust pointers 0.235ms
+[0.103s][79728][gc,phases,start] GC(1) Phase 4: Compact heap
+[0.104s][79728][gc,phases      ] GC(1) Phase 4: Compact heap 0.136ms
+[0.104s][79728][gc,phases,start] GC(1) Phase 5: Reset Metadata
+[0.104s][79728][gc,phases      ] GC(1) Phase 5: Reset Metadata 0.168ms
+[0.105s][79728][gc,heap        ] GC(1) Eden regions: 1->0(102)
+[0.105s][79728][gc,heap        ] GC(1) Survivor regions: 0->0(0)
+[0.105s][79728][gc,heap        ] GC(1) Old regions: 6->6
+[0.105s][79728][gc,heap        ] GC(1) Humongous regions: 4->4
+[0.105s][79728][gc,metaspace   ] GC(1) Metaspace: 3044K(3264K)->3044K(3264K) NonClass: 2709K(2816K)->2709K(2816K) Class: 334K(448K)->334K(448K)
+[0.105s][79728][gc             ] GC(1) Pause Full (System.gc()) 12M->11M(4096M) 2.546ms
+[0.105s][79728][gc,cpu         ] GC(1) User=0.01s Sys=0.00s Real=0.00s
+[0.956s][79728][gc,start       ] GC(2) Pause Young (Normal) (G1 Evacuation Pause)
+[0.956s][79728][gc,task        ] GC(2) Using 9 workers of 9 for evacuation
+[1.117s][79728][gc,phases      ] GC(2)   Pre Evacuate Collection Set: 0.09ms
+[1.117s][79728][gc,phases      ] GC(2)   Merge Heap Roots: 0.27ms
+[1.117s][79728][gc,phases      ] GC(2)   Evacuate Collection Set: 160.22ms
+[1.117s][79728][gc,phases      ] GC(2)   Post Evacuate Collection Set: 0.39ms
+[1.117s][79728][gc,phases      ] GC(2)   Other: 0.09ms
+[1.117s][79728][gc,heap        ] GC(2) Eden regions: 102->0(89)
+[1.117s][79728][gc,heap        ] GC(2) Survivor regions: 0->13(13)
+[1.117s][79728][gc,heap        ] GC(2) Old regions: 6->88
+[1.117s][79728][gc,heap        ] GC(2) Humongous regions: 279->279
+[1.117s][79728][gc,metaspace   ] GC(2) Metaspace: 4192K(4352K)->4192K(4352K) NonClass: 3711K(3776K)->3711K(3776K) Class: 481K(576K)->481K(576K)
+[1.117s][79728][gc             ] GC(2) Pause Young (Normal) (G1 Evacuation Pause) 765M->750M(4096M) 161.203ms
+[1.117s][79728][gc,cpu         ] GC(2) User=1.37s Sys=0.03s Real=0.17s
+[1.224s][79728][gc,start       ] GC(3) Pause Young (Normal) (G1 Evacuation Pause)
+[1.224s][79728][gc,task        ] GC(3) Using 9 workers of 9 for evacuation
+[1.470s][79728][gc,mmu         ] GC(3) MMU target violated: 201.0ms (200.0ms/201.0ms)
+[1.470s][79728][gc,phases      ] GC(3)   Pre Evacuate Collection Set: 0.15ms
+[1.470s][79728][gc,phases      ] GC(3)   Merge Heap Roots: 0.35ms
+[1.470s][79728][gc,phases      ] GC(3)   Evacuate Collection Set: 245.58ms
+[1.470s][79728][gc,phases      ] GC(3)   Post Evacuate Collection Set: 0.14ms
+[1.470s][79728][gc,phases      ] GC(3)   Other: 0.07ms
+[1.470s][79728][gc,heap        ] GC(3) Eden regions: 89->0(89)
+[1.470s][79728][gc,heap        ] GC(3) Survivor regions: 13->13(13)
+[1.470s][79728][gc,heap        ] GC(3) Old regions: 88->180
+[1.470s][79728][gc,heap        ] GC(3) Humongous regions: 279->279
+[1.470s][79728][gc,metaspace   ] GC(3) Metaspace: 4192K(4352K)->4192K(4352K) NonClass: 3711K(3776K)->3711K(3776K) Class: 481K(576K)->481K(576K)
+[1.470s][79728][gc             ] GC(3) Pause Young (Normal) (G1 Evacuation Pause) 928M->934M(4096M) 246.365ms
+[1.470s][79728][gc,cpu         ] GC(3) User=2.13s Sys=0.02s Real=0.25s
+[1.556s][79728][gc,start       ] GC(4) Pause Young (Normal) (G1 Evacuation Pause)
+[1.556s][79728][gc,task        ] GC(4) Using 9 workers of 9 for evacuation
+[1.574s][79728][gc,phases      ] GC(4)   Pre Evacuate Collection Set: 0.11ms
+[1.574s][79728][gc,phases      ] GC(4)   Merge Heap Roots: 0.08ms
+[1.574s][79728][gc,phases      ] GC(4)   Evacuate Collection Set: 17.37ms
+[1.574s][79728][gc,phases      ] GC(4)   Post Evacuate Collection Set: 0.12ms
+[1.574s][79728][gc,phases      ] GC(4)   Other: 0.04ms
+[1.574s][79728][gc,heap        ] GC(4) Eden regions: 89->0(89)
+[1.574s][79728][gc,heap        ] GC(4) Survivor regions: 13->13(13)
+[1.574s][79728][gc,heap        ] GC(4) Old regions: 180->271
+[1.574s][79728][gc,heap        ] GC(4) Humongous regions: 279->279
+[1.574s][79728][gc,metaspace   ] GC(4) Metaspace: 4192K(4352K)->4192K(4352K) NonClass: 3711K(3776K)->3711K(3776K) Class: 481K(576K)->481K(576K)
+[1.574s][79728][gc             ] GC(4) Pause Young (Normal) (G1 Evacuation Pause) 1112M->1117M(4096M) 17.816ms
+[1.574s][79728][gc,cpu         ] GC(4) User=0.12s Sys=0.03s Real=0.01s
+[1.612s][79728][gc,start       ] GC(5) Pause Full (System.gc())
+[1.612s][79728][gc,task        ] GC(5) Using 9 workers of 9 for full compaction
+[1.612s][79728][gc,phases,start] GC(5) Phase 1: Mark live objects
+[1.628s][79728][gc,phases      ] GC(5) Phase 1: Mark live objects 16.111ms
+[1.628s][79728][gc,phases,start] GC(5) Phase 2: Prepare compaction
+[1.628s][79728][gc,phases      ] GC(5) Phase 2: Prepare compaction 0.265ms
+[1.628s][79728][gc,phases,start] GC(5) Phase 3: Adjust pointers
+[1.634s][79728][gc,phases      ] GC(5) Phase 3: Adjust pointers 6.197ms
+[1.634s][79728][gc,phases,start] GC(5) Phase 4: Compact heap
+[1.635s][79728][gc,phases      ] GC(5) Phase 4: Compact heap 0.341ms
+[1.635s][79728][gc,phases,start] GC(5) Phase 5: Reset Metadata
+[1.635s][79728][gc,phases      ] GC(5) Phase 5: Reset Metadata 0.193ms
+[1.636s][79728][gc,heap        ] GC(5) Eden regions: 36->0(102)
+[1.636s][79728][gc,heap        ] GC(5) Survivor regions: 13->0(13)
+[1.636s][79728][gc,heap        ] GC(5) Old regions: 271->9
+[1.636s][79728][gc,heap        ] GC(5) Humongous regions: 279->259
+[1.636s][79728][gc,metaspace   ] GC(5) Metaspace: 4248K(4416K)->4248K(4416K) NonClass: 3756K(3840K)->3756K(3840K) Class: 492K(576K)->492K(576K)
+[1.636s][79728][gc             ] GC(5) Pause Full (System.gc()) 1188M->521M(4096M) 24.653ms
+[1.636s][79728][gc,cpu         ] GC(5) User=0.15s Sys=0.03s Real=0.03s
+[1.636s][79728][gc,start       ] GC(6) Pause Full (System.gc())
+[1.636s][79728][gc,task        ] GC(6) Using 9 workers of 9 for full compaction
+[1.636s][79728][gc,phases,start] GC(6) Phase 1: Mark live objects
+[1.652s][79728][gc,phases      ] GC(6) Phase 1: Mark live objects 15.528ms
+[1.652s][79728][gc,phases,start] GC(6) Phase 2: Prepare compaction
+[1.652s][79728][gc,phases      ] GC(6) Phase 2: Prepare compaction 0.166ms
+[1.652s][79728][gc,phases,start] GC(6) Phase 3: Adjust pointers
+[1.656s][79728][gc,phases      ] GC(6) Phase 3: Adjust pointers 4.006ms
+[1.656s][79728][gc,phases,start] GC(6) Phase 4: Compact heap
+[1.656s][79728][gc,phases      ] GC(6) Phase 4: Compact heap 0.160ms
+[1.656s][79728][gc,phases,start] GC(6) Phase 5: Reset Metadata
+[1.657s][79728][gc,phases      ] GC(6) Phase 5: Reset Metadata 0.186ms
+[1.658s][79728][gc,heap        ] GC(6) Eden regions: 1->0(102)
+[1.658s][79728][gc,heap        ] GC(6) Survivor regions: 0->0(13)
+[1.658s][79728][gc,heap        ] GC(6) Old regions: 9->9
+[1.658s][79728][gc,heap        ] GC(6) Humongous regions: 259->259
+[1.658s][79728][gc,metaspace   ] GC(6) Metaspace: 4248K(4416K)->4248K(4416K) NonClass: 3756K(3840K)->3756K(3840K) Class: 492K(576K)->492K(576K)
+[1.658s][79728][gc             ] GC(6) Pause Full (System.gc()) 522M->521M(4096M) 21.439ms
+[1.658s][79728][gc,cpu         ] GC(6) User=0.13s Sys=0.02s Real=0.02s
+[2.391s][79728][gc,start       ] GC(7) Pause Young (Normal) (G1 Evacuation Pause)
+[2.392s][79728][gc,task        ] GC(7) Using 9 workers of 9 for evacuation
+[2.408s][79728][gc,phases      ] GC(7)   Pre Evacuate Collection Set: 0.14ms
+[2.408s][79728][gc,phases      ] GC(7)   Merge Heap Roots: 0.07ms
+[2.408s][79728][gc,phases      ] GC(7)   Evacuate Collection Set: 16.33ms
+[2.408s][79728][gc,phases      ] GC(7)   Post Evacuate Collection Set: 0.19ms
+[2.408s][79728][gc,phases      ] GC(7)   Other: 0.05ms
+[2.408s][79728][gc,heap        ] GC(7) Eden regions: 103->0(110)
+[2.408s][79728][gc,heap        ] GC(7) Survivor regions: 0->13(13)
+[2.408s][79728][gc,heap        ] GC(7) Old regions: 9->102
+[2.408s][79728][gc,heap        ] GC(7) Humongous regions: 279->279
+[2.408s][79728][gc,metaspace   ] GC(7) Metaspace: 4250K(4416K)->4250K(4416K) NonClass: 3758K(3840K)->3758K(3840K) Class: 492K(576K)->492K(576K)
+[2.408s][79728][gc             ] GC(7) Pause Young (Normal) (G1 Evacuation Pause) 767M->772M(4096M) 16.920ms
+[2.408s][79728][gc,cpu         ] GC(7) User=0.14s Sys=0.00s Real=0.02s
+[2.535s][79728][gc,start       ] GC(8) Pause Young (Normal) (G1 Evacuation Pause)
+[2.535s][79728][gc,task        ] GC(8) Using 9 workers of 9 for evacuation
+[2.558s][79728][gc,phases      ] GC(8)   Pre Evacuate Collection Set: 0.22ms
+[2.558s][79728][gc,phases      ] GC(8)   Merge Heap Roots: 0.08ms
+[2.558s][79728][gc,phases      ] GC(8)   Evacuate Collection Set: 21.98ms
+[2.558s][79728][gc,phases      ] GC(8)   Post Evacuate Collection Set: 0.14ms
+[2.558s][79728][gc,phases      ] GC(8)   Other: 0.04ms
+[2.558s][79728][gc,heap        ] GC(8) Eden regions: 132->0(134)
+[2.558s][79728][gc,heap        ] GC(8) Survivor regions: 13->19(19)
+[2.558s][79728][gc,heap        ] GC(8) Old regions: 102->230
+[2.558s][79728][gc,heap        ] GC(8) Humongous regions: 279->279
+[2.558s][79728][gc,metaspace   ] GC(8) Metaspace: 4250K(4416K)->4250K(4416K) NonClass: 3758K(3840K)->3758K(3840K) Class: 492K(576K)->492K(576K)
+[2.558s][79728][gc             ] GC(8) Pause Young (Normal) (G1 Evacuation Pause) 1036M->1041M(4096M) 22.588ms
+[2.558s][79728][gc,cpu         ] GC(8) User=0.17s Sys=0.01s Real=0.03s
+[2.638s][79728][gc,start       ] GC(9) Pause Full (System.gc())
+[2.638s][79728][gc,task        ] GC(9) Using 9 workers of 9 for full compaction
+[2.638s][79728][gc,phases,start] GC(9) Phase 1: Mark live objects
+[2.654s][79728][gc,phases      ] GC(9) Phase 1: Mark live objects 15.476ms
+[2.654s][79728][gc,phases,start] GC(9) Phase 2: Prepare compaction
+[2.654s][79728][gc,phases      ] GC(9) Phase 2: Prepare compaction 0.241ms
+[2.654s][79728][gc,phases,start] GC(9) Phase 3: Adjust pointers
+[2.658s][79728][gc,phases      ] GC(9) Phase 3: Adjust pointers 3.954ms
+[2.658s][79728][gc,phases,start] GC(9) Phase 4: Compact heap
+[2.658s][79728][gc,phases      ] GC(9) Phase 4: Compact heap 0.185ms
+[2.658s][79728][gc,phases,start] GC(9) Phase 5: Reset Metadata
+[2.658s][79728][gc,phases      ] GC(9) Phase 5: Reset Metadata 0.136ms
+[2.659s][79728][gc,heap        ] GC(9) Eden regions: 72->0(153)
+[2.659s][79728][gc,heap        ] GC(9) Survivor regions: 19->0(19)
+[2.659s][79728][gc,heap        ] GC(9) Old regions: 230->9
+[2.659s][79728][gc,heap        ] GC(9) Humongous regions: 279->259
+[2.659s][79728][gc,metaspace   ] GC(9) Metaspace: 4250K(4480K)->4250K(4480K) NonClass: 3758K(3904K)->3758K(3904K) Class: 492K(576K)->492K(576K)
+[2.659s][79728][gc             ] GC(9) Pause Full (System.gc()) 1184M->521M(4096M) 21.303ms
+[2.659s][79728][gc,cpu         ] GC(9) User=0.14s Sys=0.03s Real=0.02s
+[2.660s][79728][gc,start       ] GC(10) Pause Full (System.gc())
+[2.660s][79728][gc,task        ] GC(10) Using 9 workers of 9 for full compaction
+[2.660s][79728][gc,phases,start] GC(10) Phase 1: Mark live objects
+[2.675s][79728][gc,phases      ] GC(10) Phase 1: Mark live objects 15.559ms
+[2.675s][79728][gc,phases,start] GC(10) Phase 2: Prepare compaction
+[2.675s][79728][gc,phases      ] GC(10) Phase 2: Prepare compaction 0.167ms
+[2.675s][79728][gc,phases,start] GC(10) Phase 3: Adjust pointers
+[2.679s][79728][gc,phases      ] GC(10) Phase 3: Adjust pointers 3.836ms
+[2.679s][79728][gc,phases,start] GC(10) Phase 4: Compact heap
+[2.679s][79728][gc,phases      ] GC(10) Phase 4: Compact heap 0.135ms
+[2.679s][79728][gc,phases,start] GC(10) Phase 5: Reset Metadata
+[2.680s][79728][gc,phases      ] GC(10) Phase 5: Reset Metadata 0.131ms
+[2.681s][79728][gc,heap        ] GC(10) Eden regions: 1->0(153)
+[2.681s][79728][gc,heap        ] GC(10) Survivor regions: 0->0(19)
+[2.681s][79728][gc,heap        ] GC(10) Old regions: 9->9
+[2.681s][79728][gc,heap        ] GC(10) Humongous regions: 259->259
+[2.681s][79728][gc,metaspace   ] GC(10) Metaspace: 4250K(4480K)->4250K(4480K) NonClass: 3758K(3904K)->3758K(3904K) Class: 492K(576K)->492K(576K)
+[2.681s][79728][gc             ] GC(10) Pause Full (System.gc()) 522M->521M(4096M) 21.091ms
+[2.681s][79728][gc,cpu         ] GC(10) User=0.13s Sys=0.02s Real=0.02s
+[3.443s][79728][gc,start       ] GC(11) Pause Young (Normal) (G1 Evacuation Pause)
+[3.443s][79728][gc,task        ] GC(11) Using 9 workers of 9 for evacuation
+[3.467s][79728][gc,phases      ] GC(11)   Pre Evacuate Collection Set: 0.12ms
+[3.467s][79728][gc,phases      ] GC(11)   Merge Heap Roots: 0.13ms
+[3.467s][79728][gc,phases      ] GC(11)   Evacuate Collection Set: 23.71ms
+[3.467s][79728][gc,phases      ] GC(11)   Post Evacuate Collection Set: 0.14ms
+[3.467s][79728][gc,phases      ] GC(11)   Other: 0.04ms
+[3.467s][79728][gc,heap        ] GC(11) Eden regions: 170->0(182)
+[3.467s][79728][gc,heap        ] GC(11) Survivor regions: 0->22(22)
+[3.467s][79728][gc,heap        ] GC(11) Old regions: 9->159
+[3.467s][79728][gc,heap        ] GC(11) Humongous regions: 279->279
+[3.467s][79728][gc,metaspace   ] GC(11) Metaspace: 4250K(4480K)->4250K(4480K) NonClass: 3758K(3904K)->3758K(3904K) Class: 492K(576K)->492K(576K)
+[3.467s][79728][gc             ] GC(11) Pause Young (Normal) (G1 Evacuation Pause) 901M->904M(4096M) 24.272ms
+[3.467s][79728][gc,cpu         ] GC(11) User=0.20s Sys=0.01s Real=0.03s
+[3.563s][79728][gc,start       ] GC(12) Pause Full (System.gc())
+[3.563s][79728][gc,task        ] GC(12) Using 9 workers of 9 for full compaction
+[3.563s][79728][gc,phases,start] GC(12) Phase 1: Mark live objects
+[3.578s][79728][gc,phases      ] GC(12) Phase 1: Mark live objects 15.281ms
+[3.578s][79728][gc,phases,start] GC(12) Phase 2: Prepare compaction
+[3.579s][79728][gc,phases      ] GC(12) Phase 2: Prepare compaction 0.227ms
+[3.579s][79728][gc,phases,start] GC(12) Phase 3: Adjust pointers
+[3.583s][79728][gc,phases      ] GC(12) Phase 3: Adjust pointers 4.023ms
+[3.583s][79728][gc,phases,start] GC(12) Phase 4: Compact heap
+[3.583s][79728][gc,phases      ] GC(12) Phase 4: Compact heap 0.210ms
+[3.583s][79728][gc,phases,start] GC(12) Phase 5: Reset Metadata
+[3.583s][79728][gc,phases      ] GC(12) Phase 5: Reset Metadata 0.164ms
+[3.584s][79728][gc,heap        ] GC(12) Eden regions: 137->0(199)
+[3.584s][79728][gc,heap        ] GC(12) Survivor regions: 22->0(22)
+[3.584s][79728][gc,heap        ] GC(12) Old regions: 159->9
+[3.584s][79728][gc,heap        ] GC(12) Humongous regions: 279->259
+[3.584s][79728][gc,metaspace   ] GC(12) Metaspace: 4252K(4480K)->4252K(4480K) NonClass: 3760K(3904K)->3760K(3904K) Class: 492K(576K)->492K(576K)
+[3.584s][79728][gc             ] GC(12) Pause Full (System.gc()) 1176M->521M(4096M) 21.255ms
+[3.584s][79728][gc,cpu         ] GC(12) User=0.13s Sys=0.02s Real=0.02s
+[3.584s][79728][gc,start       ] GC(13) Pause Full (System.gc())
+[3.584s][79728][gc,task        ] GC(13) Using 9 workers of 9 for full compaction
+[3.584s][79728][gc,phases,start] GC(13) Phase 1: Mark live objects
+[3.600s][79728][gc,phases      ] GC(13) Phase 1: Mark live objects 15.338ms
+[3.600s][79728][gc,phases,start] GC(13) Phase 2: Prepare compaction
+[3.600s][79728][gc,phases      ] GC(13) Phase 2: Prepare compaction 0.169ms
+[3.600s][79728][gc,phases,start] GC(13) Phase 3: Adjust pointers
+[3.604s][79728][gc,phases      ] GC(13) Phase 3: Adjust pointers 3.951ms
+[3.604s][79728][gc,phases,start] GC(13) Phase 4: Compact heap
+[3.604s][79728][gc,phases      ] GC(13) Phase 4: Compact heap 0.133ms
+[3.604s][79728][gc,phases,start] GC(13) Phase 5: Reset Metadata
+[3.604s][79728][gc,phases      ] GC(13) Phase 5: Reset Metadata 0.137ms
+[3.605s][79728][gc,heap        ] GC(13) Eden regions: 1->0(199)
+[3.605s][79728][gc,heap        ] GC(13) Survivor regions: 0->0(22)
+[3.605s][79728][gc,heap        ] GC(13) Old regions: 9->9
+[3.605s][79728][gc,heap        ] GC(13) Humongous regions: 259->259
+[3.605s][79728][gc,metaspace   ] GC(13) Metaspace: 4252K(4480K)->4252K(4480K) NonClass: 3760K(3904K)->3760K(3904K) Class: 492K(576K)->492K(576K)
+[3.605s][79728][gc             ] GC(13) Pause Full (System.gc()) 521M->521M(4096M) 20.999ms
+[3.605s][79728][gc,cpu         ] GC(13) User=0.13s Sys=0.02s Real=0.02s
+[4.387s][79728][gc,start       ] GC(14) Pause Young (Normal) (G1 Evacuation Pause)
+[4.387s][79728][gc,task        ] GC(14) Using 9 workers of 9 for evacuation
+[4.417s][79728][gc,phases      ] GC(14)   Pre Evacuate Collection Set: 0.11ms
+[4.417s][79728][gc,phases      ] GC(14)   Merge Heap Roots: 0.13ms
+[4.417s][79728][gc,phases      ] GC(14)   Evacuate Collection Set: 29.46ms
+[4.417s][79728][gc,phases      ] GC(14)   Post Evacuate Collection Set: 0.16ms
+[4.417s][79728][gc,phases      ] GC(14)   Other: 0.06ms
+[4.417s][79728][gc,heap        ] GC(14) Eden regions: 213->0(231)
+[4.417s][79728][gc,heap        ] GC(14) Survivor regions: 0->27(27)
+[4.417s][79728][gc,heap        ] GC(14) Old regions: 9->198
+[4.417s][79728][gc,heap        ] GC(14) Humongous regions: 279->279
+[4.417s][79728][gc,metaspace   ] GC(14) Metaspace: 4252K(4480K)->4252K(4480K) NonClass: 3760K(3904K)->3760K(3904K) Class: 492K(576K)->492K(576K)
+[4.417s][79728][gc             ] GC(14) Pause Young (Normal) (G1 Evacuation Pause) 987M->992M(4096M) 30.043ms
+[4.417s][79728][gc,cpu         ] GC(14) User=0.25s Sys=0.01s Real=0.03s
+[4.473s][79728][gc,start       ] GC(15) Pause Full (System.gc())
+[4.473s][79728][gc,task        ] GC(15) Using 9 workers of 9 for full compaction
+[4.473s][79728][gc,phases,start] GC(15) Phase 1: Mark live objects
+[4.488s][79728][gc,phases      ] GC(15) Phase 1: Mark live objects 15.373ms
+[4.488s][79728][gc,phases,start] GC(15) Phase 2: Prepare compaction
+[4.488s][79728][gc,phases      ] GC(15) Phase 2: Prepare compaction 0.237ms
+[4.488s][79728][gc,phases,start] GC(15) Phase 3: Adjust pointers
+[4.493s][79728][gc,phases      ] GC(15) Phase 3: Adjust pointers 4.136ms
+[4.493s][79728][gc,phases,start] GC(15) Phase 4: Compact heap
+[4.493s][79728][gc,phases      ] GC(15) Phase 4: Compact heap 0.196ms
+[4.493s][79728][gc,phases,start] GC(15) Phase 5: Reset Metadata
+[4.493s][79728][gc,phases      ] GC(15) Phase 5: Reset Metadata 0.159ms
+[4.494s][79728][gc,heap        ] GC(15) Eden regions: 94->0(253)
+[4.494s][79728][gc,heap        ] GC(15) Survivor regions: 27->0(27)
+[4.494s][79728][gc,heap        ] GC(15) Old regions: 198->9
+[4.494s][79728][gc,heap        ] GC(15) Humongous regions: 279->259
+[4.494s][79728][gc,metaspace   ] GC(15) Metaspace: 4254K(4480K)->4254K(4480K) NonClass: 3762K(3904K)->3762K(3904K) Class: 492K(576K)->492K(576K)
+[4.494s][79728][gc             ] GC(15) Pause Full (System.gc()) 1178M->521M(4096M) 21.482ms
+[4.494s][79728][gc,cpu         ] GC(15) User=0.14s Sys=0.02s Real=0.02s
+[4.494s][79728][gc,start       ] GC(16) Pause Full (System.gc())
+[4.494s][79728][gc,task        ] GC(16) Using 9 workers of 9 for full compaction
+[4.494s][79728][gc,phases,start] GC(16) Phase 1: Mark live objects
+[4.510s][79728][gc,phases      ] GC(16) Phase 1: Mark live objects 15.339ms
+[4.510s][79728][gc,phases,start] GC(16) Phase 2: Prepare compaction
+[4.510s][79728][gc,phases      ] GC(16) Phase 2: Prepare compaction 0.172ms
+[4.510s][79728][gc,phases,start] GC(16) Phase 3: Adjust pointers
+[4.514s][79728][gc,phases      ] GC(16) Phase 3: Adjust pointers 4.025ms
+[4.514s][79728][gc,phases,start] GC(16) Phase 4: Compact heap
+[4.514s][79728][gc,phases      ] GC(16) Phase 4: Compact heap 0.130ms
+[4.514s][79728][gc,phases,start] GC(16) Phase 5: Reset Metadata
+[4.514s][79728][gc,phases      ] GC(16) Phase 5: Reset Metadata 0.163ms
+[4.515s][79728][gc,heap        ] GC(16) Eden regions: 1->0(253)
+[4.515s][79728][gc,heap        ] GC(16) Survivor regions: 0->0(27)
+[4.515s][79728][gc,heap        ] GC(16) Old regions: 9->9
+[4.515s][79728][gc,heap        ] GC(16) Humongous regions: 259->259
+[4.515s][79728][gc,metaspace   ] GC(16) Metaspace: 4254K(4480K)->4254K(4480K) NonClass: 3762K(3904K)->3762K(3904K) Class: 492K(576K)->492K(576K)
+[4.515s][79728][gc             ] GC(16) Pause Full (System.gc()) 521M->521M(4096M) 21.191ms
+[4.515s][79728][gc,cpu         ] GC(16) User=0.13s Sys=0.02s Real=0.02s
+[5.342s][79728][gc,start       ] GC(17) Pause Young (Normal) (G1 Evacuation Pause)
+[5.342s][79728][gc,task        ] GC(17) Using 9 workers of 9 for evacuation
+[5.383s][79728][gc,phases      ] GC(17)   Pre Evacuate Collection Set: 0.11ms
+[5.383s][79728][gc,phases      ] GC(17)   Merge Heap Roots: 0.14ms
+[5.383s][79728][gc,phases      ] GC(17)   Evacuate Collection Set: 40.79ms
+[5.383s][79728][gc,phases      ] GC(17)   Post Evacuate Collection Set: 0.20ms
+[5.383s][79728][gc,phases      ] GC(17)   Other: 0.06ms
+[5.383s][79728][gc,heap        ] GC(17) Eden regions: 266->0(284)
+[5.383s][79728][gc,heap        ] GC(17) Survivor regions: 0->34(34)
+[5.383s][79728][gc,heap        ] GC(17) Old regions: 9->243
+[5.383s][79728][gc,heap        ] GC(17) Humongous regions: 279->279
+[5.383s][79728][gc,metaspace   ] GC(17) Metaspace: 4255K(4480K)->4255K(4480K) NonClass: 3763K(3904K)->3763K(3904K) Class: 492K(576K)->492K(576K)
+[5.383s][79728][gc             ] GC(17) Pause Young (Normal) (G1 Evacuation Pause) 1093M->1097M(4096M) 41.432ms
+[5.383s][79728][gc,cpu         ] GC(17) User=0.31s Sys=0.02s Real=0.04s
+[5.423s][79728][gc,start       ] GC(18) Pause Full (System.gc())
+[5.423s][79728][gc,task        ] GC(18) Using 9 workers of 9 for full compaction
+[5.423s][79728][gc,phases,start] GC(18) Phase 1: Mark live objects
+[5.439s][79728][gc,phases      ] GC(18) Phase 1: Mark live objects 15.898ms
+[5.439s][79728][gc,phases,start] GC(18) Phase 2: Prepare compaction
+[5.439s][79728][gc,phases      ] GC(18) Phase 2: Prepare compaction 0.260ms
+[5.439s][79728][gc,phases,start] GC(18) Phase 3: Adjust pointers
+[5.444s][79728][gc,phases      ] GC(18) Phase 3: Adjust pointers 4.498ms
+[5.444s][79728][gc,phases,start] GC(18) Phase 4: Compact heap
+[5.444s][79728][gc,phases      ] GC(18) Phase 4: Compact heap 0.194ms
+[5.444s][79728][gc,phases,start] GC(18) Phase 5: Reset Metadata
+[5.444s][79728][gc,phases      ] GC(18) Phase 5: Reset Metadata 0.202ms
+[5.445s][79728][gc,heap        ] GC(18) Eden regions: 41->0(312)
+[5.445s][79728][gc,heap        ] GC(18) Survivor regions: 34->0(34)
+[5.445s][79728][gc,heap        ] GC(18) Old regions: 243->9
+[5.445s][79728][gc,heap        ] GC(18) Humongous regions: 279->259
+[5.445s][79728][gc,metaspace   ] GC(18) Metaspace: 4257K(4480K)->4257K(4480K) NonClass: 3765K(3904K)->3765K(3904K) Class: 492K(576K)->492K(576K)
+[5.445s][79728][gc             ] GC(18) Pause Full (System.gc()) 1177M->521M(4096M) 22.585ms
+[5.445s][79728][gc,cpu         ] GC(18) User=0.13s Sys=0.01s Real=0.02s
+[5.446s][79728][gc,start       ] GC(19) Pause Full (System.gc())
+[5.446s][79728][gc,task        ] GC(19) Using 9 workers of 9 for full compaction
+[5.446s][79728][gc,phases,start] GC(19) Phase 1: Mark live objects
+[5.461s][79728][gc,phases      ] GC(19) Phase 1: Mark live objects 15.117ms
+[5.461s][79728][gc,phases,start] GC(19) Phase 2: Prepare compaction
+[5.461s][79728][gc,phases      ] GC(19) Phase 2: Prepare compaction 0.171ms
+[5.461s][79728][gc,phases,start] GC(19) Phase 3: Adjust pointers
+[5.465s][79728][gc,phases      ] GC(19) Phase 3: Adjust pointers 3.818ms
+[5.465s][79728][gc,phases,start] GC(19) Phase 4: Compact heap
+[5.465s][79728][gc,phases      ] GC(19) Phase 4: Compact heap 0.130ms
+[5.465s][79728][gc,phases,start] GC(19) Phase 5: Reset Metadata
+[5.465s][79728][gc,phases      ] GC(19) Phase 5: Reset Metadata 0.141ms
+[5.466s][79728][gc,heap        ] GC(19) Eden regions: 1->0(312)
+[5.466s][79728][gc,heap        ] GC(19) Survivor regions: 0->0(34)
+[5.466s][79728][gc,heap        ] GC(19) Old regions: 9->9
+[5.466s][79728][gc,heap        ] GC(19) Humongous regions: 259->259
+[5.466s][79728][gc,metaspace   ] GC(19) Metaspace: 4257K(4480K)->4257K(4480K) NonClass: 3765K(3904K)->3765K(3904K) Class: 492K(576K)->492K(576K)
+[5.466s][79728][gc             ] GC(19) Pause Full (System.gc()) 521M->521M(4096M) 20.661ms
+[5.466s][79728][gc,cpu         ] GC(19) User=0.13s Sys=0.02s Real=0.03s
+[6.333s][79728][gc,start       ] GC(20) Pause Full (System.gc())
+[6.334s][79728][gc,task        ] GC(20) Using 9 workers of 9 for full compaction
+[6.334s][79728][gc,phases,start] GC(20) Phase 1: Mark live objects
+[6.350s][79728][gc,phases      ] GC(20) Phase 1: Mark live objects 15.832ms
+[6.350s][79728][gc,phases,start] GC(20) Phase 2: Prepare compaction
+[6.350s][79728][gc,phases      ] GC(20) Phase 2: Prepare compaction 0.244ms
+[6.350s][79728][gc,phases,start] GC(20) Phase 3: Adjust pointers
+[6.354s][79728][gc,phases      ] GC(20) Phase 3: Adjust pointers 4.060ms
+[6.354s][79728][gc,phases,start] GC(20) Phase 4: Compact heap
+[6.354s][79728][gc,phases      ] GC(20) Phase 4: Compact heap 0.201ms
+[6.354s][79728][gc,phases,start] GC(20) Phase 5: Reset Metadata
+[6.355s][79728][gc,phases      ] GC(20) Phase 5: Reset Metadata 0.144ms
+[6.356s][79728][gc,heap        ] GC(20) Eden regions: 306->0(312)
+[6.356s][79728][gc,heap        ] GC(20) Survivor regions: 0->0(34)
+[6.356s][79728][gc,heap        ] GC(20) Old regions: 9->9
+[6.356s][79728][gc,heap        ] GC(20) Humongous regions: 279->259
+[6.356s][79728][gc,metaspace   ] GC(20) Metaspace: 4281K(4480K)->4281K(4480K) NonClass: 3788K(3904K)->3788K(3904K) Class: 492K(576K)->492K(576K)
+[6.356s][79728][gc             ] GC(20) Pause Full (System.gc()) 1173M->521M(4096M) 22.598ms
+[6.356s][79728][gc,cpu         ] GC(20) User=0.13s Sys=0.03s Real=0.02s
+[6.356s][79728][gc,start       ] GC(21) Pause Full (System.gc())
+[6.356s][79728][gc,task        ] GC(21) Using 9 workers of 9 for full compaction
+[6.356s][79728][gc,phases,start] GC(21) Phase 1: Mark live objects
+[6.371s][79728][gc,phases      ] GC(21) Phase 1: Mark live objects 15.334ms
+[6.371s][79728][gc,phases,start] GC(21) Phase 2: Prepare compaction
+[6.371s][79728][gc,phases      ] GC(21) Phase 2: Prepare compaction 0.170ms
+[6.372s][79728][gc,phases,start] GC(21) Phase 3: Adjust pointers
+[6.376s][79728][gc,phases      ] GC(21) Phase 3: Adjust pointers 4.145ms
+[6.376s][79728][gc,phases,start] GC(21) Phase 4: Compact heap
+[6.376s][79728][gc,phases      ] GC(21) Phase 4: Compact heap 0.135ms
+[6.376s][79728][gc,phases,start] GC(21) Phase 5: Reset Metadata
+[6.376s][79728][gc,phases      ] GC(21) Phase 5: Reset Metadata 0.136ms
+[6.377s][79728][gc,heap        ] GC(21) Eden regions: 1->0(312)
+[6.377s][79728][gc,heap        ] GC(21) Survivor regions: 0->0(34)
+[6.377s][79728][gc,heap        ] GC(21) Old regions: 9->9
+[6.377s][79728][gc,heap        ] GC(21) Humongous regions: 259->259
+[6.377s][79728][gc,metaspace   ] GC(21) Metaspace: 4281K(4480K)->4281K(4480K) NonClass: 3789K(3904K)->3789K(3904K) Class: 492K(576K)->492K(576K)
+[6.377s][79728][gc             ] GC(21) Pause Full (System.gc()) 521M->521M(4096M) 21.227ms
+[6.377s][79728][gc,cpu         ] GC(21) User=0.13s Sys=0.02s Real=0.02s
+[7.215s][79728][gc,start       ] GC(22) Pause Full (System.gc())
+[7.215s][79728][gc,task        ] GC(22) Using 9 workers of 9 for full compaction
+[7.215s][79728][gc,phases,start] GC(22) Phase 1: Mark live objects
+[7.231s][79728][gc,phases      ] GC(22) Phase 1: Mark live objects 15.526ms
+[7.231s][79728][gc,phases,start] GC(22) Phase 2: Prepare compaction
+[7.231s][79728][gc,phases      ] GC(22) Phase 2: Prepare compaction 0.236ms
+[7.231s][79728][gc,phases,start] GC(22) Phase 3: Adjust pointers
+[7.235s][79728][gc,phases      ] GC(22) Phase 3: Adjust pointers 3.957ms
+[7.235s][79728][gc,phases,start] GC(22) Phase 4: Compact heap
+[7.235s][79728][gc,phases      ] GC(22) Phase 4: Compact heap 0.198ms
+[7.235s][79728][gc,phases,start] GC(22) Phase 5: Reset Metadata
+[7.236s][79728][gc,phases      ] GC(22) Phase 5: Reset Metadata 0.168ms
+[7.237s][79728][gc,heap        ] GC(22) Eden regions: 306->0(312)
+[7.237s][79728][gc,heap        ] GC(22) Survivor regions: 0->0(34)
+[7.237s][79728][gc,heap        ] GC(22) Old regions: 9->9
+[7.237s][79728][gc,heap        ] GC(22) Humongous regions: 279->259
+[7.237s][79728][gc,metaspace   ] GC(22) Metaspace: 4286K(4480K)->4286K(4480K) NonClass: 3793K(3904K)->3793K(3904K) Class: 492K(576K)->492K(576K)
+[7.237s][79728][gc             ] GC(22) Pause Full (System.gc()) 1173M->521M(4096M) 21.618ms
+[7.237s][79728][gc,cpu         ] GC(22) User=0.14s Sys=0.03s Real=0.03s
+[7.237s][79728][gc,start       ] GC(23) Pause Full (System.gc())
+[7.237s][79728][gc,task        ] GC(23) Using 9 workers of 9 for full compaction
+[7.237s][79728][gc,phases,start] GC(23) Phase 1: Mark live objects
+[7.253s][79728][gc,phases      ] GC(23) Phase 1: Mark live objects 15.576ms
+[7.253s][79728][gc,phases,start] GC(23) Phase 2: Prepare compaction
+[7.253s][79728][gc,phases      ] GC(23) Phase 2: Prepare compaction 0.164ms
+[7.253s][79728][gc,phases,start] GC(23) Phase 3: Adjust pointers
+[7.257s][79728][gc,phases      ] GC(23) Phase 3: Adjust pointers 4.023ms
+[7.257s][79728][gc,phases,start] GC(23) Phase 4: Compact heap
+[7.257s][79728][gc,phases      ] GC(23) Phase 4: Compact heap 0.134ms
+[7.257s][79728][gc,phases,start] GC(23) Phase 5: Reset Metadata
+[7.257s][79728][gc,phases      ] GC(23) Phase 5: Reset Metadata 0.189ms
+[7.259s][79728][gc,heap        ] GC(23) Eden regions: 1->0(312)
+[7.259s][79728][gc,heap        ] GC(23) Survivor regions: 0->0(34)
+[7.259s][79728][gc,heap        ] GC(23) Old regions: 9->9
+[7.259s][79728][gc,heap        ] GC(23) Humongous regions: 259->259
+[7.259s][79728][gc,metaspace   ] GC(23) Metaspace: 4286K(4480K)->4286K(4480K) NonClass: 3793K(3904K)->3793K(3904K) Class: 492K(576K)->492K(576K)
+[7.259s][79728][gc             ] GC(23) Pause Full (System.gc()) 521M->521M(4096M) 21.415ms
+[7.259s][79728][gc,cpu         ] GC(23) User=0.13s Sys=0.02s Real=0.02s
+[8.097s][79728][gc,start       ] GC(24) Pause Full (System.gc())
+[8.097s][79728][gc,task        ] GC(24) Using 9 workers of 9 for full compaction
+[8.097s][79728][gc,phases,start] GC(24) Phase 1: Mark live objects
+[8.112s][79728][gc,phases      ] GC(24) Phase 1: Mark live objects 15.563ms
+[8.112s][79728][gc,phases,start] GC(24) Phase 2: Prepare compaction
+[8.113s][79728][gc,phases      ] GC(24) Phase 2: Prepare compaction 0.239ms
+[8.113s][79728][gc,phases,start] GC(24) Phase 3: Adjust pointers
+[8.117s][79728][gc,phases      ] GC(24) Phase 3: Adjust pointers 4.077ms
+[8.117s][79728][gc,phases,start] GC(24) Phase 4: Compact heap
+[8.117s][79728][gc,phases      ] GC(24) Phase 4: Compact heap 0.258ms
+[8.117s][79728][gc,phases,start] GC(24) Phase 5: Reset Metadata
+[8.117s][79728][gc,phases      ] GC(24) Phase 5: Reset Metadata 0.148ms
+[8.118s][79728][gc,heap        ] GC(24) Eden regions: 306->0(312)
+[8.118s][79728][gc,heap        ] GC(24) Survivor regions: 0->0(34)
+[8.118s][79728][gc,heap        ] GC(24) Old regions: 9->9
+[8.118s][79728][gc,heap        ] GC(24) Humongous regions: 279->259
+[8.118s][79728][gc,metaspace   ] GC(24) Metaspace: 4289K(4480K)->4289K(4480K) NonClass: 3796K(3904K)->3796K(3904K) Class: 492K(576K)->492K(576K)
+[8.118s][79728][gc             ] GC(24) Pause Full (System.gc()) 1173M->521M(4096M) 21.808ms
+[8.118s][79728][gc,cpu         ] GC(24) User=0.14s Sys=0.03s Real=0.02s
+[8.118s][79728][gc,start       ] GC(25) Pause Full (System.gc())
+[8.119s][79728][gc,task        ] GC(25) Using 9 workers of 9 for full compaction
+[8.119s][79728][gc,phases,start] GC(25) Phase 1: Mark live objects
+[8.134s][79728][gc,phases      ] GC(25) Phase 1: Mark live objects 15.496ms
+[8.134s][79728][gc,phases,start] GC(25) Phase 2: Prepare compaction
+[8.134s][79728][gc,phases      ] GC(25) Phase 2: Prepare compaction 0.169ms
+[8.134s][79728][gc,phases,start] GC(25) Phase 3: Adjust pointers
+[8.138s][79728][gc,phases      ] GC(25) Phase 3: Adjust pointers 3.921ms
+[8.138s][79728][gc,phases,start] GC(25) Phase 4: Compact heap
+[8.138s][79728][gc,phases      ] GC(25) Phase 4: Compact heap 0.134ms
+[8.138s][79728][gc,phases,start] GC(25) Phase 5: Reset Metadata
+[8.138s][79728][gc,phases      ] GC(25) Phase 5: Reset Metadata 0.138ms
+[8.140s][79728][gc,heap        ] GC(25) Eden regions: 1->0(312)
+[8.140s][79728][gc,heap        ] GC(25) Survivor regions: 0->0(34)
+[8.140s][79728][gc,heap        ] GC(25) Old regions: 9->9
+[8.140s][79728][gc,heap        ] GC(25) Humongous regions: 259->259
+[8.140s][79728][gc,metaspace   ] GC(25) Metaspace: 4289K(4480K)->4289K(4480K) NonClass: 3796K(3904K)->3796K(3904K) Class: 492K(576K)->492K(576K)
+[8.140s][79728][gc             ] GC(25) Pause Full (System.gc()) 521M->521M(4096M) 21.146ms
+[8.140s][79728][gc,cpu         ] GC(25) User=0.13s Sys=0.02s Real=0.02s
+[8.982s][79728][gc,start       ] GC(26) Pause Full (System.gc())
+[8.982s][79728][gc,task        ] GC(26) Using 9 workers of 9 for full compaction
+[8.982s][79728][gc,phases,start] GC(26) Phase 1: Mark live objects
+[8.998s][79728][gc,phases      ] GC(26) Phase 1: Mark live objects 15.814ms
+[8.998s][79728][gc,phases,start] GC(26) Phase 2: Prepare compaction
+[8.999s][79728][gc,phases      ] GC(26) Phase 2: Prepare compaction 0.260ms
+[8.999s][79728][gc,phases,start] GC(26) Phase 3: Adjust pointers
+[9.003s][79728][gc,phases      ] GC(26) Phase 3: Adjust pointers 4.228ms
+[9.003s][79728][gc,phases,start] GC(26) Phase 4: Compact heap
+[9.003s][79728][gc,phases      ] GC(26) Phase 4: Compact heap 0.224ms
+[9.003s][79728][gc,phases,start] GC(26) Phase 5: Reset Metadata
+[9.003s][79728][gc,phases      ] GC(26) Phase 5: Reset Metadata 0.168ms
+[9.005s][79728][gc,heap        ] GC(26) Eden regions: 306->0(312)
+[9.005s][79728][gc,heap        ] GC(26) Survivor regions: 0->0(34)
+[9.005s][79728][gc,heap        ] GC(26) Old regions: 9->9
+[9.005s][79728][gc,heap        ] GC(26) Humongous regions: 279->259
+[9.005s][79728][gc,metaspace   ] GC(26) Metaspace: 4297K(4480K)->4297K(4480K) NonClass: 3804K(3904K)->3804K(3904K) Class: 492K(576K)->492K(576K)
+[9.005s][79728][gc             ] GC(26) Pause Full (System.gc()) 1173M->521M(4096M) 22.281ms
+[9.005s][79728][gc,cpu         ] GC(26) User=0.14s Sys=0.02s Real=0.02s
+[9.005s][79728][gc,start       ] GC(27) Pause Full (System.gc())
+[9.005s][79728][gc,task        ] GC(27) Using 9 workers of 9 for full compaction
+[9.005s][79728][gc,phases,start] GC(27) Phase 1: Mark live objects
+[9.021s][79728][gc,phases      ] GC(27) Phase 1: Mark live objects 15.738ms
+[9.021s][79728][gc,phases,start] GC(27) Phase 2: Prepare compaction
+[9.021s][79728][gc,phases      ] GC(27) Phase 2: Prepare compaction 0.170ms
+[9.021s][79728][gc,phases,start] GC(27) Phase 3: Adjust pointers
+[9.025s][79728][gc,phases      ] GC(27) Phase 3: Adjust pointers 4.333ms
+[9.025s][79728][gc,phases,start] GC(27) Phase 4: Compact heap
+[9.025s][79728][gc,phases      ] GC(27) Phase 4: Compact heap 0.141ms
+[9.025s][79728][gc,phases,start] GC(27) Phase 5: Reset Metadata
+[9.025s][79728][gc,phases      ] GC(27) Phase 5: Reset Metadata 0.159ms
+[9.027s][79728][gc,heap        ] GC(27) Eden regions: 1->0(312)
+[9.027s][79728][gc,heap        ] GC(27) Survivor regions: 0->0(34)
+[9.027s][79728][gc,heap        ] GC(27) Old regions: 9->9
+[9.027s][79728][gc,heap        ] GC(27) Humongous regions: 259->259
+[9.027s][79728][gc,metaspace   ] GC(27) Metaspace: 4297K(4480K)->4297K(4480K) NonClass: 3804K(3904K)->3804K(3904K) Class: 492K(576K)->492K(576K)
+[9.027s][79728][gc             ] GC(27) Pause Full (System.gc()) 521M->521M(4096M) 21.910ms
+[9.027s][79728][gc,cpu         ] GC(27) User=0.13s Sys=0.02s Real=0.03s
+[9.860s][79728][gc,start       ] GC(28) Pause Full (System.gc())
+[9.860s][79728][gc,task        ] GC(28) Using 9 workers of 9 for full compaction
+[9.860s][79728][gc,phases,start] GC(28) Phase 1: Mark live objects
+[9.875s][79728][gc,phases      ] GC(28) Phase 1: Mark live objects 15.610ms
+[9.875s][79728][gc,phases,start] GC(28) Phase 2: Prepare compaction
+[9.876s][79728][gc,phases      ] GC(28) Phase 2: Prepare compaction 0.253ms
+[9.876s][79728][gc,phases,start] GC(28) Phase 3: Adjust pointers
+[9.879s][79728][gc,phases      ] GC(28) Phase 3: Adjust pointers 3.891ms
+[9.879s][79728][gc,phases,start] GC(28) Phase 4: Compact heap
+[9.880s][79728][gc,phases      ] GC(28) Phase 4: Compact heap 0.186ms
+[9.880s][79728][gc,phases,start] GC(28) Phase 5: Reset Metadata
+[9.880s][79728][gc,phases      ] GC(28) Phase 5: Reset Metadata 0.144ms
+[9.881s][79728][gc,heap        ] GC(28) Eden regions: 306->0(312)
+[9.881s][79728][gc,heap        ] GC(28) Survivor regions: 0->0(34)
+[9.881s][79728][gc,heap        ] GC(28) Old regions: 9->9
+[9.881s][79728][gc,heap        ] GC(28) Humongous regions: 279->259
+[9.881s][79728][gc,metaspace   ] GC(28) Metaspace: 4297K(4480K)->4297K(4480K) NonClass: 3804K(3904K)->3804K(3904K) Class: 492K(576K)->492K(576K)
+[9.881s][79728][gc             ] GC(28) Pause Full (System.gc()) 1172M->521M(4096M) 21.642ms
+[9.881s][79728][gc,cpu         ] GC(28) User=0.13s Sys=0.02s Real=0.02s
+[9.881s][79728][gc,start       ] GC(29) Pause Full (System.gc())
+[9.881s][79728][gc,task        ] GC(29) Using 9 workers of 9 for full compaction
+[9.881s][79728][gc,phases,start] GC(29) Phase 1: Mark live objects
+[9.897s][79728][gc,phases      ] GC(29) Phase 1: Mark live objects 15.642ms
+[9.897s][79728][gc,phases,start] GC(29) Phase 2: Prepare compaction
+[9.897s][79728][gc,phases      ] GC(29) Phase 2: Prepare compaction 0.163ms
+[9.897s][79728][gc,phases,start] GC(29) Phase 3: Adjust pointers
+[9.901s][79728][gc,phases      ] GC(29) Phase 3: Adjust pointers 3.846ms
+[9.901s][79728][gc,phases,start] GC(29) Phase 4: Compact heap
+[9.901s][79728][gc,phases      ] GC(29) Phase 4: Compact heap 0.129ms
+[9.901s][79728][gc,phases,start] GC(29) Phase 5: Reset Metadata
+[9.901s][79728][gc,phases      ] GC(29) Phase 5: Reset Metadata 0.169ms
+[9.903s][79728][gc,heap        ] GC(29) Eden regions: 1->0(312)
+[9.903s][79728][gc,heap        ] GC(29) Survivor regions: 0->0(34)
+[9.903s][79728][gc,heap        ] GC(29) Old regions: 9->9
+[9.903s][79728][gc,heap        ] GC(29) Humongous regions: 259->259
+[9.903s][79728][gc,metaspace   ] GC(29) Metaspace: 4297K(4480K)->4297K(4480K) NonClass: 3804K(3904K)->3804K(3904K) Class: 492K(576K)->492K(576K)
+[9.903s][79728][gc             ] GC(29) Pause Full (System.gc()) 521M->521M(4096M) 21.282ms
+[9.903s][79728][gc,cpu         ] GC(29) User=0.13s Sys=0.03s Real=0.02s
+[10.738s][79728][gc,start       ] GC(30) Pause Full (System.gc())
+[10.738s][79728][gc,task        ] GC(30) Using 9 workers of 9 for full compaction
+[10.738s][79728][gc,phases,start] GC(30) Phase 1: Mark live objects
+[10.753s][79728][gc,phases      ] GC(30) Phase 1: Mark live objects 15.538ms
+[10.753s][79728][gc,phases,start] GC(30) Phase 2: Prepare compaction
+[10.754s][79728][gc,phases      ] GC(30) Phase 2: Prepare compaction 0.267ms
+[10.754s][79728][gc,phases,start] GC(30) Phase 3: Adjust pointers
+[10.758s][79728][gc,phases      ] GC(30) Phase 3: Adjust pointers 4.257ms
+[10.758s][79728][gc,phases,start] GC(30) Phase 4: Compact heap
+[10.758s][79728][gc,phases      ] GC(30) Phase 4: Compact heap 0.203ms
+[10.758s][79728][gc,phases,start] GC(30) Phase 5: Reset Metadata
+[10.758s][79728][gc,phases      ] GC(30) Phase 5: Reset Metadata 0.143ms
+[10.760s][79728][gc,heap        ] GC(30) Eden regions: 306->0(312)
+[10.760s][79728][gc,heap        ] GC(30) Survivor regions: 0->0(34)
+[10.760s][79728][gc,heap        ] GC(30) Old regions: 9->9
+[10.760s][79728][gc,heap        ] GC(30) Humongous regions: 279->259
+[10.760s][79728][gc,metaspace   ] GC(30) Metaspace: 4308K(4480K)->4308K(4480K) NonClass: 3815K(3904K)->3815K(3904K) Class: 492K(576K)->492K(576K)
+[10.760s][79728][gc             ] GC(30) Pause Full (System.gc()) 1172M->521M(4096M) 21.793ms
+[10.760s][79728][gc,cpu         ] GC(30) User=0.14s Sys=0.02s Real=0.02s
+[10.760s][79728][gc,start       ] GC(31) Pause Full (System.gc())
+[10.760s][79728][gc,task        ] GC(31) Using 9 workers of 9 for full compaction
+[10.760s][79728][gc,phases,start] GC(31) Phase 1: Mark live objects
+[10.775s][79728][gc,phases      ] GC(31) Phase 1: Mark live objects 15.522ms
+[10.775s][79728][gc,phases,start] GC(31) Phase 2: Prepare compaction
+[10.775s][79728][gc,phases      ] GC(31) Phase 2: Prepare compaction 0.167ms
+[10.775s][79728][gc,phases,start] GC(31) Phase 3: Adjust pointers
+[10.779s][79728][gc,phases      ] GC(31) Phase 3: Adjust pointers 3.871ms
+[10.779s][79728][gc,phases,start] GC(31) Phase 4: Compact heap
+[10.779s][79728][gc,phases      ] GC(31) Phase 4: Compact heap 0.131ms
+[10.779s][79728][gc,phases,start] GC(31) Phase 5: Reset Metadata
+[10.780s][79728][gc,phases      ] GC(31) Phase 5: Reset Metadata 0.137ms
+[10.781s][79728][gc,heap        ] GC(31) Eden regions: 1->0(312)
+[10.781s][79728][gc,heap        ] GC(31) Survivor regions: 0->0(34)
+[10.781s][79728][gc,heap        ] GC(31) Old regions: 9->9
+[10.781s][79728][gc,heap        ] GC(31) Humongous regions: 259->259
+[10.781s][79728][gc,metaspace   ] GC(31) Metaspace: 4309K(4480K)->4309K(4480K) NonClass: 3816K(3904K)->3816K(3904K) Class: 492K(576K)->492K(576K)
+[10.781s][79728][gc             ] GC(31) Pause Full (System.gc()) 521M->521M(4096M) 21.118ms
+[10.781s][79728][gc,cpu         ] GC(31) User=0.13s Sys=0.02s Real=0.02s
+[11.627s][79728][gc,start       ] GC(32) Pause Full (System.gc())
+[11.627s][79728][gc,task        ] GC(32) Using 9 workers of 9 for full compaction
+[11.627s][79728][gc,phases,start] GC(32) Phase 1: Mark live objects
+[11.642s][79728][gc,phases      ] GC(32) Phase 1: Mark live objects 15.430ms
+[11.642s][79728][gc,phases,start] GC(32) Phase 2: Prepare compaction
+[11.643s][79728][gc,phases      ] GC(32) Phase 2: Prepare compaction 0.234ms
+[11.643s][79728][gc,phases,start] GC(32) Phase 3: Adjust pointers
+[11.647s][79728][gc,phases      ] GC(32) Phase 3: Adjust pointers 3.987ms
+[11.647s][79728][gc,phases,start] GC(32) Phase 4: Compact heap
+[11.647s][79728][gc,phases      ] GC(32) Phase 4: Compact heap 0.181ms
+[11.647s][79728][gc,phases,start] GC(32) Phase 5: Reset Metadata
+[11.647s][79728][gc,phases      ] GC(32) Phase 5: Reset Metadata 0.138ms
+[11.648s][79728][gc,heap        ] GC(32) Eden regions: 306->0(312)
+[11.648s][79728][gc,heap        ] GC(32) Survivor regions: 0->0(34)
+[11.648s][79728][gc,heap        ] GC(32) Old regions: 9->9
+[11.648s][79728][gc,heap        ] GC(32) Humongous regions: 279->259
+[11.648s][79728][gc,metaspace   ] GC(32) Metaspace: 4313K(4480K)->4313K(4480K) NonClass: 3821K(3904K)->3821K(3904K) Class: 492K(576K)->492K(576K)
+[11.648s][79728][gc             ] GC(32) Pause Full (System.gc()) 1172M->521M(4096M) 21.339ms
+[11.648s][79728][gc,cpu         ] GC(32) User=0.13s Sys=0.02s Real=0.02s
+[11.648s][79728][gc,start       ] GC(33) Pause Full (System.gc())
+[11.648s][79728][gc,task        ] GC(33) Using 9 workers of 9 for full compaction
+[11.648s][79728][gc,phases,start] GC(33) Phase 1: Mark live objects
+[11.664s][79728][gc,phases      ] GC(33) Phase 1: Mark live objects 15.416ms
+[11.664s][79728][gc,phases,start] GC(33) Phase 2: Prepare compaction
+[11.664s][79728][gc,phases      ] GC(33) Phase 2: Prepare compaction 0.170ms
+[11.664s][79728][gc,phases,start] GC(33) Phase 3: Adjust pointers
+[11.668s][79728][gc,phases      ] GC(33) Phase 3: Adjust pointers 3.940ms
+[11.668s][79728][gc,phases,start] GC(33) Phase 4: Compact heap
+[11.668s][79728][gc,phases      ] GC(33) Phase 4: Compact heap 0.131ms
+[11.668s][79728][gc,phases,start] GC(33) Phase 5: Reset Metadata
+[11.668s][79728][gc,phases      ] GC(33) Phase 5: Reset Metadata 0.156ms
+[11.669s][79728][gc,heap        ] GC(33) Eden regions: 1->0(312)
+[11.669s][79728][gc,heap        ] GC(33) Survivor regions: 0->0(34)
+[11.669s][79728][gc,heap        ] GC(33) Old regions: 9->9
+[11.669s][79728][gc,heap        ] GC(33) Humongous regions: 259->259
+[11.669s][79728][gc,metaspace   ] GC(33) Metaspace: 4313K(4480K)->4313K(4480K) NonClass: 3821K(3904K)->3821K(3904K) Class: 492K(576K)->492K(576K)
+[11.669s][79728][gc             ] GC(33) Pause Full (System.gc()) 521M->521M(4096M) 21.133ms
+[11.669s][79728][gc,cpu         ] GC(33) User=0.14s Sys=0.03s Real=0.02s
+[12.506s][79728][gc,start       ] GC(34) Pause Full (System.gc())
+[12.506s][79728][gc,task        ] GC(34) Using 9 workers of 9 for full compaction
+[12.507s][79728][gc,phases,start] GC(34) Phase 1: Mark live objects
+[12.522s][79728][gc,phases      ] GC(34) Phase 1: Mark live objects 15.871ms
+[12.522s][79728][gc,phases,start] GC(34) Phase 2: Prepare compaction
+[12.523s][79728][gc,phases      ] GC(34) Phase 2: Prepare compaction 0.238ms
+[12.523s][79728][gc,phases,start] GC(34) Phase 3: Adjust pointers
+[12.527s][79728][gc,phases      ] GC(34) Phase 3: Adjust pointers 4.322ms
+[12.527s][79728][gc,phases,start] GC(34) Phase 4: Compact heap
+[12.527s][79728][gc,phases      ] GC(34) Phase 4: Compact heap 0.209ms
+[12.527s][79728][gc,phases,start] GC(34) Phase 5: Reset Metadata
+[12.527s][79728][gc,phases      ] GC(34) Phase 5: Reset Metadata 0.140ms
+[12.529s][79728][gc,heap        ] GC(34) Eden regions: 306->0(312)
+[12.529s][79728][gc,heap        ] GC(34) Survivor regions: 0->0(34)
+[12.529s][79728][gc,heap        ] GC(34) Old regions: 9->9
+[12.529s][79728][gc,heap        ] GC(34) Humongous regions: 279->259
+[12.529s][79728][gc,metaspace   ] GC(34) Metaspace: 4321K(4544K)->4321K(4544K) NonClass: 3828K(3968K)->3828K(3968K) Class: 492K(576K)->492K(576K)
+[12.529s][79728][gc             ] GC(34) Pause Full (System.gc()) 1172M->521M(4096M) 22.234ms
+[12.529s][79728][gc,cpu         ] GC(34) User=0.14s Sys=0.02s Real=0.02s
+[12.529s][79728][gc,start       ] GC(35) Pause Full (System.gc())
+[12.529s][79728][gc,task        ] GC(35) Using 9 workers of 9 for full compaction
+[12.529s][79728][gc,phases,start] GC(35) Phase 1: Mark live objects
+[12.544s][79728][gc,phases      ] GC(35) Phase 1: Mark live objects 15.269ms
+[12.544s][79728][gc,phases,start] GC(35) Phase 2: Prepare compaction
+[12.544s][79728][gc,phases      ] GC(35) Phase 2: Prepare compaction 0.170ms
+[12.544s][79728][gc,phases,start] GC(35) Phase 3: Adjust pointers
+[12.548s][79728][gc,phases      ] GC(35) Phase 3: Adjust pointers 3.925ms
+[12.548s][79728][gc,phases,start] GC(35) Phase 4: Compact heap
+[12.548s][79728][gc,phases      ] GC(35) Phase 4: Compact heap 0.133ms
+[12.548s][79728][gc,phases,start] GC(35) Phase 5: Reset Metadata
+[12.549s][79728][gc,phases      ] GC(35) Phase 5: Reset Metadata 0.146ms
+[12.550s][79728][gc,heap        ] GC(35) Eden regions: 1->0(312)
+[12.550s][79728][gc,heap        ] GC(35) Survivor regions: 0->0(34)
+[12.550s][79728][gc,heap        ] GC(35) Old regions: 9->9
+[12.550s][79728][gc,heap        ] GC(35) Humongous regions: 259->259
+[12.550s][79728][gc,metaspace   ] GC(35) Metaspace: 4321K(4544K)->4321K(4544K) NonClass: 3829K(3968K)->3829K(3968K) Class: 492K(576K)->492K(576K)
+[12.550s][79728][gc             ] GC(35) Pause Full (System.gc()) 522M->521M(4096M) 20.971ms
+[12.550s][79728][gc,cpu         ] GC(35) User=0.13s Sys=0.02s Real=0.02s
+[13.379s][79728][gc,start       ] GC(36) Pause Full (System.gc())
+[13.379s][79728][gc,task        ] GC(36) Using 9 workers of 9 for full compaction
+[13.379s][79728][gc,phases,start] GC(36) Phase 1: Mark live objects
+[13.395s][79728][gc,phases      ] GC(36) Phase 1: Mark live objects 15.531ms
+[13.395s][79728][gc,phases,start] GC(36) Phase 2: Prepare compaction
+[13.395s][79728][gc,phases      ] GC(36) Phase 2: Prepare compaction 0.269ms
+[13.395s][79728][gc,phases,start] GC(36) Phase 3: Adjust pointers
+[13.399s][79728][gc,phases      ] GC(36) Phase 3: Adjust pointers 4.003ms
+[13.399s][79728][gc,phases,start] GC(36) Phase 4: Compact heap
+[13.399s][79728][gc,phases      ] GC(36) Phase 4: Compact heap 0.199ms
+[13.399s][79728][gc,phases,start] GC(36) Phase 5: Reset Metadata
+[13.399s][79728][gc,phases      ] GC(36) Phase 5: Reset Metadata 0.151ms
+[13.401s][79728][gc,heap        ] GC(36) Eden regions: 307->0(312)
+[13.401s][79728][gc,heap        ] GC(36) Survivor regions: 0->0(34)
+[13.401s][79728][gc,heap        ] GC(36) Old regions: 9->9
+[13.401s][79728][gc,heap        ] GC(36) Humongous regions: 279->259
+[13.401s][79728][gc,metaspace   ] GC(36) Metaspace: 4325K(4544K)->4325K(4544K) NonClass: 3832K(3968K)->3832K(3968K) Class: 492K(576K)->492K(576K)
+[13.401s][79728][gc             ] GC(36) Pause Full (System.gc()) 1173M->521M(4096M) 21.590ms
+[13.401s][79728][gc,cpu         ] GC(36) User=0.14s Sys=0.03s Real=0.02s
+[13.401s][79728][gc,start       ] GC(37) Pause Full (System.gc())
+[13.401s][79728][gc,task        ] GC(37) Using 9 workers of 9 for full compaction
+[13.401s][79728][gc,phases,start] GC(37) Phase 1: Mark live objects
+[13.416s][79728][gc,phases      ] GC(37) Phase 1: Mark live objects 15.472ms
+[13.416s][79728][gc,phases,start] GC(37) Phase 2: Prepare compaction
+[13.417s][79728][gc,phases      ] GC(37) Phase 2: Prepare compaction 0.177ms
+[13.417s][79728][gc,phases,start] GC(37) Phase 3: Adjust pointers
+[13.421s][79728][gc,phases      ] GC(37) Phase 3: Adjust pointers 4.350ms
+[13.421s][79728][gc,phases,start] GC(37) Phase 4: Compact heap
+[13.421s][79728][gc,phases      ] GC(37) Phase 4: Compact heap 0.141ms
+[13.421s][79728][gc,phases,start] GC(37) Phase 5: Reset Metadata
+[13.421s][79728][gc,phases      ] GC(37) Phase 5: Reset Metadata 0.148ms
+[13.422s][79728][gc,heap        ] GC(37) Eden regions: 1->0(312)
+[13.422s][79728][gc,heap        ] GC(37) Survivor regions: 0->0(34)
+[13.422s][79728][gc,heap        ] GC(37) Old regions: 9->9
+[13.422s][79728][gc,heap        ] GC(37) Humongous regions: 259->259
+[13.422s][79728][gc,metaspace   ] GC(37) Metaspace: 4325K(4544K)->4325K(4544K) NonClass: 3832K(3968K)->3832K(3968K) Class: 492K(576K)->492K(576K)
+[13.422s][79728][gc             ] GC(37) Pause Full (System.gc()) 521M->521M(4096M) 21.666ms
+[13.423s][79728][gc,cpu         ] GC(37) User=0.13s Sys=0.02s Real=0.02s
+[14.268s][79728][gc,exit        ] Heap
+[14.269s][79728][gc,exit        ]  garbage-first heap   total reserved 4194304K, committed 4194304K, used 1203831K [0x0000000300800000, 0x0000000400800000)
+[14.269s][79728][gc,exit        ]   region size 2048K, 307 young (628736K), 0 survivors (0K)
+[14.269s][79728][gc,exit        ]  Metaspace       used 4390K, committed 4544K, reserved 1114112K
+[14.269s][79728][gc,exit        ]   class space    used 501K, committed 576K, reserved 1048576K
