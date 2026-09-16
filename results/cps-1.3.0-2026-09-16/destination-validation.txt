@@ -1,0 +1,22 @@
+SLF4J(W): No SLF4J providers were found.
+SLF4J(W): Defaulting to no-operation (NOP) logger implementation
+SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.
+SLF4J(W): Class path contains SLF4J bindings targeting slf4j-api versions 1.7.x or earlier.
+SLF4J(W): Ignoring binding found at [jar:file:/Users/karenbarseghyan/Projects/j-util/performance-lab/benchmark-jmh/target/benchmarks.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J(W): See https://www.slf4j.org/codes.html#ignoredBindings for an explanation.
+validated rows=100000 batch=8192 path=0 all eight columns
+validated rows=100000 batch=8192 path=1 all eight columns
+validated rows=100000 batch=8192 path=2 all eight columns
+validated rows=100000 batch=8192 path=3 all eight columns
+validated rows=100000 batch=1000000 path=0 all eight columns
+validated rows=100000 batch=1000000 path=1 all eight columns
+validated rows=100000 batch=1000000 path=2 all eight columns
+validated rows=100000 batch=1000000 path=3 all eight columns
+validated rows=10000000 batch=8192 path=0 all eight columns
+validated rows=10000000 batch=8192 path=1 all eight columns
+validated rows=10000000 batch=8192 path=2 all eight columns
+validated rows=10000000 batch=8192 path=3 all eight columns
+validated rows=10000000 batch=1000000 path=0 all eight columns
+validated rows=10000000 batch=1000000 path=1 all eight columns
+validated rows=10000000 batch=1000000 path=2 all eight columns
+validated rows=10000000 batch=1000000 path=3 all eight columns

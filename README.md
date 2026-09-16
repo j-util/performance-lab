@@ -269,6 +269,10 @@ java -jar benchmark-jmh/target/benchmarks.jar \
   -rf json -rff target/cps-1.3-destination.json
 ```
 
+The [2026-09-16 CPS 1.3 evaluation](results/cps-1.3.0-2026-09-16/README.md)
+records both runs, compatibility checks and a **BLOCKED** performance verdict
+because the large-workload timings did not stabilize.
+
 Repeat the large-row matrix independently before drawing a release conclusion.
 Report the JMH confidence intervals, per-fork variation, normalized allocation,
 JDK/OS/CPU and repository SHAs alongside results. Allocation includes executor

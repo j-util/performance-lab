@@ -1,0 +1,49 @@
++ /Users/karenbarseghyan/.sdkman/candidates/java/26.0.1-tem/bin/javac --release 8 -cp /tmp/cps-1.3-readiness/published/columnar-projection-store-1.2.0.jar -processorpath /tmp/cps-1.3-readiness/published/columnar-projection-store-processor-1.2.0.jar -processor io.github.jutil.columnarprojection.processor.ProjectionSchemaProcessor -d /tmp/cps-1.3-readiness/consumer/1.2.0 -s /tmp/cps-1.3-readiness/consumer/1.2.0 /tmp/cps-1.3-readiness/consumer/Trade.java
+warning: [options] source value 8 is obsolete and will be removed in a future release
+warning: [options] target value 8 is obsolete and will be removed in a future release
+warning: [options] To suppress warnings about obsolete options, use -Xlint:-options.
+3 warnings
++ /Users/karenbarseghyan/.sdkman/candidates/java/26.0.1-tem/bin/jar cf /tmp/cps-1.3-readiness/consumer/1.2.0.jar -C /tmp/cps-1.3-readiness/consumer/1.2.0 .
++ /Users/karenbarseghyan/.sdkman/candidates/java/26.0.1-tem/bin/javac --release 8 -cp /Users/karenbarseghyan/.m2/repository/io/github/j-util/columnar-projection-store/1.3.0-SNAPSHOT/columnar-projection-store-1.3.0-SNAPSHOT.jar -processorpath /Users/karenbarseghyan/.m2/repository/io/github/j-util/columnar-projection-store-processor/1.3.0-SNAPSHOT/columnar-projection-store-processor-1.3.0-SNAPSHOT.jar -processor io.github.jutil.columnarprojection.processor.ProjectionSchemaProcessor -d /tmp/cps-1.3-readiness/consumer/1.3.0-SNAPSHOT -s /tmp/cps-1.3-readiness/consumer/1.3.0-SNAPSHOT /tmp/cps-1.3-readiness/consumer/Trade.java
+warning: [options] source value 8 is obsolete and will be removed in a future release
+warning: [options] target value 8 is obsolete and will be removed in a future release
+warning: [options] To suppress warnings about obsolete options, use -Xlint:-options.
+3 warnings
++ /Users/karenbarseghyan/.sdkman/candidates/java/26.0.1-tem/bin/jar cf /tmp/cps-1.3-readiness/consumer/1.3.0-SNAPSHOT.jar -C /tmp/cps-1.3-readiness/consumer/1.3.0-SNAPSHOT .
++ /Users/karenbarseghyan/.sdkman/candidates/java/26.0.1-tem/bin/javac --release 8 -proc:none -cp /tmp/cps-1.3-readiness/consumer/1.3.0-SNAPSHOT:/Users/karenbarseghyan/.m2/repository/io/github/j-util/columnar-projection-store/1.3.0-SNAPSHOT/columnar-projection-store-1.3.0-SNAPSHOT.jar -d /tmp/cps-1.3-readiness/consumer/1.3.0-SNAPSHOT /tmp/cps-1.3-readiness/consumer/Main.java
+warning: [options] source value 8 is obsolete and will be removed in a future release
+warning: [options] target value 8 is obsolete and will be removed in a future release
+warning: [options] To suppress warnings about obsolete options, use -Xlint:-options.
+3 warnings
++ /Users/karenbarseghyan/.sdkman/candidates/java/26.0.1-tem/bin/java -cp /tmp/cps-1.3-readiness/consumer/1.3.0-SNAPSHOT:/Users/karenbarseghyan/.m2/repository/io/github/j-util/columnar-projection-store/1.3.0-SNAPSHOT/columnar-projection-store-1.3.0-SNAPSHOT.jar consumer.Main
+clean-consumer-ok
++ /tmp/cps-1.3-readiness/jdk8u504-b01/Contents/Home/bin/java -cp /tmp/cps-1.3-readiness/consumer/1.3.0-SNAPSHOT:/Users/karenbarseghyan/.m2/repository/io/github/j-util/columnar-projection-store/1.3.0-SNAPSHOT/columnar-projection-store-1.3.0-SNAPSHOT.jar consumer.Main
+clean-consumer-ok
++ /Users/karenbarseghyan/.sdkman/candidates/java/26.0.1-tem/bin/javadoc -quiet -Xdoclint:all -Werror -classpath /Users/karenbarseghyan/.m2/repository/io/github/j-util/columnar-projection-store/1.3.0-SNAPSHOT/columnar-projection-store-1.3.0-SNAPSHOT.jar -d /tmp/cps-1.3-readiness/consumer/javadoc /tmp/cps-1.3-readiness/consumer/Trade.java /tmp/cps-1.3-readiness/consumer/1.3.0-SNAPSHOT/consumer/TradeStore.java /tmp/cps-1.3-readiness/consumer/1.3.0-SNAPSHOT/consumer/Trade__ColumnarProjectionStore.java
+Candidate and consumer class major versions: 52
++ /Users/karenbarseghyan/.sdkman/candidates/java/26.0.1-tem/bin/java -jar /tmp/cps-1.3-readiness/japicmp.jar --old /tmp/cps-1.3-readiness/consumer/1.2.0.jar --new /tmp/cps-1.3-readiness/consumer/1.3.0-SNAPSHOT.jar --old-classpath /tmp/cps-1.3-readiness/published/columnar-projection-store-1.2.0.jar --new-classpath /Users/karenbarseghyan/.m2/repository/io/github/j-util/columnar-projection-store/1.3.0-SNAPSHOT/columnar-projection-store-1.3.0-SNAPSHOT.jar --only-modified --error-on-binary-incompatibility --error-on-source-incompatibility
+Comparing source compatibility of /tmp/cps-1.3-readiness/consumer/1.3.0-SNAPSHOT.jar against /tmp/cps-1.3-readiness/consumer/1.2.0.jar
+***  MODIFIED CLASS: PUBLIC FINAL consumer.Trade__ColumnarProjectionStore  (not serializable)
+	===  CLASS FILE FORMAT VERSION: 52.0 <- 52.0
+	+++  NEW METHOD: PUBLIC(+) consumer.TradeStore$ColumnAppender columnAppender()
+***  MODIFIED INTERFACE: PUBLIC ABSTRACT consumer.TradeStore  (not serializable)
+	===  CLASS FILE FORMAT VERSION: 52.0 <- 52.0
+	+++  NEW METHOD: PUBLIC(+) consumer.TradeStore$ColumnAppender columnAppender()
++++  NEW INTERFACE: PUBLIC(+) ABSTRACT(+) STATIC(+) consumer.TradeStore$ColumnAppender  (not serializable)
+	+++  CLASS FILE FORMAT VERSION: 52.0 <- n.a.
+	+++  NEW SUPERCLASS: java.lang.Object
+	+++  NEW METHOD: PUBLIC(+) ABSTRACT(+) void price(double[])
+	+++  NEW METHOD: PUBLIC(+) ABSTRACT(+) void price(double[], int, int)
+	+++  NEW METHOD: PUBLIC(+) ABSTRACT(+) void symbol(java.lang.String[])
+	+++  NEW METHOD: PUBLIC(+) ABSTRACT(+) void symbol(java.lang.String[], int, int)
+	+++  NEW METHOD: PUBLIC(+) ABSTRACT(+) void timestamp(long[])
+	+++  NEW METHOD: PUBLIC(+) ABSTRACT(+) void timestamp(long[], int, int)
+
++ /Users/karenbarseghyan/.sdkman/candidates/java/26.0.1-tem/bin/java -jar /tmp/cps-1.3-readiness/japicmp.jar --old /tmp/cps-1.3-readiness/published/columnar-projection-store-1.2.0.jar --new /Users/karenbarseghyan/.m2/repository/io/github/j-util/columnar-projection-store/1.3.0-SNAPSHOT/columnar-projection-store-1.3.0-SNAPSHOT.jar --only-modified --error-on-binary-incompatibility --error-on-source-incompatibility
+Comparing source compatibility of /Users/karenbarseghyan/.m2/repository/io/github/j-util/columnar-projection-store/1.3.0-SNAPSHOT/columnar-projection-store-1.3.0-SNAPSHOT.jar against /tmp/cps-1.3-readiness/published/columnar-projection-store-1.2.0.jar
+No changes.
++ /Users/karenbarseghyan/.sdkman/candidates/java/26.0.1-tem/bin/java -jar /tmp/cps-1.3-readiness/japicmp.jar --old /tmp/cps-1.3-readiness/published/columnar-projection-store-processor-1.2.0.jar --new /Users/karenbarseghyan/.m2/repository/io/github/j-util/columnar-projection-store-processor/1.3.0-SNAPSHOT/columnar-projection-store-processor-1.3.0-SNAPSHOT.jar --only-modified --error-on-binary-incompatibility --error-on-source-incompatibility
+Comparing source compatibility of /Users/karenbarseghyan/.m2/repository/io/github/j-util/columnar-projection-store-processor/1.3.0-SNAPSHOT/columnar-projection-store-processor-1.3.0-SNAPSHOT.jar against /tmp/cps-1.3-readiness/published/columnar-projection-store-processor-1.2.0.jar
+***  MODIFIED CLASS: PUBLIC FINAL io.github.jutil.columnarprojection.processor.ProjectionSchemaProcessor  (not serializable)
+	===  CLASS FILE FORMAT VERSION: 52.0 <- 52.0
+
