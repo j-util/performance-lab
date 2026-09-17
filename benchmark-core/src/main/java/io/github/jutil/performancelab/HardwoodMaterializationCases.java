@@ -22,7 +22,7 @@ public final class HardwoodMaterializationCases {
             List<Path> parquetFiles,
             int batchSize) throws IOException {
         try (ParquetFileReader reader = openAll(parquetFiles)) {
-            return HardwoodMarketDataProjectionHardwoodLoader.load(reader, batchSize);
+            return HardwoodMarketDataProjectionHardwoodLoader.loadWithBatchSize(reader, batchSize);
         }
     }
 
@@ -33,7 +33,7 @@ public final class HardwoodMaterializationCases {
                     int batchSize,
                     Executor columnCopyExecutor) throws IOException {
         try (ParquetFileReader reader = openAll(parquetFiles)) {
-            return HardwoodMarketDataProjectionHardwoodLoader.load(
+            return HardwoodMarketDataProjectionHardwoodLoader.loadWithBatchSize(
                     reader, batchSize, columnCopyExecutor);
         }
     }

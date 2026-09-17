@@ -109,11 +109,11 @@ consecutive values across the file boundary. All paths pass the files in the
 same order to one real Hardwood multi-file reader and use the same projection:
 
 - `hardwoodToColumnarBatch` calls the generated
-  `HardwoodMarketDataProjectionHardwoodLoader.load(reader, batchSize)` method.
+  `HardwoodMarketDataProjectionHardwoodLoader.loadWithBatchSize(reader, batchSize)` method.
   The loader creates the projected column readers, uses the generated common-range
   batch API, materializes every file, and seals the store.
 - `hardwoodToExecutorBackedColumnarBatch` calls the additive generated
-  `load(reader, batchSize, executor)` overload. The JMH client creates and reuses one
+  `loadWithBatchSize(reader, batchSize, executor)` overload. The JMH client creates and reuses one
   caller-owned fixed thread pool with eight workers, matching the projection's
   eight columns. Hardwood still advances and materializes each input batch on
   the benchmark thread; the generated store submits only the eight independent
