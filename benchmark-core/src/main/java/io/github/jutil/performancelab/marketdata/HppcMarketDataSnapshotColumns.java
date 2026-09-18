@@ -1,4 +1,4 @@
-package io.github.jutil.performancelab;
+package io.github.jutil.performancelab.marketdata;
 
 import com.carrotsearch.hppc.DoubleArrayList;
 import com.carrotsearch.hppc.LongArrayList;

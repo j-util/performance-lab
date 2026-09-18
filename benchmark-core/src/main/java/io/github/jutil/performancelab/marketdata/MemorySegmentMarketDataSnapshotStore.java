@@ -1,4 +1,4 @@
-package io.github.jutil.performancelab;
+package io.github.jutil.performancelab.marketdata;
 
 import static java.lang.foreign.ValueLayout.JAVA_BYTE;
 import static java.lang.foreign.ValueLayout.JAVA_DOUBLE;

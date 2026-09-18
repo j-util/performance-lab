@@ -1,4 +1,4 @@
-package io.github.jutil.performancelab;
+package io.github.jutil.performancelab.marketdata;
 
 import net.openhft.chronicle.bytes.Byteable;
 import net.openhft.chronicle.values.MaxUtf8Length;

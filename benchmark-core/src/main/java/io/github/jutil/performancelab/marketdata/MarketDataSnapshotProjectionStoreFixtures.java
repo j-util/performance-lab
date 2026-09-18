@@ -1,4 +1,4 @@
-package io.github.jutil.performancelab;
+package io.github.jutil.performancelab.marketdata;
 
 import io.github.jutil.columnarprojection.ProjectionStore;
 import io.github.jutil.columnarprojection.ProjectionStores;

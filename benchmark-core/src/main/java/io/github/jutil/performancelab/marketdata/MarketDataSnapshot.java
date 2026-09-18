@@ -1,4 +1,4 @@
-package io.github.jutil.performancelab;
+package io.github.jutil.performancelab.marketdata;
 
 /**
  * Complete market state captured immediately after a distinct completed trade.

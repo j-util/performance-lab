@@ -1,4 +1,4 @@
-package io.github.jutil.performancelab;
+package io.github.jutil.performancelab.marketdata;
 
 /** Deterministic, filesystem-independent input for market-data snapshot benchmarks. */
 final class MarketDataSnapshotFixtures {

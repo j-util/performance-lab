@@ -1,4 +1,4 @@
-package io.github.jutil.performancelab;
+package io.github.jutil.performancelab.marketdata;
 
 import java.util.concurrent.TimeUnit;
 
@@ -10,17 +10,17 @@ import org.openjdk.jmh.annotations.Mode;
 import org.openjdk.jmh.annotations.OutputTimeUnit;
 import org.openjdk.jmh.annotations.Warmup;
 
-import io.github.jutil.performancelab.ReadyMarketDataSnapshotAverageStateSupport.ArrayListState;
-import io.github.jutil.performancelab.ReadyMarketDataSnapshotAverageStateSupport.ApacheArrowColumnarState;
-import io.github.jutil.performancelab.ReadyMarketDataSnapshotAverageStateSupport.ChronicleValuesBytesRowState;
-import io.github.jutil.performancelab.ReadyMarketDataSnapshotAverageStateSupport.ColumnarProjectionStoreState;
-import io.github.jutil.performancelab.ReadyMarketDataSnapshotAverageStateSupport.DoubleArrayBaselineState;
-import io.github.jutil.performancelab.ReadyMarketDataSnapshotAverageStateSupport.DflibDataFrameState;
-import io.github.jutil.performancelab.ReadyMarketDataSnapshotAverageStateSupport.EclipseFastListState;
-import io.github.jutil.performancelab.ReadyMarketDataSnapshotAverageStateSupport.FastUtilObjectArrayListState;
-import io.github.jutil.performancelab.ReadyMarketDataSnapshotAverageStateSupport.HppcColumnarState;
-import io.github.jutil.performancelab.ReadyMarketDataSnapshotAverageStateSupport.MemorySegmentRowState;
-import io.github.jutil.performancelab.ReadyMarketDataSnapshotAverageStateSupport.TablesawTableState;
+import io.github.jutil.performancelab.marketdata.ReadyMarketDataSnapshotAverageStateSupport.ArrayListState;
+import io.github.jutil.performancelab.marketdata.ReadyMarketDataSnapshotAverageStateSupport.ApacheArrowColumnarState;
+import io.github.jutil.performancelab.marketdata.ReadyMarketDataSnapshotAverageStateSupport.ChronicleValuesBytesRowState;
+import io.github.jutil.performancelab.marketdata.ReadyMarketDataSnapshotAverageStateSupport.ColumnarProjectionStoreState;
+import io.github.jutil.performancelab.marketdata.ReadyMarketDataSnapshotAverageStateSupport.DoubleArrayBaselineState;
+import io.github.jutil.performancelab.marketdata.ReadyMarketDataSnapshotAverageStateSupport.DflibDataFrameState;
+import io.github.jutil.performancelab.marketdata.ReadyMarketDataSnapshotAverageStateSupport.EclipseFastListState;
+import io.github.jutil.performancelab.marketdata.ReadyMarketDataSnapshotAverageStateSupport.FastUtilObjectArrayListState;
+import io.github.jutil.performancelab.marketdata.ReadyMarketDataSnapshotAverageStateSupport.HppcColumnarState;
+import io.github.jutil.performancelab.marketdata.ReadyMarketDataSnapshotAverageStateSupport.MemorySegmentRowState;
+import io.github.jutil.performancelab.marketdata.ReadyMarketDataSnapshotAverageStateSupport.TablesawTableState;
 
 /** Last-trade-price averages over ready, complete market-data snapshots. */
 @BenchmarkMode(Mode.AverageTime)

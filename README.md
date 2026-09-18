@@ -987,7 +987,7 @@ row count with:
 
 ```shell
 java -jar benchmark-jmh/target/benchmarks.jar \
-  ReadyMarketDataSnapshotAverageBenchmark \
+  io.github.jutil.performancelab.marketdata.ReadyMarketDataSnapshotAverageBenchmark \
   -p rowCount=10000
 ```
 
@@ -1020,7 +1020,7 @@ measured runtime:
 
 ```shell
 java -jar benchmark-jmh/target/benchmarks.jar \
-  ColumnarProjectionStoreIterationBenchmark \
+  io.github.jutil.performancelab.marketdata.ColumnarProjectionStoreIterationBenchmark \
   -p rowCount=1000000 \
   -prof gc
 ```
@@ -1037,7 +1037,7 @@ counts and use the largest configured data set:
 
 ```shell
 java -jar benchmark-jmh/target/benchmarks.jar \
-  ColumnarProjectionStoreIterationBenchmark \
+  io.github.jutil.performancelab.marketdata.ColumnarProjectionStoreIterationBenchmark \
   -p rowCount=10000000 \
   -wi 5 \
   -i 10 \
@@ -1055,7 +1055,7 @@ Run all methods with:
 
 ```shell
 java -jar benchmark-jmh/target/benchmarks.jar \
-  'CsvFullRowProcessingBenchmark|CsvFilteredPriceSumEndToEndBenchmark|ReadyPriceSumBenchmark|ReadyFilteredPriceSumBenchmark|ReadyPriceAverageBenchmark|MaxByDoubleBenchmark|ReadyMarketDataSnapshotAverageBenchmark|ColumnarProjectionStoreIterationBenchmark'
+  'CsvFullRowProcessingBenchmark|CsvFilteredPriceSumEndToEndBenchmark|ReadyPriceSumBenchmark|ReadyFilteredPriceSumBenchmark|ReadyPriceAverageBenchmark|MaxByDoubleBenchmark|io.github.jutil.performancelab.marketdata.ReadyMarketDataSnapshotAverageBenchmark|io.github.jutil.performancelab.marketdata.ColumnarProjectionStoreIterationBenchmark'
 ```
 
 Override the `rowCount` JMH parameter with `-p`; the corresponding dataset must
@@ -1063,7 +1063,7 @@ already exist for the CSV-backed benchmarks:
 
 ```shell
 java -jar benchmark-jmh/target/benchmarks.jar \
-  'CsvFullRowProcessingBenchmark|CsvFilteredPriceSumEndToEndBenchmark|ReadyPriceSumBenchmark|ReadyFilteredPriceSumBenchmark|ReadyPriceAverageBenchmark|MaxByDoubleBenchmark|ReadyMarketDataSnapshotAverageBenchmark|ColumnarProjectionStoreIterationBenchmark' \
+  'CsvFullRowProcessingBenchmark|CsvFilteredPriceSumEndToEndBenchmark|ReadyPriceSumBenchmark|ReadyFilteredPriceSumBenchmark|ReadyPriceAverageBenchmark|MaxByDoubleBenchmark|io.github.jutil.performancelab.marketdata.ReadyMarketDataSnapshotAverageBenchmark|io.github.jutil.performancelab.marketdata.ColumnarProjectionStoreIterationBenchmark' \
   -p rowCount=100000
 ```
 
@@ -1071,7 +1071,7 @@ Add JMH's GC profiler to collect allocation and garbage-collection metrics:
 
 ```shell
 java -jar benchmark-jmh/target/benchmarks.jar \
-  'CsvFullRowProcessingBenchmark|CsvFilteredPriceSumEndToEndBenchmark|ReadyPriceSumBenchmark|ReadyFilteredPriceSumBenchmark|ReadyPriceAverageBenchmark|MaxByDoubleBenchmark|ReadyMarketDataSnapshotAverageBenchmark|ColumnarProjectionStoreIterationBenchmark' \
+  'CsvFullRowProcessingBenchmark|CsvFilteredPriceSumEndToEndBenchmark|ReadyPriceSumBenchmark|ReadyFilteredPriceSumBenchmark|ReadyPriceAverageBenchmark|MaxByDoubleBenchmark|io.github.jutil.performancelab.marketdata.ReadyMarketDataSnapshotAverageBenchmark|io.github.jutil.performancelab.marketdata.ColumnarProjectionStoreIterationBenchmark' \
   -p rowCount=10000 \
   -prof gc
 ```
