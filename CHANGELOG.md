@@ -4,6 +4,8 @@ All notable changes to this repository will be documented in this file.
 
 ## Unreleased
 
+- Remove obsolete local-install instructions and retired CPS `forEach` scaffolding.
+
 - Restore single-shot materialization measurement with five warmups, ten
   measurements and three forks; document fixed-heap cleanup, GC evidence,
   full-value validation and actual Hardwood versus experimental pipelining.
@@ -33,11 +35,10 @@ All notable changes to this repository will be documented in this file.
   knowledge, and deterministic `addAll` or destructive `spliceTail`
   consolidation, plus single-threaded, iteration-prepared merge-only methods;
   document merge-only timing separately from GC-profiler allocation counters.
-- Pin the benchmark dependency to `splice-list:2.0.0`; until publication, build
-  and install the exact 2.0.0 release-candidate source locally instead of using
-  the former `2.0.0-SNAPSHOT` artifact.
+- Use the published `splice-list:2.0.0` dependency from Maven Central,
+  replacing the former snapshot/local setup.
 - Add a focused Columnar Projection Store iteration benchmark comparing its
-  reusable cursor, indexed stable views, and OO-style `forEach` traversal for
+  reusable cursor and indexed stable views for
   narrow-field work and full-row checksums, including allocation profiling
   guidance.
 - Add complete eight-field DFLib DataFrame and manually assembled HPPC primitive

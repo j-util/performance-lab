@@ -29,9 +29,9 @@ The Maven Wrapper downloads the project's Maven version automatically.
 Ordinary verification tests belong under `benchmark-core/src/test/java` and use
 JUnit 5.
 
-Performance-lab is pinned to `io.github.j-util:splice-list:2.0.0`. Until that
-version is published, the [exact 2.0.0 release-candidate source](https://github.com/j-util/splice-list/tree/07242b88f39d4bdf65a53573b2394485df44547d)
-must be built and installed locally before building this project.
+All project dependencies, including
+`io.github.j-util:splice-list:2.0.0`, resolve from Maven Central. No local
+library builds are required.
 
 ## Generate benchmark data
 
@@ -71,11 +71,11 @@ station-name;temperature
 ```
 
 Station names repeat realistically and temperatures always have one decimal
-digit. The default is 10,000,000 measurements. Build with the configured Maven
-settings and run the generator without arguments to use that default:
+digit. The default is 10,000,000 measurements. Build the project and run the
+generator without arguments to use that default:
 
 ```shell
-./mvnw -s /Users/karenbarseghyan/.m2/settings-j-util.xml clean package
+./mvnw clean package
 java -cp benchmark-jmh/target/benchmarks.jar \
   io.github.jutil.performancelab.OneBrcStyleDatasetGenerator
 ```
@@ -292,8 +292,11 @@ repeated `AverageTime` allocation allowed GC placement to dominate the score.
 The [corrected single-shot report](results/cps-1.3.0-single-shot-2026-09-16/README.md)
 records the exact-commit measurements and limitations with the verdict
 **FUNCTIONALLY READY; PERFORMANCE TRADEOFF CHARACTERIZED**.
-`scripts/cps13/run-evidence.sh` runs the complete prescribed validation
-and benchmark sequence; `scripts/cps13/ValidateDestinations.java` checks all
+`scripts/cps13/run-evidence.sh` is retained as the exact historical runner used
+for the corrected 2026-09-16 evidence at commit
+`41afe3444622e9a46d3f0bf2d9f5e9d2e6fadcee`. Its candidate-artifact requirements
+are documented in the [corresponding report](results/cps-1.3.0-single-shot-2026-09-16/README.md).
+`scripts/cps13/ValidateDestinations.java` checks all
 rows and eight fields, ordering, exact capacity and sealing for all 20 selected
 input/path combinations outside timing, including the per-batch barrier.
 
@@ -1002,11 +1005,10 @@ these flags when running the packaged benchmark normally.
 ### `ColumnarProjectionStoreIterationBenchmark`
 
 This focused ready-data suite compares the ergonomics and efficiency of the
-three public row-oriented traversal APIs on the same sealed Columnar Projection
-Store. The cursor exposes one reusable projection view whose contents advance
-with the cursor and therefore must not be retained. Indexed `viewAt(index)`
-provides explicit random access through stable, retainable views. `forEach` is
-the conventional OO traversal API and also supplies stable, retainable views.
+two public row-oriented traversal APIs on the same sealed Columnar Projection
+Store. The `cursor()` API exposes one reusable projection view whose contents
+advance with the cursor and therefore must not be retained. Indexed `viewAt(index)`
+provides explicit random access through stable, retainable views.
 
 The benchmark measures the cost of the stable-view convenience; it does not
 assume in advance that one traversal will be faster or allocate more at runtime.
@@ -1042,11 +1044,10 @@ java -jar benchmark-jmh/target/benchmarks.jar \
 ```
 
 These APIs deliberately have different contracts: the cursor prioritizes
-maximum traversal efficiency through a reusable view, `viewAt` provides stable
-views for explicit random access, and `forEach` provides conventional OO
-traversal through stable views. Interpret timing and allocation results in that
-ergonomics-versus-efficiency context rather than treating convenience as an
-inferior contract.
+maximum traversal efficiency through a reusable view, while `viewAt` provides
+stable views for explicit random access. Interpret timing and allocation results
+in that ergonomics-versus-efficiency context rather than treating convenience
+as an inferior contract.
 
 Run all methods with:
 

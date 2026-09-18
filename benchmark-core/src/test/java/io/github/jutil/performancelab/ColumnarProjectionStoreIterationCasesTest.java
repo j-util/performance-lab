@@ -11,7 +11,7 @@ class ColumnarProjectionStoreIterationCasesTest {
 
     @ParameterizedTest
     @ValueSource(ints = {1, 1000})
-    void allTraversalMechanismsProduceIdenticalResultsAndResetAccumulators(int rowCount) {
+    void cursorAndIndexedTraversalProduceIdenticalResultsAndResetAccumulators(int rowCount) {
         ProjectionStore<MarketDataSnapshotProjection> store =
                 ColumnarProjectionStoreIterationCases.newStore(rowCount);
         ColumnarProjectionStoreIterationCases.LastTradePriceSumAccumulator sumAccumulator =
@@ -25,14 +25,8 @@ class ColumnarProjectionStoreIterationCasesTest {
         double indexedSum = ColumnarProjectionStoreIterationCases
                 .indexedStableViewLastTradePriceSum(store, sumAccumulator);
         assertEquals(rowCount, sumAccumulator.count());
-        // TODO: Restore after columnar-projection-store:1.2.0 is published.
-        /*
-        double forEachSum = ColumnarProjectionStoreIterationCases
-                .forEachLastTradePriceSum(store, sumAccumulator);
-        assertEquals(rowCount, sumAccumulator.count());
-        */
+
         assertEquals(cursorSum, indexedSum);
-        // assertEquals(cursorSum, forEachSum);
 
         long cursorChecksum = ColumnarProjectionStoreIterationCases
                 .cursorFullRowChecksum(store, checksumAccumulator);
@@ -40,13 +34,7 @@ class ColumnarProjectionStoreIterationCasesTest {
         long indexedChecksum = ColumnarProjectionStoreIterationCases
                 .indexedStableViewFullRowChecksum(store, checksumAccumulator);
         assertEquals(rowCount, checksumAccumulator.count());
-        /*
-        long forEachChecksum = ColumnarProjectionStoreIterationCases
-                .forEachFullRowChecksum(store, checksumAccumulator);
-        assertEquals(rowCount, checksumAccumulator.count());
-        */
         assertEquals(cursorChecksum, indexedChecksum);
-        // assertEquals(cursorChecksum, forEachChecksum);
 
         assertEquals(
                 cursorSum,
@@ -58,13 +46,6 @@ class ColumnarProjectionStoreIterationCasesTest {
                 ColumnarProjectionStoreIterationCases
                         .indexedStableViewLastTradePriceSum(store, sumAccumulator));
         assertEquals(rowCount, sumAccumulator.count());
-        /*
-        assertEquals(
-                forEachSum,
-                ColumnarProjectionStoreIterationCases
-                        .forEachLastTradePriceSum(store, sumAccumulator));
-        assertEquals(rowCount, sumAccumulator.count());
-        */
         assertEquals(
                 cursorChecksum,
                 ColumnarProjectionStoreIterationCases
@@ -75,14 +56,6 @@ class ColumnarProjectionStoreIterationCasesTest {
                 ColumnarProjectionStoreIterationCases
                         .indexedStableViewFullRowChecksum(store, checksumAccumulator));
         assertEquals(rowCount, checksumAccumulator.count());
-        /*
-        assertEquals(
-                forEachChecksum,
-                ColumnarProjectionStoreIterationCases
-                        .forEachFullRowChecksum(store, checksumAccumulator));
-        assertEquals(rowCount, checksumAccumulator.count());
-        */
-
         ColumnarProjectionStoreIterationCases.validate(store, rowCount);
     }
 }
