@@ -160,11 +160,10 @@ disabled and deterministic low-cardinality strings and exactly representable
 numeric values. Results from the earlier single-file, combined-capacity benchmark
 are not directly comparable with this multi-file workload.
 
-Development note: this configuration requires Hardwood Core `1.1.0.Beta1`
-plus locally installed `1.3.0-SNAPSHOT` Columnar Projection Store artifacts
-and `1.1.0-SNAPSHOT` Columnar Projection Store Hardwood runtime and processor
-artifacts in `~/.m2`. It will not resolve on ordinary CI until the remaining
-snapshot dependencies are published or become otherwise available.
+The Hardwood benchmarks resolve published Columnar Projection Store `1.3.0`,
+Columnar Projection Store Hardwood `1.1.0-Beta1`, and Hardwood Core
+`1.1.0.Beta1` artifacts from Maven Central. No locally installed CPS or
+integration snapshots are required.
 
 Run the ordinary small correctness test, which checks the unequal two-file
 fixture, Hardwood's multi-file state, both indexed file-metadata entries, the
