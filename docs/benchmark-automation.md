@@ -76,7 +76,7 @@ branch-protection settings or future service jobs have been configured.
 | Layer | Work and triggers | Authority, history, and reporting |
 | --- | --- | --- |
 | Ordinary correctness CI | Existing `clean verify` on PRs and pushes to `main`; no benchmark timing. | Required correctness/build authority. No performance history or regression claim. |
-| CodSpeed (planned) | The two-method suite on Temurin 25 with the CodSpeed JMH fork. Use dedicated runner `codspeed-macro-x64-ryzen-9950x-ubuntu-24-04`. Pushes to `main` establish baselines; trusted same-repository PRs provide comparisons; manual dispatch is limited to `main`. | Publish service history and advisory comparisons/profiles. Not a merge gate initially; does not replace controlled publication-quality measurements. |
+| CodSpeed (planned) | The two-method suite on Temurin 25 with the CodSpeed JMH fork. Default to dedicated ARM64 Graviton runner `codspeed-macro-arm64-graviton-ubuntu-22-04`. Pushes to `main` establish baselines; trusted same-repository PRs provide comparisons; manual dispatch is limited to `main`. | Publish service history and advisory comparisons/profiles. Not a merge gate initially; does not replace controlled publication-quality measurements. |
 | Bencher (planned) | The same methods on Temurin 25 using standard JMH 1.37 and testbed `gha-ubuntu2404-x64-temurin25-jmh137-inmemory-v1`. Publish accepted `main` history only, after exact-commit correctness verification. Manual validation on `main` produces artifacts without service publication. | No PR publication or regression thresholds initially. Shared-runner history is exploratory and advisory, not a merge gate. Validate the exact result set before upload and preserve raw JMH JSON. |
 | Existing manual GitHub Actions benchmarks | Explicit manual dispatch of an existing suite/preset; produce artifacts and environment metadata. | Remain available without automatically publishing service history. Hosted-runner timings are diagnostic, not universal performance evidence or a merge gate. |
 | Controlled local runs | Explicit investigations using workload-specific methodology and preserved reproduction instructions. | Remain the venue for publication-quality measurements after repeatability and environment review. Evidence publication is explicit, not automatic. |
@@ -87,17 +87,33 @@ This automation policy does not supersede historical evidence or reproduction in
 
 ## Service limitations and history identity
 
-CodSpeed's [Java integration](https://codspeed.io/docs/benchmarks/java) uses a custom
-JMH mode and ignores ordinary benchmark-mode declarations. The requested `avgt`
+CodSpeed's [Java integration](https://codspeed.io/docs/benchmarks/java) currently
+supports only walltime. It uses a custom JMH mode and ignores ordinary
+benchmark-mode declarations. The requested `avgt`
 recipe therefore does not make CodSpeed results interchangeable with standard
 JMH results. Verify actual instrumentation rather than accepting an ordinary
 uninstrumented run as CodSpeed evidence.
 
-Reliable walltime comparison requires baseline and candidate to use the same
-[dedicated macro-runner type](https://codspeed.io/docs/features/macro-runners).
-A normal GitHub-hosted runner can support integration smoke, but its results
-must not populate accepted CodSpeed comparison history. Use the explicit x64
-label above; the generic `codspeed-macro` alias selects ARM.
+The default planned environment is the [ARM64 Graviton macro runner](https://codspeed.io/docs/features/macro-runners),
+with explicit label `codspeed-macro-arm64-graviton-ubuntu-22-04`. The selected
+two-method in-memory suite is suitable for this runner. CodSpeed's own
+[Java CI](https://github.com/CodSpeedHQ/codspeed-jvm/blob/main/.github/workflows/ci.yml)
+runs walltime benchmarks using the legacy `codspeed-macro` label, which continues
+to select the same Graviton runner.
+
+Comparisons are valid only against runs using the same runner label and
+environment. Ordinary GitHub-hosted runners may execute benchmarks for integration
+smoke, but their noisy walltime results are not authoritative CodSpeed regression
+history. Controlled local publication-quality measurements remain separate.
+
+Every plan currently includes 600 Graviton runner minutes per month, not unlimited
+free execution. Additional open-source sponsored minutes may be requested from
+CodSpeed but must not be assumed.
+
+The Ryzen x64 runner `codspeed-macro-x64-ryzen-9950x-ubuntu-24-04` is optional
+and is not included in the ordinary free allowance. Use it only if CodSpeed grants
+sponsored access or a paid plan is intentionally adopted, with a separate history
+identity for that environment.
 
 Bencher's current `java_jmh` adapter does not preserve parameter identity or JMH
 secondary metrics; see the [reviewed adapter source](https://github.com/bencherdev/bencher/blob/v0.6.12/lib/bencher_adapter/src/adapters/java/jmh.rs).
@@ -139,8 +155,9 @@ manual or controlled local use under their existing methodology.
 
 These are unresolved setup prerequisites, not repository defects:
 
-- Confirm access to the compatible CodSpeed x64 macro runner. Availability or
-  open-source sponsorship may require direct coordination with CodSpeed.
+- Confirm access to the default ARM64 Graviton macro runner within the included
+  monthly allowance. Additional sponsorship requires coordination with CodSpeed;
+  x64 access is not a blocker or prerequisite for Step 3.
 - Confirm the CodSpeed GitHub App connection for `j-util/performance-lab` and
   organization runner-group authorization for this public repository; follow
   the [official macro-runner setup](https://codspeed.io/docs/integrations/ci/github-actions/macro-runners.md).
