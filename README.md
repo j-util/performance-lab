@@ -459,10 +459,15 @@ creation and submission, worker-local list construction, ordinary `List.add`
 filling, joining every task, final destination construction, and
 `ArrayList.addAll` copying or `SpliceList.spliceTail` relinking. Total execution
 time is the primary result for this suite. Because `spliceTail` consumes its
-sources, the merge-only methods prepare fresh partial lists in JMH iteration
-setup. Fixture preparation is excluded from the primary timing. Their
+source `SpliceList`s, each `Level.Iteration` setup prepares one set of merge-only
+partial collections. Fixture preparation is excluded from the primary timing. Their
 diagnostic timings isolate final copying from final relinking without fill,
 task-submission, executor, or join costs.
+
+The supported merge-only recipe uses `SingleShotTime`, one benchmark thread,
+and one invocation per warmup and measurement iteration: `-t 1 -wbs 1 -bs 1`.
+Higher warmup or measurement batch sizes would reuse consumed sources within
+one iteration and are invalid for the paired merge-only comparison.
 
 JMH trial setup creates the fixed executor for the total-work methods and source
 reference arrays containing stable references to pre-created markers. Trial
@@ -506,6 +511,9 @@ java -jar benchmark-jmh/target/benchmarks.jar \
   'ParallelListFillAndCombineBenchmark\.(arrayListAddAllMergeOnly|spliceListSpliceTailMergeOnly)$' \
   -p elementCount=10000 \
   -p parallelism=8 \
+  -t 1 \
+  -wbs 1 \
+  -bs 1 \
   -wi 1 \
   -i 2 \
   -f 1
@@ -536,6 +544,9 @@ java -jar benchmark-jmh/target/benchmarks.jar \
   'ParallelListFillAndCombineBenchmark\.(arrayListAddAllMergeOnly|spliceListSpliceTailMergeOnly)$' \
   -p elementCount=10000,100000,1000000,10000000,20000000,30000000 \
   -p parallelism=2,4,8 \
+  -t 1 \
+  -wbs 1 \
+  -bs 1 \
   -wi 5 \
   -i 10 \
   -f 3 \
@@ -553,10 +564,13 @@ trial setup and are excluded from measurement. The three representations are an
 whose one regular segment has capacity `rowCount`, and a `SpliceList<IterationItem>` whose
 regular segment capacity is `ceil(rowCount / 10)`.
 
-The default 10,000,000-item input is divisible by ten, so the last representation
-has exactly ten full regular segments of 1,000,000 elements each. Other positive
-row-count overrides use `Math.ceilDiv(rowCount, 10)` and may end with a partially
-filled segment. Neither the one-segment nor ten-segment representation uses the
+The default `rowCount=10000000` produces exactly ten full regular segments of
+1,000,000 elements each. The frozen automated `rowCount=100000` produces ten full
+10,000-element segments. Other positive row counts use `Math.ceilDiv(rowCount, 10)`,
+but their actual segment count is not guaranteed to be ten; for example,
+`rowCount=23` gives capacity 3 and eight segments. The method retains the name
+`tenSegmentSpliceListIterator` because both the default and frozen automated
+inputs produce exactly ten segments. Neither the one-segment nor ten-segment representation uses the
 production default segment size of 1024 at the default row count, so their
 results are not evidence for the default configuration.
 
@@ -1051,7 +1065,9 @@ stable views for explicit random access. Interpret timing and allocation results
 in that ergonomics-versus-efficiency context rather than treating convenience
 as an inferior contract.
 
-Run all methods with:
+Run the selected 46-method group below. It is not the complete 73-method
+repository inventory; workload families with specialized setup or execution
+requirements retain their separate commands.
 
 ```shell
 java -jar benchmark-jmh/target/benchmarks.jar \

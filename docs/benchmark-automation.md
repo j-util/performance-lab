@@ -15,6 +15,12 @@ It does not enable CodSpeed, finalize Bencher, or change existing benchmark reci
 
 ## Initial automated suite
 
+The two-method suite, single parameter combination, and recipe below are frozen
+for the initial CodSpeed and Bencher implementations. Workflow implementation
+must not silently broaden the selector or modify this contract. Changing a
+method, parameter, JDK, OS, runner, testbed, harness, JVM flag, or recipe requires
+a separate reviewed policy change and a distinct history/testbed identity.
+
 Both services will select exactly these methods:
 
 - `io.github.jutil.performancelab.marketdata.ColumnarProjectionStoreIterationBenchmark.cursorLastTradePriceSum`
@@ -32,7 +38,7 @@ Both classes use `rowCount`. Track one fixed parameter combination:
 rowCount=100000
 ```
 
-The common planned JMH arguments are:
+The planned standard-JMH recipe is:
 
 ```text
 -p rowCount=100000
@@ -51,9 +57,11 @@ Java 25 for both integrations and record its exact build with the run metadata.
 
 The CPS fixture is constructed and validated in trial setup. Each measured
 invocation resets its accumulator, creates a cursor, and scans the sealed store.
-The Splice List fixture is also constructed and validated in trial setup; each
-measured invocation traverses ten segments and sums values without consuming
-the list. Both are safe for repeated execution. See the existing
+The Splice List fixture is also constructed and validated in trial setup. At the
+frozen `rowCount=100000`, `Math.ceilDiv(100000, 10)` gives a regular segment
+capacity of 10000, so the fixture has exactly ten full segments. Each measured
+invocation traverses those segments and sums values without consuming the list.
+Both are safe for repeated execution. See the existing
 [CPS iteration methodology](../README.md#columnarprojectionstoreiterationbenchmark)
 and [collection iteration methodology](../README.md#readycollectioniterationbenchmark).
 
@@ -120,9 +128,7 @@ secondary metrics; see the [reviewed adapter source](https://github.com/bencherd
 The initial policy therefore uses one fixed parameter combination and tracks
 latency only, in nanoseconds per complete traversal, with no allocation claim.
 
-A change to benchmark method, parameter, JDK, OS, runner type, harness, JVM flags,
-or recipe requires an explicitly new history/testbed identity. Do not mix
-incompatible results or combine CodSpeed and standard JMH histories.
+Do not mix incompatible results or combine CodSpeed and standard JMH histories.
 
 ## Exclusions from initial automation
 
