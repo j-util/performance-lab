@@ -177,7 +177,7 @@ public final class ReadyMarketDataSnapshotAverageStateSupport {
 
         @Setup(Level.Trial)
         public void setup() {
-            store = ReadyMarketDataSnapshotAverageCases.newColumnarProjectionStore(rowCount);
+            store = MarketDataSnapshotProjectionStoreFixtures.newStore(rowCount);
             ReadyMarketDataSnapshotAverageCases.validateAverage(
                     "Columnar Projection Store",
                     rowCount,

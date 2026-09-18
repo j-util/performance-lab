@@ -12,7 +12,7 @@ final class ColumnarProjectionStoreIterationCases {
     }
 
     static ProjectionStore<MarketDataSnapshotProjection> newStore(int rowCount) {
-        return ReadyMarketDataSnapshotAverageCases.newColumnarProjectionStore(rowCount);
+        return MarketDataSnapshotProjectionStoreFixtures.newStore(rowCount);
     }
 
     static double cursorLastTradePriceSum(

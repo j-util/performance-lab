@@ -11,7 +11,6 @@ import org.eclipse.collections.impl.list.mutable.FastList;
 
 import io.github.jutil.columnarprojection.ProjectionCursor;
 import io.github.jutil.columnarprojection.ProjectionStore;
-import io.github.jutil.columnarprojection.ProjectionStores;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import tech.tablesaw.api.DoubleColumn;
 import tech.tablesaw.api.LongColumn;
@@ -167,16 +166,6 @@ final class ReadyMarketDataSnapshotAverageCases {
         }
         validateSize("Double-array baseline last-trade prices", rowCount, lastTradePrices.length);
         return lastTradePrices;
-    }
-
-    static ProjectionStore<MarketDataSnapshotProjection> newColumnarProjectionStore(int rowCount) {
-        MarketDataSnapshotFixtures.validateRowCount(rowCount);
-        ProjectionStore<MarketDataSnapshotProjection> store =
-                ProjectionStores.create(MarketDataSnapshotProjection.class, rowCount);
-        addSnapshots(rowCount, store::add);
-        validateSize("Columnar Projection Store", rowCount, store.size());
-        store.seal();
-        return store;
     }
 
     static MemorySegmentMarketDataSnapshotStore newMemorySegmentRowStore(int rowCount) {

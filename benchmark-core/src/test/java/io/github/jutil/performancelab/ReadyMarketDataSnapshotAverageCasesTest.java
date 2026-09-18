@@ -103,8 +103,7 @@ class ReadyMarketDataSnapshotAverageCasesTest {
                             .newDoubleArrayBaselineLastTradePrices(invalidRowCount));
             assertThrows(
                     IllegalArgumentException.class,
-                    () -> ReadyMarketDataSnapshotAverageCases
-                            .newColumnarProjectionStore(invalidRowCount));
+                    () -> MarketDataSnapshotProjectionStoreFixtures.newStore(invalidRowCount));
             assertThrows(
                     IllegalArgumentException.class,
                     () -> MarketDataSnapshotFixtures
@@ -129,7 +128,7 @@ class ReadyMarketDataSnapshotAverageCasesTest {
                 ReadyMarketDataSnapshotAverageCases.newEclipseFastList(rowCount);
         Table tablesaw = ReadyMarketDataSnapshotAverageCases.newTablesawTable(rowCount);
         ProjectionStore<MarketDataSnapshotProjection> columnar =
-                ReadyMarketDataSnapshotAverageCases.newColumnarProjectionStore(rowCount);
+                MarketDataSnapshotProjectionStoreFixtures.newStore(rowCount);
         double[] baselineLastTradePrices = ReadyMarketDataSnapshotAverageCases
                 .newDoubleArrayBaselineLastTradePrices(rowCount);
 
