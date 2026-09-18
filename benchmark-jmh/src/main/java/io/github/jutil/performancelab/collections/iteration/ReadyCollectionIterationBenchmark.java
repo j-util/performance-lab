@@ -1,4 +1,4 @@
-package io.github.jutil.performancelab;
+package io.github.jutil.performancelab.collections.iteration;
 
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;

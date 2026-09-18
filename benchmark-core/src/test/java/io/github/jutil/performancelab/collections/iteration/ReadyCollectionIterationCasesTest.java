@@ -1,4 +1,4 @@
-package io.github.jutil.performancelab;
+package io.github.jutil.performancelab.collections.iteration;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;

@@ -572,7 +572,7 @@ Run the extended default-size comparison with GC profiling and JSON output:
 
 ```shell
 java -jar benchmark-jmh/target/benchmarks.jar \
-  ReadyCollectionIterationBenchmark \
+  io.github.jutil.performancelab.collections.iteration.ReadyCollectionIterationBenchmark \
   -p rowCount=10000000 \
   -wi 5 \
   -i 10 \

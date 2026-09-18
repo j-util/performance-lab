@@ -18,12 +18,12 @@ It does not enable CodSpeed, finalize Bencher, or change existing benchmark reci
 Both services will select exactly these methods:
 
 - `io.github.jutil.performancelab.marketdata.ColumnarProjectionStoreIterationBenchmark.cursorLastTradePriceSum`
-- `io.github.jutil.performancelab.ReadyCollectionIterationBenchmark.tenSegmentSpliceListIterator`
+- `io.github.jutil.performancelab.collections.iteration.ReadyCollectionIterationBenchmark.tenSegmentSpliceListIterator`
 
 Use this exact anchored include expression, without broader class selectors:
 
 ```text
-^io\.github\.jutil\.performancelab\.(marketdata\.ColumnarProjectionStoreIterationBenchmark\.cursorLastTradePriceSum|ReadyCollectionIterationBenchmark\.tenSegmentSpliceListIterator)$
+^io\.github\.jutil\.performancelab\.(marketdata\.ColumnarProjectionStoreIterationBenchmark\.cursorLastTradePriceSum|collections\.iteration\.ReadyCollectionIterationBenchmark\.tenSegmentSpliceListIterator)$
 ```
 
 Both classes use `rowCount`. Track one fixed parameter combination:
