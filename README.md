@@ -94,6 +94,8 @@ stays under the ignored `target/` tree and must not be committed.
 
 ## Run the benchmarks
 
+See the [benchmark automation policy](docs/benchmark-automation.md) for planned CI use.
+
 The benchmark methods are organized into classes so that each class contains
 only directly comparable operations. Separate ready-data classes add the narrow
 and wide average comparisons and the maximum-by-double comparison described
