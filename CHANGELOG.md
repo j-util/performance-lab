@@ -21,7 +21,7 @@ All notable changes to this repository will be documented in this file.
 - Use explicit, identical Hardwood decoding batch sizes across all materialization
   benchmark paths.
 - Add a separate ready-data iterator benchmark comparing an exactly pre-sized
-  `ArrayList<Item>` with one- and ten-segment `SpliceList<Item>` representations
+  `ArrayList<IterationItem>` with one- and ten-segment `SpliceList<IterationItem>` representations
   over the same deterministic 10-million-item fixture.
 - Replace the CSV-backed collection-growth experiments with a pure append
   benchmark whose primary comparison gives `ArrayList` initial capacity and

@@ -50,7 +50,7 @@ public class ReadyCollectionIterationBenchmark {
         @Param({"10000000"})
         public int rowCount;
 
-        ArrayList<Item> items;
+        ArrayList<IterationItem> items;
 
         @Setup(Level.Trial)
         public void setup() {
@@ -66,7 +66,7 @@ public class ReadyCollectionIterationBenchmark {
         @Param({"10000000"})
         public int rowCount;
 
-        SpliceList<Item> items;
+        SpliceList<IterationItem> items;
 
         @Setup(Level.Trial)
         public void setup() {
@@ -87,7 +87,7 @@ public class ReadyCollectionIterationBenchmark {
         @Param({"10000000"})
         public int rowCount;
 
-        SpliceList<Item> items;
+        SpliceList<IterationItem> items;
 
         @Setup(Level.Trial)
         public void setup() {

@@ -14,16 +14,16 @@ final class ReadyCollectionIterationCases {
     private ReadyCollectionIterationCases() {
     }
 
-    static ArrayList<Item> newArrayList(int rowCount) {
+    static ArrayList<IterationItem> newArrayList(int rowCount) {
         validateRowCount(rowCount);
-        ArrayList<Item> items = new ArrayList<>(rowCount);
+        ArrayList<IterationItem> items = new ArrayList<>(rowCount);
         addItems(rowCount, items::add);
         return items;
     }
 
-    static SpliceList<Item> newOneSegmentSpliceList(int rowCount) {
+    static SpliceList<IterationItem> newOneSegmentSpliceList(int rowCount) {
         validateRowCount(rowCount);
-        SpliceList<Item> items = new SpliceList<>(rowCount);
+        SpliceList<IterationItem> items = new SpliceList<>(rowCount);
         addItems(rowCount, items::addLast);
         return items;
     }
@@ -32,8 +32,8 @@ final class ReadyCollectionIterationCases {
      * Creates a SpliceList whose regular segment capacity is {@code ceil(rowCount / 10)}.
      * The default 10,000,000-row input therefore occupies exactly ten full regular segments.
      */
-    static SpliceList<Item> newTenSegmentSpliceList(int rowCount) {
-        SpliceList<Item> items = new SpliceList<>(tenSegmentSize(rowCount));
+    static SpliceList<IterationItem> newTenSegmentSpliceList(int rowCount) {
+        SpliceList<IterationItem> items = new SpliceList<>(tenSegmentSize(rowCount));
         addItems(rowCount, items::addLast);
         return items;
     }
@@ -44,10 +44,10 @@ final class ReadyCollectionIterationCases {
     }
 
     /** Performs exactly one enhanced-for traversal and returns its sum. */
-    static double iteratorSum(Iterable<Item> items) {
+    static double iteratorSum(Iterable<IterationItem> items) {
         Objects.requireNonNull(items, "items");
         double sum = 0.0;
-        for (Item item : items) {
+        for (IterationItem item : items) {
             sum += item.value();
         }
         return sum;
@@ -58,13 +58,13 @@ final class ReadyCollectionIterationCases {
      * Each representation-specific trial setup compares with the same canonical sum, which
      * establishes exact agreement without retaining multiple large representations together.
      */
-    static void validateFixture(String representation, int rowCount, Iterable<Item> items) {
+    static void validateFixture(String representation, int rowCount, Iterable<IterationItem> items) {
         Objects.requireNonNull(representation, "representation");
         Objects.requireNonNull(items, "items");
         validateRowCount(rowCount);
 
         int index = 0;
-        for (Item item : items) {
+        for (IterationItem item : items) {
             if (index >= rowCount) {
                 throw new IllegalStateException(
                         representation + " contains more than " + rowCount + " items");
@@ -90,14 +90,14 @@ final class ReadyCollectionIterationCases {
         }
     }
 
-    static Item itemAt(int index) {
+    static IterationItem itemAt(int index) {
         if (index < 0) {
             throw new IllegalArgumentException("index must be non-negative: " + index);
         }
-        return new Item(ITEM_KEY, valueAt(index));
+        return new IterationItem(ITEM_KEY, valueAt(index));
     }
 
-    private static void addItems(int rowCount, java.util.function.Consumer<Item> destination) {
+    private static void addItems(int rowCount, java.util.function.Consumer<IterationItem> destination) {
         for (int index = 0; index < rowCount; index++) {
             destination.accept(itemAt(index));
         }

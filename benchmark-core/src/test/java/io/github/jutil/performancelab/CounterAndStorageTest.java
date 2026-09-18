@@ -27,11 +27,11 @@ class CounterAndStorageTest {
     @Test
     void storageUsesStationKeysAndTracksMergedRowCount() {
         Storage first = new Storage();
-        first.store(new Item("Yerevan", -2.0));
-        first.store(new Item("Yerevan", 4.0));
+        first.store(new StationMeasurement("Yerevan", -2.0));
+        first.store(new StationMeasurement("Yerevan", 4.0));
 
         Storage second = new Storage();
-        second.store(new Item("Berlin", 8.0));
+        second.store(new StationMeasurement("Berlin", 8.0));
         first.merge(second);
 
         assertEquals(3L, first.totalProcessedRowCount());

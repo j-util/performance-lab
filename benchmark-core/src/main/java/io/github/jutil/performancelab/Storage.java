@@ -11,8 +11,8 @@ public final class Storage {
     private long totalProcessedRowCount;
 
     /** Stores one parsed measurement. */
-    public void store(Item item) {
-        counters.computeIfAbsent(item.key(), ignored -> new Counter()).add(item.value());
+    public void store(StationMeasurement item) {
+        counters.computeIfAbsent(item.station(), ignored -> new Counter()).add(item.temperature());
         totalProcessedRowCount++;
     }
 

@@ -33,7 +33,7 @@ final class OneBrcStyleCsvParser implements InputParser<Storage> {
         emitter.accept(storage);
     }
 
-    static void parseItems(InputStream input, Consumer<? super Item> consumer) throws IOException {
+    static void parseItems(InputStream input, Consumer<? super StationMeasurement> consumer) throws IOException {
         InputStreamReader reader = new InputStreamReader(input, StandardCharsets.UTF_8);
         CSVParser parser = CSV_FORMAT.parse(reader);
         for (CSVRecord record : parser) {
@@ -41,13 +41,13 @@ final class OneBrcStyleCsvParser implements InputParser<Storage> {
         }
     }
 
-    static Item parseLine(String line) {
+    static StationMeasurement parseLine(String line) {
         try (CSVParser parser = CSV_FORMAT.parse(new StringReader(line))) {
             Iterator<CSVRecord> records = parser.iterator();
             if (!records.hasNext()) {
                 throw new IllegalArgumentException("Expected one CSV record but found none");
             }
-            Item item = toItem(records.next());
+            StationMeasurement item = toItem(records.next());
             if (records.hasNext()) {
                 throw new IllegalArgumentException("Expected one CSV record but found more than one");
             }
@@ -61,12 +61,12 @@ final class OneBrcStyleCsvParser implements InputParser<Storage> {
         return CSV_FORMAT;
     }
 
-    private static Item toItem(CSVRecord record) {
+    private static StationMeasurement toItem(CSVRecord record) {
         if (record.size() != 2) {
             throw new IllegalArgumentException(
                     "Expected two CSV fields but found " + record.size()
                             + " in record " + record.getRecordNumber());
         }
-        return new Item(record.get(0), Double.parseDouble(record.get(1)));
+        return new StationMeasurement(record.get(0), Double.parseDouble(record.get(1)));
     }
 }

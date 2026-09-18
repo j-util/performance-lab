@@ -336,7 +336,7 @@ This is a fair 1BRC-style processor benchmark, not an optimized or official
 1BRC submission. All five variants parse the same two fields with the same
 immutable Apache Commons CSV format (semicolon delimiter, no header, no
 trimming or surrounding-space assumptions) and map each record to
-`Item(String key, double value)` using `Double.parseDouble`:
+`StationMeasurement(String station, double temperature)` using `Double.parseDouble`:
 
 | Benchmark | Execution strategy | Parallelism |
 | --- | --- | ---: |
@@ -468,7 +468,7 @@ JMH trial setup creates the fixed executor for the total-work methods and source
 reference arrays containing stable references to pre-created markers. Trial
 teardown closes the executor. Executor lifecycle, marker and source-array
 creation, merge-only fixture preparation, file I/O, CSV parsing, logging,
-`Item` allocation, validation, result traversal, and subsequent consumption are
+per-element allocation, validation, result traversal, and subsequent consumption are
 excluded from the primary timing. Every method returns the completed collection
 so it escapes the measured invocation. GC-profiler allocation counters can
 include fixture preparation even though setup is outside the primary timing;
@@ -546,11 +546,11 @@ java -jar benchmark-jmh/target/benchmarks.jar \
 ### `ReadyCollectionIterationBenchmark`
 
 This separate ready-data benchmark asks only what sequential iterator traversal
-costs after complete `Item` objects have already been materialized. Construction,
+costs after complete `IterationItem` objects have already been materialized. Construction,
 fixture generation, population, and correctness validation happen during JMH
 trial setup and are excluded from measurement. The three representations are an
-`ArrayList<Item>` with exact initial capacity `rowCount`, a `SpliceList<Item>`
-whose one regular segment has capacity `rowCount`, and a `SpliceList<Item>` whose
+`ArrayList<IterationItem>` with exact initial capacity `rowCount`, a `SpliceList<IterationItem>`
+whose one regular segment has capacity `rowCount`, and a `SpliceList<IterationItem>` whose
 regular segment capacity is `ceil(rowCount / 10)`.
 
 The default 10,000,000-item input is divisible by ten, so the last representation
@@ -562,7 +562,7 @@ results are not evidence for the default configuration.
 
 All three benchmark methods invoke the same shared enhanced-for/iterator loop,
 visit every item once in encounter order, add the same deterministic finite
-`Item.value()` values to a `double` sum, and return that sum. Indexed access is
+`IterationItem.value()` values to a `double` sum, and return that sum. Indexed access is
 intentionally excluded because it has fundamentally different complexity for
 `SpliceList`; streams, spliterators, `forEach`, parallelism, and
 collection-specific traversal shortcuts are also outside this comparison. No
@@ -588,7 +588,7 @@ This collection-only suite separately measures append cost. Each measured
 invocation creates one fresh collection, runs one append loop, and returns the
 populated list. The single marker object is created during JMH trial setup, so
 the loop measures collection allocation and reference addition rather than
-element construction. File I/O, CSV parsing, logging, `Item` allocation,
+element construction. File I/O, CSV parsing, logging, per-element allocation,
 validation, traversal, and consolidation are excluded.
 
 The primary comparison is a matched pair at every shared `capacityHint` value:
